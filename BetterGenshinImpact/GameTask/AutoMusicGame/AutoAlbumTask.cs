@@ -1,3 +1,6 @@
+using System.Globalization;
+using Microsoft.Extensions.Localization;
+using BetterGenshinImpact.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,6 +53,8 @@ public class AutoAlbumTask : ISoloTask<AutoMusicGameParam, NoData>
     /// </summary>
     private AutoMusicGameParam _taskParam = null!;
 
+    private readonly string allLocalizedString;
+
     /// <summary>
     /// 创建自动音游专辑任务
     /// </summary>
@@ -60,6 +65,10 @@ public class AutoAlbumTask : ISoloTask<AutoMusicGameParam, NoData>
         _runtime = runtime;
         _config = config;
         _autoMusicGameTask = new AutoMusicGameTask(runtime, config);
+
+        IStringLocalizer<AutoAlbumTask> stringLocalizer = App.GetService<IStringLocalizer<AutoAlbumTask>>() ?? throw new NullReferenceException();
+        CultureInfo cultureInfo = new CultureInfo(config.OtherConfig.GameCultureInfoName);
+        this.allLocalizedString = stringLocalizer.WithCultureGet(cultureInfo, "全部");
     }
 
     /// <summary>
@@ -115,7 +124,7 @@ public class AutoAlbumTask : ISoloTask<AutoMusicGameParam, NoData>
             // OCR 后再次判断，区分是否是全部歌曲页面
             using var ocrArea = ra1.DeriveCrop(iconRa.Right, iconRa.Top, ra1.Width * 0.16, iconRa.Height);
             var ocrRes = ocrArea.FindMulti(RecognitionObject.OcrThis);
-            if (ocrRes.Any(region => region.Text.Contains("全部")))
+            if (ocrRes.Any(region => region.Text.Contains(this.allLocalizedString)))
             {
                 return SoloTaskResult.Failed(SoloTaskReasons.PageNotReached,
                     "当前在全部歌曲页面，此页面无法运行本任务。请返回到主界面选择专辑列表中以国家为主题的专辑页！");

@@ -1,3 +1,6 @@
+using System.Globalization;
+using Microsoft.Extensions.Localization;
+using BetterGenshinImpact.Helpers;
 using BetterGenshinImpact.Core.Input;
 using BetterGenshinImpact.Core.Recognition.OCR;
 using BetterGenshinImpact.Core.Recognition.OpenCv;
@@ -59,6 +62,8 @@ public class GetGridIconsTask : ISoloTask<GetGridIconsParam, NoData>
     /// </summary>
     private bool starAsSuffix;
 
+    private readonly string setIncludesLocalizedString;
+
     /// <summary>
     /// 创建获取 Grid 界面物品图标任务
     /// </summary>
@@ -66,6 +71,10 @@ public class GetGridIconsTask : ISoloTask<GetGridIconsParam, NoData>
     public GetGridIconsTask(GameRuntime runtime)
     {
         _runtime = runtime;
+
+        IStringLocalizer<GetGridIconsTask> stringLocalizer = App.GetService<IStringLocalizer<GetGridIconsTask>>() ?? throw new NullReferenceException();
+        CultureInfo cultureInfo = new CultureInfo(ConfigService.Config!.OtherConfig.GameCultureInfoName);
+        this.setIncludesLocalizedString = stringLocalizer.WithCultureGet(cultureInfo, "套装包含");
     }
 
     /// <summary>
@@ -172,13 +181,13 @@ public class GetGridIconsTask : ISoloTask<GetGridIconsParam, NoData>
             itemRegion.Click();
             await _runtime.Delay(300, ct);
 
-            static bool tryGetFlower(GameRuntime runtime, out string flowerName)
+            bool tryGetFlower(GameRuntime runtime, out string flowerName)
             {
                 using var ra1 = runtime.CaptureToRectArea();
                 using ImageRegion nameRegion = ra1.DeriveCrop(new Rect((int)(ra1.Width * 0.714), (int)(ra1.Width * 0.284), (int)(ra1.Width * 0.256), (int)(ra1.Width * 0.208)));
                 var ocrResult = OcrFactory.Paddle.OcrResult(nameRegion.SrcMat);
 
-                var flowerWithGlyph = ocrResult.Regions.OrderBy(r => r.Rect.Center.Y).SkipWhile(r => !r.Text.Contains("套装包含")).Skip(1).FirstOrDefault();
+                var flowerWithGlyph = ocrResult.Regions.OrderBy(r => r.Rect.Center.Y).SkipWhile(r => !r.Text.Contains(this.setIncludesLocalizedString)).Skip(1).FirstOrDefault();
                 if (flowerWithGlyph == default)
                 {
                     nameRegion.Move();
