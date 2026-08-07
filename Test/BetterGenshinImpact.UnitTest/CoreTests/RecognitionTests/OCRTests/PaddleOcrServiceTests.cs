@@ -42,6 +42,13 @@ namespace BetterGenshinImpact.UnitTest.CoreTests.RecognitionTests.OCRTests
         [InlineData("fr", "Cliquez pour fermer", "Cliquez.*pour.*fermer")]
         [InlineData("fr", "Sélection rapide", "Sélection.*rapide")]
         [InlineData("fr", "Artéfact 2★", "Artéfact.*2★?")]
+        // PR-B tranche (AutoBossTask/AutoLeyLineOutcropTask/AutoStygianOnslaughtTask): valori piu' critici perche' regex-pattern (contengono .*)
+        [InlineData("en", "Click anywhere in the blank area", "Click.*anywhere.*in.*the.*blank.*area")]
+        [InlineData("fr", "Cliquez pour poursuivre", "Cliquez.*pour.*poursuivre")]
+        [InlineData("en", "Replenish Original Resin", "Replenish.*Original.*Resin")]
+        [InlineData("fr", "Recharger la Résine originelle", "Recharger.*la.*Résine.*originelle")]
+        [InlineData("en", "Stygian Onslaught", "Stygian.*Onslaught")]
+        [InlineData("en", "Challenge Failed", "Challenge.*Failed")]
         /// <summary>
         /// 测试识别各种文字，结果为成功
         /// </summary>
