@@ -23,6 +23,7 @@ using BetterGenshinImpact.GameTask.Common.BgiVision;
 using BetterGenshinImpact.GameTask.Common.Job;
 using BetterGenshinImpact.GameTask.Common.Reward;
 using BetterGenshinImpact.GameTask.Common.Map.Maps.Base;
+using BetterGenshinImpact.Helpers;
 using BetterGenshinImpact.GameTask;
 using BetterGenshinImpact.GameTask.Model;
 using BetterGenshinImpact.GameTask.Model.Area;
@@ -48,6 +49,8 @@ using static BetterGenshinImpact.GameTask.Common.TaskControl;
 using BetterGenshinImpact.View;
 using BetterGenshinImpact.View.Pages.SoloTaskSettings;
 using BetterGenshinImpact.ViewModel.SoloTaskSettings;
+using Microsoft.Extensions.Localization;
+using System.Globalization;
 
 namespace BetterGenshinImpact.GameTask.AutoLeyLineOutcrop;
 
@@ -180,6 +183,12 @@ public class AutoLeyLineOutcropTask : ISoloTask<AutoLeyLineOutcropParam, ResinCl
     private static readonly object PickLock = new();
     private bool _friendshipTeamSwitched;
 
+    private readonly string originalResinLocalizedString;
+    private readonly string contactLeyLineFlowerPatternString;
+    private readonly string reviveLocalizedString;
+    private readonly string leyLineOrOverflowPatternString;
+    private readonly string stopLocalizedString;
+
     /// <summary>
     /// 创建自动地脉花任务。业务参数通过 <see cref="RunAsync"/> 传入。
     /// </summary>
@@ -190,6 +199,15 @@ public class AutoLeyLineOutcropTask : ISoloTask<AutoLeyLineOutcropParam, ResinCl
         _runtime = runtime;
         _config = config;
         _returnMainUiTask = new ReturnMainUiTask(runtime);
+
+        IStringLocalizer<AutoLeyLineOutcropTask> stringLocalizer =
+            App.GetService<IStringLocalizer<AutoLeyLineOutcropTask>>() ?? throw new NullReferenceException();
+        CultureInfo cultureInfo = new CultureInfo(config.OtherConfig.GameCultureInfoName);
+        this.originalResinLocalizedString = stringLocalizer.WithCultureGet(cultureInfo, "原粹树脂");
+        this.contactLeyLineFlowerPatternString = stringLocalizer.WithCultureGet(cultureInfo, "(接触|地脉|之花)");
+        this.reviveLocalizedString = stringLocalizer.WithCultureGet(cultureInfo, "复苏");
+        this.leyLineOrOverflowPatternString = stringLocalizer.WithCultureGet(cultureInfo, "(地脉|衍出)");
+        this.stopLocalizedString = stringLocalizer.WithCultureGet(cultureInfo, "停止");
     }
 
     /// <summary>
@@ -1818,7 +1836,7 @@ public class AutoLeyLineOutcropTask : ISoloTask<AutoLeyLineOutcropParam, ResinCl
     {
         using var capture = _runtime.CaptureToRectArea();
         // Bv.FindF is faster for common keywords and avoids OCR misses.
-        if (Bv.FindF(capture, "接触") || Bv.FindF(capture, "地脉") || Bv.FindF(capture, "之花"))
+        if (Bv.FindF(capture, contactLeyLineFlowerPatternString))
         {
             return true;
         }
@@ -1826,14 +1844,12 @@ public class AutoLeyLineOutcropTask : ISoloTask<AutoLeyLineOutcropParam, ResinCl
         var list = capture.FindMulti(_ocrRoThis);
         foreach (var res in list)
         {
-            if (res.Text.Contains("原粹树脂", StringComparison.Ordinal))
+            if (res.Text.Contains(originalResinLocalizedString, StringComparison.Ordinal))
             {
                 return true;
             }
 
-            if (res.Text.Contains("接触", StringComparison.Ordinal)
-                || res.Text.Contains("地脉", StringComparison.Ordinal)
-                || res.Text.Contains("之花", StringComparison.Ordinal))
+            if (Regex.IsMatch(res.Text, contactLeyLineFlowerPatternString))
             {
                 return true;
             }
@@ -1868,7 +1884,7 @@ public class AutoLeyLineOutcropTask : ISoloTask<AutoLeyLineOutcropParam, ResinCl
         var list = capture.FindMulti(_ocrRoThis);
         foreach (var res in list)
         {
-            if (res.Text.Contains("复苏", StringComparison.Ordinal))
+            if (res.Text.Contains(reviveLocalizedString, StringComparison.Ordinal))
             {
                 res.Click();
                 await _runtime.Delay(2000, _ct);
@@ -2463,14 +2479,14 @@ public class AutoLeyLineOutcropTask : ISoloTask<AutoLeyLineOutcropParam, ResinCl
 
         using var capture = _runtime.CaptureToRectArea();
         var list = capture.FindMulti(_ocrRoThis);
-        var stop = list.FirstOrDefault(r => r.Text.Contains("停止", StringComparison.Ordinal));
+        var stop = list.FirstOrDefault(r => r.Text.Contains(stopLocalizedString, StringComparison.Ordinal));
         if (stop != null)
         {
             stop.Click();
             return;
         }
 
-        var leyLine = list.FirstOrDefault(r => r.Text.Contains("地脉", StringComparison.Ordinal) || r.Text.Contains("衍出", StringComparison.Ordinal));
+        var leyLine = list.FirstOrDefault(r => Regex.IsMatch(r.Text, leyLineOrOverflowPatternString));
         if (leyLine != null)
         {
             leyLine.Click();
