@@ -202,7 +202,7 @@
                                     </StackPanel.Resources>
                                     <TextBlock FontFamily="{StaticResource FgiIconFontFamily}"
                                                Opacity="{Binding DataContext.Config.MaskWindowConfig.TextOpacity, RelativeSource={RelativeSource AncestorType=Window}}"
-                                               Text="{Binding Name}">
+                                               Text="{Binding Name, Converter={StaticResource LocalizedDisplayConverter}}">
                                         <TextBlock.FontSize>
                                             <MultiBinding Converter="{StaticResource OverlayScaledSizeConverter}">
                                                 <Binding Path="DataContext.Config.MaskWindowConfig.StatusFontSize" RelativeSource="{RelativeSource AncestorType=Window}" />
@@ -1034,8 +1034,13 @@
                                                       VerticalContentAlignment="Center"
                                                       Cursor="Hand"
                                                       ItemsSource="{Binding MapPointApiProviderOptions}"
-                                                      SelectedItem="{Binding SelectedMapPointApiProviderOption, Mode=TwoWay}"
-                                                      DisplayMemberPath="DisplayName" />
+                                                      SelectedItem="{Binding SelectedMapPointApiProviderOption, Mode=TwoWay}">
+                                                <ComboBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{Binding DisplayName, Converter={StaticResource LocalizedDisplayConverter}}" />
+                                                    </DataTemplate>
+                                                </ComboBox.ItemTemplate>
+                                            </ComboBox>
 
                                             <ComboBox Grid.Column="1"
                                                       Height="32"

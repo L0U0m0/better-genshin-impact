@@ -147,7 +147,7 @@ public static class DomainCascadingComboBoxBehavior
             return;
 
         comboBox.SetValue(LastCommittedItemProperty, item);
-        comboBox.SetValue(LastCommittedTextProperty, item!.Tag as string ?? string.Empty);
+        comboBox.SetValue(LastCommittedTextProperty, item!.Label ?? string.Empty);
     }
 
     private static void ApplySelectedPreviewBinding(CascadingComboBox comboBox)

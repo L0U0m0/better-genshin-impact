@@ -56,7 +56,7 @@
                             <ui:GridViewColumn Width="{Binding ActualWidth, ElementName=TreeColumnStar}" Header="动作">
                                 <ui:GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <ui:TreeRowExpander Content="{Binding ActionName}" />
+                                        <ui:TreeRowExpander Content="{Binding ActionName, Converter={StaticResource LocalizedDisplayConverter}}" />
                                     </DataTemplate>
                                 </ui:GridViewColumn.CellTemplate>
                             </ui:GridViewColumn>
