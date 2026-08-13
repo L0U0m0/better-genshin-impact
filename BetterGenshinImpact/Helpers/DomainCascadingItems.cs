@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using BetterGenshinImpact.GameTask.Common.Element.Assets;
+using BetterGenshinImpact.Service.Interface;
 using Wpf.Ui.Violeta.Controls;
 
 namespace BetterGenshinImpact.Helpers;
@@ -39,15 +40,16 @@ public static class DomainCascadingItems
 
     private static IReadOnlyList<ICascadingItem> BuildItems()
     {
+        var translator = App.GetService<ITranslationService>();
         return MapLazyAssets.Get().CountryToDomains.Keys
             .Reverse()
             .Select(country => (ICascadingItem)new CascadingItem(
-                country,
+                Translate(translator, country),
                 MapLazyAssets.Get().CountryToDomains[country]
                     .AsEnumerable()
                     .Reverse()
                     .Select(d => (ICascadingItem)new CascadingItem(
-                        d.Name! + " | " + FormatRewards(d.Rewards))
+                        Translate(translator, d.Name!) + " | " + FormatRewards(d.Rewards, translator))
                     {
                         Tag = d.Name
                     })
@@ -55,14 +57,23 @@ public static class DomainCascadingItems
             .ToList();
     }
 
-    private static string FormatRewards(IEnumerable<string> rewards)
+    private static string FormatRewards(IEnumerable<string> rewards, ITranslationService? translator)
     {
         return string.Join(" ", rewards
             .Select((reward, index) => TalentRewardDisplays.TryGetValue(reward, out var display)
-                ? (display.Order, Index: index, display.Text)
-                : (Order: int.MaxValue, Index: index, Text: reward))
+                ? (display.Order, Index: index, Text: Translate(translator, display.Text))
+                : (Order: int.MaxValue, Index: index, Text: Translate(translator, reward)))
             .OrderBy(reward => reward.Order)
             .ThenBy(reward => reward.Index)
             .Select(reward => reward.Text));
+    }
+
+    /// <summary>
+    /// Traduzione display-only: se il servizio non è disponibile o la voce manca a
+    /// dizionario, ritorna il testo originale (fallback null-safe).
+    /// </summary>
+    private static string Translate(ITranslationService? translator, string text)
+    {
+        return translator?.Translate(text) ?? text;
     }
 }
