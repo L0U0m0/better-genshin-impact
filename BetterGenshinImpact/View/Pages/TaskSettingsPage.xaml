@@ -132,6 +132,11 @@
                               Margin="0,0,36,0"
                               ItemsSource="{Binding AutoFightViewModel.StrategyList}"
                               SelectedItem="{Binding Config.AutoGeniusInvokationConfig.StrategyName, Mode=TwoWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Converter={StaticResource LocalizedDisplayConverter}}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
                         <b:Interaction.Triggers>
                             <b:EventTrigger EventName="DropDownOpened">
                                 <b:InvokeCommandAction Command="{Binding StrategyDropDownOpenedCommand}"

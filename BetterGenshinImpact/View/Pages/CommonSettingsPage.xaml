@@ -264,13 +264,13 @@
                                         <ui:TextBlock Grid.Row="0"
                                                       Grid.Column="0"
                                                       FontTypography="BodyStrong"
-                                                      Text="{Binding Name}"
+                                                      Text="{Binding Name, Converter={StaticResource LocalizedDisplayConverter}}"
                                                       TextWrapping="Wrap" />
                                         <ui:TextBlock Grid.Row="1"
                                                       Grid.Column="0"
                                                       Margin="0,4,0,0"
                                                       Foreground="{ui:ThemeResource TextFillColorTertiaryBrush}"
-                                                      Text="{Binding Description}"
+                                                      Text="{Binding Description, Converter={StaticResource LocalizedDisplayConverter}}"
                                                       TextWrapping="Wrap" />
                                         <ui:ToggleSwitch Grid.Row="0"
                                                          Grid.RowSpan="2"
@@ -318,7 +318,7 @@
                                                               ToolTip="{Binding ToolTipText}">
                                                         <ui:TextBlock Margin="4,0,0,0"
                                                                       FontTypography="Body"
-                                                                      Text="{Binding DisplayName}"
+                                                                      Text="{Binding DisplayName, Converter={StaticResource LocalizedDisplayConverter}}"
                                                                       TextTrimming="CharacterEllipsis"
                                                                       TextWrapping="NoWrap" />
                                                     </CheckBox>
@@ -341,12 +341,12 @@
                                                     <ui:TextBlock Grid.Row="0"
                                                                   Grid.Column="0"
                                                                   FontTypography="Body"
-                                                                  Text="{Binding DisplayName}"
+                                                                  Text="{Binding DisplayName, Converter={StaticResource LocalizedDisplayConverter}}"
                                                                   TextWrapping="Wrap" />
                                                     <ui:TextBlock Grid.Row="1"
                                                                   Grid.Column="0"
                                                                   Foreground="{ui:ThemeResource TextFillColorTertiaryBrush}"
-                                                                  Text="{Binding Description}"
+                                                                  Text="{Binding Description, Converter={StaticResource LocalizedDisplayConverter}}"
                                                                   TextWrapping="Wrap" />
                                                     <ui:TextBox Grid.Row="0"
                                                                 Grid.RowSpan="2"
@@ -379,7 +379,7 @@
                                                                             BorderBrush="Gray"
                                                                             BorderThickness="1" />
                                                                     <TextBlock VerticalAlignment="Center"
-                                                                               Text="{Binding DisplayName}"
+                                                                               Text="{Binding DisplayName, Converter={StaticResource LocalizedDisplayConverter}}"
                                                                                TextTrimming="CharacterEllipsis" />
                                                                 </StackPanel>
                                                             </DataTemplate>

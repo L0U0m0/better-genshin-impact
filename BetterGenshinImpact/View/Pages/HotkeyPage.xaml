@@ -49,7 +49,7 @@
                             <ui:GridViewColumn Width="{Binding ActualWidth, ElementName=TreeColumnStar}" Header="功能">
                                 <ui:GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <ui:TreeRowExpander Content="{Binding FunctionName}" />
+                                        <ui:TreeRowExpander Content="{Binding FunctionName, Converter={StaticResource LocalizedDisplayConverter}}" />
                                     </DataTemplate>
                                 </ui:GridViewColumn.CellTemplate>
                             </ui:GridViewColumn>

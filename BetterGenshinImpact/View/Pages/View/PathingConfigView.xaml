@@ -67,14 +67,26 @@
                                                   Margin="0,0,10,5"
                                                   HorizontalAlignment="Left"
                                                   ItemsSource="{Binding Source={x:Static local:ConditionDefinitions.PartySubjects}}"
-                                                  SelectedItem="{Binding Subject, Mode=TwoWay}" />
+                                                  SelectedItem="{Binding Subject, Mode=TwoWay}">
+                                            <ComboBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Converter={StaticResource LocalizedDisplayConverter}}" />
+                                                </DataTemplate>
+                                            </ComboBox.ItemTemplate>
+                                        </ComboBox>
 
                                         <!--  包含  -->
                                         <ComboBox MinWidth="80"
                                                   Margin="0,0,10,5"
                                                   HorizontalAlignment="Left"
                                                   ItemsSource="{Binding Definition.PredicateOptions}"
-                                                  SelectedItem="{Binding Predicate, Mode=TwoWay}" />
+                                                  SelectedItem="{Binding Predicate, Mode=TwoWay}">
+                                            <ComboBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Converter={StaticResource LocalizedDisplayConverter}}" />
+                                                </DataTemplate>
+                                            </ComboBox.ItemTemplate>
+                                        </ComboBox>
 
                                         <!--  搜索输入框  -->
                                         <sdl:MultiSelectComboBox Width="300"
@@ -89,6 +101,16 @@
                                                                  MaxDropDownHeight="300"
                                                                  SelectedItems="{Binding Object, Mode=TwoWay}"
                                                                  SelectionMode="Multiple">
+                                            <sdl:MultiSelectComboBox.DropdownItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Converter={StaticResource LocalizedDisplayConverter}}" />
+                                                </DataTemplate>
+                                            </sdl:MultiSelectComboBox.DropdownItemTemplate>
+                                            <sdl:MultiSelectComboBox.SelectedItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Converter={StaticResource LocalizedDisplayConverter}}" />
+                                                </DataTemplate>
+                                            </sdl:MultiSelectComboBox.SelectedItemTemplate>
                                             <!--<sdl:MultiSelectComboBox.Resources>
                                             <Style TargetType="{x:Type TextBlock}">
                                                 <Setter Property="Background" Value="{DynamicResource ApplicationBackgroundBrush}" />
@@ -150,14 +172,26 @@
                                                   Margin="0,0,10,5"
                                                   HorizontalAlignment="Left"
                                                   ItemsSource="{Binding Source={x:Static local:ConditionDefinitions.AvatarSubjects}}"
-                                                  SelectedItem="{Binding Subject, Mode=TwoWay}" />
+                                                  SelectedItem="{Binding Subject, Mode=TwoWay}">
+                                            <ComboBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Converter={StaticResource LocalizedDisplayConverter}}" />
+                                                </DataTemplate>
+                                            </ComboBox.ItemTemplate>
+                                        </ComboBox>
 
                                         <!--  包含  -->
                                         <ComboBox MinWidth="80"
                                                   Margin="0,0,10,5"
                                                   HorizontalAlignment="Left"
                                                   ItemsSource="{Binding Definition.PredicateOptions}"
-                                                  SelectedItem="{Binding Predicate}" />
+                                                  SelectedItem="{Binding Predicate}">
+                                            <ComboBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Converter={StaticResource LocalizedDisplayConverter}}" />
+                                                </DataTemplate>
+                                            </ComboBox.ItemTemplate>
+                                        </ComboBox>
 
                                         <!--  搜索输入框  -->
                                         <Grid Width="300" MinWidth="300">
@@ -171,7 +205,18 @@
                                                 ItemsSource="{Binding Definition.ObjectOptions, Mode=TwoWay}"
                                                 MaxDropDownHeight="300"
                                                 SelectedItems="{Binding Object, Mode=TwoWay}"
-                                                SelectionMode="Multiple" />
+                                                SelectionMode="Multiple">
+                                                <sdl:MultiSelectComboBox.DropdownItemTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{Binding Converter={StaticResource LocalizedDisplayConverter}}" />
+                                                    </DataTemplate>
+                                                </sdl:MultiSelectComboBox.DropdownItemTemplate>
+                                                <sdl:MultiSelectComboBox.SelectedItemTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{Binding Converter={StaticResource LocalizedDisplayConverter}}" />
+                                                    </DataTemplate>
+                                                </sdl:MultiSelectComboBox.SelectedItemTemplate>
+                                            </sdl:MultiSelectComboBox>
 
                                         </Grid>
 
@@ -186,7 +231,13 @@
                                                   Margin="0,0,10,0"
                                                   HorizontalAlignment="Left"
                                                   ItemsSource="{Binding Source={x:Static local:ConditionDefinitions.AvatarResultList}}"
-                                                  SelectedItem="{Binding Result}" />
+                                                  SelectedItem="{Binding Result}">
+                                            <ComboBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Converter={StaticResource LocalizedDisplayConverter}}" />
+                                                </DataTemplate>
+                                            </ComboBox.ItemTemplate>
+                                        </ComboBox>
 
                                         <!--  清除按钮  -->
                                         <Button
@@ -292,9 +343,14 @@
                         MinWidth="100"
                         Margin="0,0,36,0"
                         SelectedValuePath="Key"
-                        DisplayMemberPath="Value"
                         ItemsSource="{Binding RecoverTimingSource}"
-                        SelectedValue="{Binding Config.PathingConditionConfig.RecoverTiming}" />
+                        SelectedValue="{Binding Config.PathingConditionConfig.RecoverTiming}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Value, Converter={StaticResource LocalizedDisplayConverter}}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
                 </ui:CardControl>
             </StackPanel>
         </ScrollViewer>

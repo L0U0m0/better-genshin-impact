@@ -316,9 +316,14 @@
                                   Grid.Column="1"
                                   MinWidth="100"
                                   SelectedValuePath="Key"
-                                  DisplayMemberPath="Value"
                                   ItemsSource="{Binding RecoverTimingSource}"
-                                  SelectedValue="{Binding PathingConfig.RecoverTiming}" />
+                                  SelectedValue="{Binding PathingConfig.RecoverTiming}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Value, Converter={StaticResource LocalizedDisplayConverter}}" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
 
                     </Grid>
                     <Grid Margin="16">
@@ -425,7 +430,13 @@
                                           Grid.Column="1"
                                           MinWidth="120"
                                           ItemsSource="{Binding PathingConfig.HurryOnAvatarList}"
-                                          SelectedItem="{Binding PathingConfig.HurryOnAvatar}" />
+                                          SelectedItem="{Binding PathingConfig.HurryOnAvatar}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Converter={StaticResource LocalizedDisplayConverter}}" />
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
                             </Grid>
 
                             <!-- 覆写赶路帧间隔 -->
@@ -482,7 +493,13 @@
                                           Grid.Column="1"
                                           Width="120"
                                           ItemsSource="{Binding PathingConfig.TravelModeList}"
-                                          SelectedItem="{Binding PathingConfig.TravelMode}" />
+                                          SelectedItem="{Binding PathingConfig.TravelMode}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Converter={StaticResource LocalizedDisplayConverter}}" />
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
                             </Grid>
 
                             <!-- 赶路启用距离 -->
@@ -952,9 +969,14 @@
                                               Grid.Column="1"
                                               MinWidth="100"
                                               SelectedValuePath="Key"
-                                              DisplayMemberPath="Value"
                                               ItemsSource="{Binding SkipPolicySource}"
-                                              SelectedValue="{Binding PathingConfig.TaskCompletionSkipRuleConfig.SkipPolicy}" />
+                                              SelectedValue="{Binding PathingConfig.TaskCompletionSkipRuleConfig.SkipPolicy}">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Value, Converter={StaticResource LocalizedDisplayConverter}}" />
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
                                 </Grid>
                                 <Grid Margin="16">
                                     <Grid.RowDefinitions>
@@ -1055,9 +1077,14 @@
                                               Grid.Column="1"
                                               MinWidth="100"
                                               SelectedValuePath="Key"
-                                              DisplayMemberPath="Value"
                                               ItemsSource="{Binding ReferencePointSource}"
-                                              SelectedValue="{Binding PathingConfig.TaskCompletionSkipRuleConfig.ReferencePoint}" />
+                                              SelectedValue="{Binding PathingConfig.TaskCompletionSkipRuleConfig.ReferencePoint}">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Value, Converter={StaticResource LocalizedDisplayConverter}}" />
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
                                 </Grid>
                             </StackPanel>
                         </ui:CardExpander>
@@ -2103,9 +2130,14 @@
                                               MinWidth="100"
                                               Margin="0,0,36,0"
                                               SelectedValuePath="Key"
-                                              DisplayMemberPath="Value"
                                               ItemsSource="{Binding OnlyPickEliteDropsSource}"
-                                              SelectedValue="{Binding PathingConfig.AutoFightConfig.OnlyPickEliteDropsMode}" />
+                                              SelectedValue="{Binding PathingConfig.AutoFightConfig.OnlyPickEliteDropsMode}">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Value, Converter={StaticResource LocalizedDisplayConverter}}" />
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
                                 </Grid>
 
                                 <!-- 万叶拾取队伍名 -->
