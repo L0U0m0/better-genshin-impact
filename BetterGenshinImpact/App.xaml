@@ -36,6 +36,7 @@
             <bgivc:CultureInfoNameToKVPConverter x:Key="CultureInfoNameToKVPConverter" />
             <bgivc:StringToColorConverter x:Key="StringToColorConverter" />
             <bgivc:TrConverter x:Key="TrConverter" />
+            <bgivc:LocalizedDisplayConverter x:Key="LocalizedDisplayConverter" />
             <bgivc:AdaptiveUniformGridColumnsConverter x:Key="AdaptiveUniformGridColumnsConverter" />
 
             <!-- ===== 全局 TextBox 安全剪贴板 ===== -->
