@@ -1517,7 +1517,13 @@
                               MinWidth="100"
                               Margin="0,0,36,0"
                               ItemsSource="{Binding AdventurersGuildCountry}"
-                              SelectedItem="{Binding Config.OtherConfig.AutoFetchDispatchAdventurersGuildCountry, Mode=TwoWay}" />
+                              SelectedItem="{Binding Config.OtherConfig.AutoFetchDispatchAdventurersGuildCountry, Mode=TwoWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Converter={StaticResource LocalizedDisplayConverter}}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
                     <!--<ui:ToggleSwitch Grid.Row="0"
                                      Grid.RowSpan="2"
                                      Grid.Column="1"
@@ -1550,8 +1556,13 @@
                               Margin="0,0,36,0"
                               ItemsSource="{Binding ServerTimeZones}"
                               SelectedValue="{Binding Config.OtherConfig.ServerTimeZoneOffset}"
-                              SelectedValuePath="Item1"
-                              DisplayMemberPath="Item2" />
+                              SelectedValuePath="Item1">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Item2, Converter={StaticResource LocalizedDisplayConverter}}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
                 </Grid>
                 <ui:CardExpander Margin="16,0,52,12"
                                  ContentPadding="0"

@@ -451,6 +451,11 @@
                               Margin="0,0,36,0"
                               ItemsSource="{Binding AutoFightViewModel.CombatStrategyList}"
                               SelectedItem="{Binding Config.AutoFightConfig.StrategyName, Mode=TwoWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Converter={StaticResource LocalizedDisplayConverter}}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
                         <b:Interaction.Triggers>
                             <b:EventTrigger EventName="DropDownOpened">
                                 <b:InvokeCommandAction Command="{Binding StrategyDropDownOpenedCommand}"
@@ -1467,6 +1472,11 @@
                               Margin="0,0,36,0"
                               ItemsSource="{Binding AutoFightViewModel.CombatStrategyList}"
                               SelectedItem="{Binding Config.AutoFightConfig.StrategyName, Mode=TwoWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Converter={StaticResource LocalizedDisplayConverter}}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
                         <b:Interaction.Triggers>
                             <b:EventTrigger EventName="DropDownOpened">
                                 <b:InvokeCommandAction Command="{Binding StrategyDropDownOpenedCommand}"
@@ -1936,6 +1946,11 @@
                               Margin="0,0,36,0"
                               ItemsSource="{Binding AutoFightViewModel.CombatStrategyList}"
                               SelectedItem="{Binding Config.AutoBossConfig.StrategyName, Mode=TwoWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Converter={StaticResource LocalizedDisplayConverter}}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
                         <b:Interaction.Triggers>
                             <b:EventTrigger EventName="DropDownOpened">
                                 <b:InvokeCommandAction Command="{Binding StrategyDropDownOpenedCommand}"
@@ -2271,6 +2286,11 @@
                               Margin="0,0,36,0"
                               ItemsSource="{Binding AutoFightViewModel.CombatStrategyList}"
                               SelectedItem="{Binding Config.AutoStygianOnslaughtConfig.StrategyName, Mode=TwoWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Converter={StaticResource LocalizedDisplayConverter}}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
                         <b:Interaction.Triggers>
                             <b:EventTrigger EventName="DropDownOpened">
                                 <b:InvokeCommandAction Command="{Binding StrategyDropDownOpenedCommand}"
@@ -2730,8 +2750,13 @@
                               Margin="0,0,36,0"
                               ItemsSource="{Binding FishingTimePolicyDict}"
                               SelectedValuePath="Key"
-                              DisplayMemberPath="Value"
-                              SelectedItem="{Binding Config.AutoFishingConfig.FishingTimePolicy, Converter={StaticResource EnumToKVPConverter}, Mode=TwoWay}" />
+                              SelectedItem="{Binding Config.AutoFishingConfig.FishingTimePolicy, Converter={StaticResource EnumToKVPConverter}, Mode=TwoWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Value, Converter={StaticResource LocalizedDisplayConverter}}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
                 </Grid>
                 <Grid Margin="16">
                     <Grid.RowDefinitions>
@@ -2830,7 +2855,13 @@
                               Width="150"
                               Margin="0,0,36,0"
                               ItemsSource="{Binding Source={x:Static pages:TaskSettingsPageViewModel.LeyLineOutcropTypeList}}"
-                              SelectedItem="{Binding Config.AutoLeyLineOutcropConfig.LeyLineOutcropType, Mode=TwoWay}" />
+                              SelectedItem="{Binding Config.AutoLeyLineOutcropConfig.LeyLineOutcropType, Mode=TwoWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Converter={StaticResource LocalizedDisplayConverter}}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
                 </Grid>
                 <Grid Margin="16">
                     <Grid.RowDefinitions>
@@ -2858,7 +2889,13 @@
                               Width="120"
                               Margin="0,0,36,0"
                               ItemsSource="{Binding Source={x:Static pages:TaskSettingsPageViewModel.LeyLineOutcropCountryList}}"
-                              SelectedItem="{Binding Config.AutoLeyLineOutcropConfig.Country, Mode=TwoWay}" />
+                              SelectedItem="{Binding Config.AutoLeyLineOutcropConfig.Country, Mode=TwoWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Converter={StaticResource LocalizedDisplayConverter}}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
                 </Grid>
                 <Grid Margin="16">
                     <Grid.RowDefinitions>
@@ -2901,6 +2938,11 @@
                               Margin="0,0,36,0"
                               ItemsSource="{Binding AutoFightViewModel.CombatStrategyList}"
                               SelectedItem="{Binding Config.AutoLeyLineOutcropConfig.FightConfig.StrategyName, Mode=TwoWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Converter={StaticResource LocalizedDisplayConverter}}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
                         <b:Interaction.Triggers>
                             <b:EventTrigger EventName="DropDownOpened">
                                 <b:InvokeCommandAction Command="{Binding StrategyDropDownOpenedCommand}"
@@ -3562,7 +3604,13 @@
                               Margin="0,0,36,0"
                               ItemsSource="{Binding AutoMusicLevelList}"
                               SelectedItem="{Binding Config.AutoMusicGameConfig.MusicLevel, Mode=TwoWay}"
-                              SelectedIndex="0" />
+                              SelectedIndex="0">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Converter={StaticResource LocalizedDisplayConverter}}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
                 </Grid>
             </StackPanel>
         </ui:CardExpander>
@@ -3883,8 +3931,13 @@
                               Margin="0,0,36,0"
                               ItemsSource="{Binding RecognitionFailurePolicyDict}"
                               SelectedValuePath="Key"
-                              DisplayMemberPath="Value"
-                              SelectedItem="{Binding Config.AutoArtifactSalvageConfig.RecognitionFailurePolicy, Converter={StaticResource EnumToKVPConverter}, Mode=TwoWay}" />
+                              SelectedItem="{Binding Config.AutoArtifactSalvageConfig.RecognitionFailurePolicy, Converter={StaticResource EnumToKVPConverter}, Mode=TwoWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Value, Converter={StaticResource LocalizedDisplayConverter}}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
                 </Grid>
             </StackPanel>
         </ui:CardExpander>
@@ -4028,8 +4081,12 @@
                               Margin="0,0,36,0"
                               ItemsSource="{Binding GridNameDict}"
                               SelectedValuePath="Key"
-                              DisplayMemberPath="Value"
                               SelectedItem="{Binding Config.GetGridIconsConfig.GridName, Converter={StaticResource EnumToKVPConverter}, Mode=TwoWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Value, Converter={StaticResource LocalizedDisplayConverter}}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
                     </ComboBox>
                 </Grid>
                 <Grid Margin="16">

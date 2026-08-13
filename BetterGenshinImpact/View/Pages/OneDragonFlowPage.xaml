@@ -172,7 +172,7 @@
                                             <TextBlock Grid.Column="2"
                                                        VerticalAlignment="Center"
                                                        IsHitTestVisible="False"
-                                                       Text="{Binding Name}" Width="100">
+                                                       Text="{Binding Name, Converter={StaticResource LocalizedDisplayConverter}}" Width="100">
                                                 <TextBlock.Style>
                                                     <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
                                                         <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
@@ -377,7 +377,13 @@
                                           HorizontalContentAlignment="Center"
                                           HorizontalAlignment="Left"
                                           SelectedItem="{Binding SelectedConfig.CraftingBenchCountry, Mode=TwoWay}"
-                                          ItemsSource="{Binding CraftingBenchCountry}" />
+                                          ItemsSource="{Binding CraftingBenchCountry}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Converter={StaticResource LocalizedDisplayConverter}}" />
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
                                 
                                 <ui:TextBlock Grid.Row="0"
                                               Grid.Column="2"
@@ -1196,6 +1202,11 @@
                                           Margin="0,0,36,0"
                                           ItemsSource="{Binding AutoFightViewModel.CombatStrategyList}"
                                           SelectedItem="{Binding SelectedConfig.AutoBossStrategyName, Mode=TwoWay}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Converter={StaticResource LocalizedDisplayConverter}}" />
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
                                     <b:Interaction.Triggers>
                                         <b:EventTrigger EventName="DropDownOpened">
                                             <b:InvokeCommandAction Command="{Binding StrategyDropDownOpenedCommand}"
@@ -1644,12 +1655,24 @@
                                           Grid.Column="2"
                                           Margin="0,0,12,8"
                                           ItemsSource="{Binding Source={x:Static pages:TaskSettingsPageViewModel.LeyLineOutcropTypeList}}"
-                                          SelectedItem="{Binding SelectedConfig.LeyLineMondayType, Mode=TwoWay}" />
+                                          SelectedItem="{Binding SelectedConfig.LeyLineMondayType, Mode=TwoWay}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Converter={StaticResource LocalizedDisplayConverter}}" />
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
                                 <ComboBox Grid.Row="3"
                                           Grid.Column="3"
                                           Margin="0,0,0,8"
                                           ItemsSource="{Binding Source={x:Static pages:TaskSettingsPageViewModel.LeyLineOutcropCountryList}}"
-                                          SelectedItem="{Binding SelectedConfig.LeyLineMondayCountry, Mode=TwoWay}" />
+                                          SelectedItem="{Binding SelectedConfig.LeyLineMondayCountry, Mode=TwoWay}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Converter={StaticResource LocalizedDisplayConverter}}" />
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
 
                                 <CheckBox Grid.Row="4"
                                           Grid.Column="0"
@@ -1660,12 +1683,24 @@
                                           Grid.Column="2"
                                           Margin="0,0,12,8"
                                           ItemsSource="{Binding Source={x:Static pages:TaskSettingsPageViewModel.LeyLineOutcropTypeList}}"
-                                          SelectedItem="{Binding SelectedConfig.LeyLineTuesdayType, Mode=TwoWay}" />
+                                          SelectedItem="{Binding SelectedConfig.LeyLineTuesdayType, Mode=TwoWay}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Converter={StaticResource LocalizedDisplayConverter}}" />
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
                                 <ComboBox Grid.Row="4"
                                           Grid.Column="3"
                                           Margin="0,0,0,8"
                                           ItemsSource="{Binding Source={x:Static pages:TaskSettingsPageViewModel.LeyLineOutcropCountryList}}"
-                                          SelectedItem="{Binding SelectedConfig.LeyLineTuesdayCountry, Mode=TwoWay}" />
+                                          SelectedItem="{Binding SelectedConfig.LeyLineTuesdayCountry, Mode=TwoWay}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Converter={StaticResource LocalizedDisplayConverter}}" />
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
 
                                 <CheckBox Grid.Row="5"
                                           Grid.Column="0"
@@ -1676,12 +1711,24 @@
                                           Grid.Column="2"
                                           Margin="0,0,12,8"
                                           ItemsSource="{Binding Source={x:Static pages:TaskSettingsPageViewModel.LeyLineOutcropTypeList}}"
-                                          SelectedItem="{Binding SelectedConfig.LeyLineWednesdayType, Mode=TwoWay}" />
+                                          SelectedItem="{Binding SelectedConfig.LeyLineWednesdayType, Mode=TwoWay}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Converter={StaticResource LocalizedDisplayConverter}}" />
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
                                 <ComboBox Grid.Row="5"
                                           Grid.Column="3"
                                           Margin="0,0,0,8"
                                           ItemsSource="{Binding Source={x:Static pages:TaskSettingsPageViewModel.LeyLineOutcropCountryList}}"
-                                          SelectedItem="{Binding SelectedConfig.LeyLineWednesdayCountry, Mode=TwoWay}" />
+                                          SelectedItem="{Binding SelectedConfig.LeyLineWednesdayCountry, Mode=TwoWay}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Converter={StaticResource LocalizedDisplayConverter}}" />
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
 
                                 <CheckBox Grid.Row="6"
                                           Grid.Column="0"
@@ -1692,12 +1739,24 @@
                                           Grid.Column="2"
                                           Margin="0,0,12,8"
                                           ItemsSource="{Binding Source={x:Static pages:TaskSettingsPageViewModel.LeyLineOutcropTypeList}}"
-                                          SelectedItem="{Binding SelectedConfig.LeyLineThursdayType, Mode=TwoWay}" />
+                                          SelectedItem="{Binding SelectedConfig.LeyLineThursdayType, Mode=TwoWay}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Converter={StaticResource LocalizedDisplayConverter}}" />
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
                                 <ComboBox Grid.Row="6"
                                           Grid.Column="3"
                                           Margin="0,0,0,8"
                                           ItemsSource="{Binding Source={x:Static pages:TaskSettingsPageViewModel.LeyLineOutcropCountryList}}"
-                                          SelectedItem="{Binding SelectedConfig.LeyLineThursdayCountry, Mode=TwoWay}" />
+                                          SelectedItem="{Binding SelectedConfig.LeyLineThursdayCountry, Mode=TwoWay}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Converter={StaticResource LocalizedDisplayConverter}}" />
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
 
                                 <CheckBox Grid.Row="7"
                                           Grid.Column="0"
@@ -1708,12 +1767,24 @@
                                           Grid.Column="2"
                                           Margin="0,0,12,8"
                                           ItemsSource="{Binding Source={x:Static pages:TaskSettingsPageViewModel.LeyLineOutcropTypeList}}"
-                                          SelectedItem="{Binding SelectedConfig.LeyLineFridayType, Mode=TwoWay}" />
+                                          SelectedItem="{Binding SelectedConfig.LeyLineFridayType, Mode=TwoWay}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Converter={StaticResource LocalizedDisplayConverter}}" />
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
                                 <ComboBox Grid.Row="7"
                                           Grid.Column="3"
                                           Margin="0,0,0,8"
                                           ItemsSource="{Binding Source={x:Static pages:TaskSettingsPageViewModel.LeyLineOutcropCountryList}}"
-                                          SelectedItem="{Binding SelectedConfig.LeyLineFridayCountry, Mode=TwoWay}" />
+                                          SelectedItem="{Binding SelectedConfig.LeyLineFridayCountry, Mode=TwoWay}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Converter={StaticResource LocalizedDisplayConverter}}" />
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
 
                                 <CheckBox Grid.Row="8"
                                           Grid.Column="0"
@@ -1724,12 +1795,24 @@
                                           Grid.Column="2"
                                           Margin="0,0,12,8"
                                           ItemsSource="{Binding Source={x:Static pages:TaskSettingsPageViewModel.LeyLineOutcropTypeList}}"
-                                          SelectedItem="{Binding SelectedConfig.LeyLineSaturdayType, Mode=TwoWay}" />
+                                          SelectedItem="{Binding SelectedConfig.LeyLineSaturdayType, Mode=TwoWay}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Converter={StaticResource LocalizedDisplayConverter}}" />
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
                                 <ComboBox Grid.Row="8"
                                           Grid.Column="3"
                                           Margin="0,0,0,8"
                                           ItemsSource="{Binding Source={x:Static pages:TaskSettingsPageViewModel.LeyLineOutcropCountryList}}"
-                                          SelectedItem="{Binding SelectedConfig.LeyLineSaturdayCountry, Mode=TwoWay}" />
+                                          SelectedItem="{Binding SelectedConfig.LeyLineSaturdayCountry, Mode=TwoWay}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Converter={StaticResource LocalizedDisplayConverter}}" />
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
 
                                 <CheckBox Grid.Row="9"
                                           Grid.Column="0"
@@ -1740,11 +1823,23 @@
                                           Grid.Column="2"
                                           Margin="0,0,12,0"
                                           ItemsSource="{Binding Source={x:Static pages:TaskSettingsPageViewModel.LeyLineOutcropTypeList}}"
-                                          SelectedItem="{Binding SelectedConfig.LeyLineSundayType, Mode=TwoWay}" />
+                                          SelectedItem="{Binding SelectedConfig.LeyLineSundayType, Mode=TwoWay}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Converter={StaticResource LocalizedDisplayConverter}}" />
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
                                 <ComboBox Grid.Row="9"
                                           Grid.Column="3"
                                           ItemsSource="{Binding Source={x:Static pages:TaskSettingsPageViewModel.LeyLineOutcropCountryList}}"
-                                          SelectedItem="{Binding SelectedConfig.LeyLineSundayCountry, Mode=TwoWay}" />
+                                          SelectedItem="{Binding SelectedConfig.LeyLineSundayCountry, Mode=TwoWay}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Converter={StaticResource LocalizedDisplayConverter}}" />
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
                             </Grid>
                         </StackPanel>
                     </ui:CardExpander>
@@ -1779,7 +1874,13 @@
                         <ComboBox MinWidth="100"
                                   Margin="0,0,28,0"
                                   SelectedItem="{Binding SelectedConfig.AdventurersGuildCountry, Mode=TwoWay}"
-                                  ItemsSource="{Binding AdventurersGuildCountry}" />
+                                  ItemsSource="{Binding AdventurersGuildCountry}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Converter={StaticResource LocalizedDisplayConverter}}" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
                     </ui:CardControl>
                     <ui:CardControl Margin="0,0,0,12">
                         <ui:CardControl.Icon>
@@ -1850,7 +1951,13 @@
                             <ComboBox MinWidth="90"
                                       Margin="0,0,10,0"
                                       SelectedItem="{Binding SelectedConfig.SereniteaPotTpType, Mode=TwoWay}"
-                                      ItemsSource="{Binding SereniteaPotTpTypes}" />
+                                      ItemsSource="{Binding SereniteaPotTpTypes}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Converter={StaticResource LocalizedDisplayConverter}}" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
                             <ToggleButton                                         
                                 Margin="0,0,28,0"
                                 VerticalAlignment="Center"
@@ -2147,7 +2254,13 @@
                         <ComboBox MinWidth="150"
                                   Margin="0,0,28,0"
                                   SelectedItem="{Binding SelectedConfig.CompletionAction, Mode=TwoWay}"
-                                  ItemsSource="{Binding CompletionActionList}" />
+                                  ItemsSource="{Binding CompletionActionList}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Converter={StaticResource LocalizedDisplayConverter}}" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
                     </ui:CardControl>
 
                     <!--  可以继续添加其他设置项  -->
