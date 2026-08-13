@@ -41,6 +41,7 @@ internal class GoToSereniteaPotTask
     private readonly string ayuanBelieveString;
     private readonly string ayuanShopString;
     private readonly string ayuanByeString;
+    private readonly string ayuanNoCompanionExpString;
     private string dongTianName;
     
     private  OneDragonFlowConfig? SelectedConfig;
@@ -58,6 +59,7 @@ internal class GoToSereniteaPotTask
         this.ayuanBelieveString = stringLocalizer.WithCultureGet(cultureInfo, "信任");
         this.ayuanShopString = stringLocalizer.WithCultureGet(cultureInfo, "洞天百宝");
         this.ayuanByeString = stringLocalizer.WithCultureGet(cultureInfo, "再见");
+        this.ayuanNoCompanionExpString = stringLocalizer.WithCultureGet(cultureInfo, "无法领取好感经验");
     }
 
     public async Task Start(CancellationToken ct)
@@ -455,7 +457,7 @@ internal class GoToSereniteaPotTask
                 RecognitionType = RecognitionTypes.Ocr,
                 RegionOfInterest = new Rect((int)(ra.Width * 0.35), (int)(ra.Height * 0.45), (int)(ra.Width * 0.3), (int)(ra.Height * 0.05))
             });
-            var tem = list.FirstOrDefault(a => a.Text.Contains("无法领取好感经验"));
+            var tem = list.FirstOrDefault(a => a.Text.Contains(this.ayuanNoCompanionExpString));
             if (tem != null)
             {
                 tem.Click();
