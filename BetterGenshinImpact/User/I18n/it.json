@@ -1287,5 +1287,9 @@
   "重云结局5:告别": "Chongyun — Finale 5: Addio",
   "重云结局6:小小的遗憾": "Chongyun — Finale 6: Piccoli rimpianti",
   "默认配置": "Configurazione predefinita",
-  "自定义": "Personalizzato"
+  "自定义": "Personalizzato",
+  "更好的原神 {Version}": "Better Genshin Impact {Version}",
+  "遮罩窗口已启动，游戏大小{Width}x{Height}，素材缩放{Scale}，DPI缩放{Dpi}": "Finestra overlay avviata, risoluzione di gioco {Width}x{Height}, scala risorse {Scale}, scala DPI {Dpi}",
+  "当前：镜头水平灵敏度{X1}，镜头垂直灵敏度{Y1}，镜头水平灵敏度（瞄准模式）{X2}，镜头垂直灵敏度（瞄准模式）{Y2}": "Attuale: sensibilità orizzontale camera {X1}, sensibilità verticale camera {Y1}, sensibilità orizzontale camera (modalità mira) {X2}, sensibilità verticale camera (modalità mira) {Y2}",
+  "当前游戏语言{Lang}不是简体中文，部分功能可能无法正常使用。The game language is not Simplified Chinese, some functions may not work properly": "La lingua di gioco attuale ({Lang}) non è cinese semplificato, alcune funzioni potrebbero non funzionare correttamente"
 }
