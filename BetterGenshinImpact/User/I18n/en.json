@@ -759,5 +759,9 @@
   "登记号： 2025SR0500752": "Registration number: 2025SR0500752",
   "版权信息": "Copyright Information",
   "🎁 有新的兑换码可用": "🎁 New redemption codes available",
-  "点击查看详情": "Click to view details"
+  "点击查看详情": "Click to view details",
+  "更好的原神 {Version}": "Better Genshin Impact {Version}",
+  "遮罩窗口已启动，游戏大小{Width}x{Height}，素材缩放{Scale}，DPI缩放{Dpi}": "Overlay window started, game resolution {Width}x{Height}, asset scale {Scale}, DPI scale {Dpi}",
+  "当前：镜头水平灵敏度{X1}，镜头垂直灵敏度{Y1}，镜头水平灵敏度（瞄准模式）{X2}，镜头垂直灵敏度（瞄准模式）{Y2}": "Current: horizontal camera sensitivity {X1}, vertical camera sensitivity {Y1}, horizontal camera sensitivity (aiming mode) {X2}, vertical camera sensitivity (aiming mode) {Y2}",
+  "当前游戏语言{Lang}不是简体中文，部分功能可能无法正常使用。The game language is not Simplified Chinese, some functions may not work properly": "The current game language ({Lang}) is not Simplified Chinese, some functions may not work properly"
 }

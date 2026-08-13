@@ -28,6 +28,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using BetterGenshinImpact.Genshin.Settings2;
 using BetterGenshinImpact.Model.MaskMap;
+using BetterGenshinImpact.Service.Interface;
 using BetterGenshinImpact.ViewModel;
 using BetterGenshinImpact.View.Windows;
 using Vanara.PInvoke;
@@ -297,14 +298,24 @@ public partial class MaskWindow : Window
         }
     }
 
+    /// <summary>
+    /// The Serilog pipeline doesn't route ILogger calls through ITranslationService (see App.xaml.cs),
+    /// so overlay log messages that must be readable in the non-Chinese UI are translated explicitly
+    /// at the call site, on the raw template (placeholders preserved), before being handed to the logger.
+    /// </summary>
+    private static string Tr(string template)
+    {
+        return App.GetService<ITranslationService>()?.Translate(template, TranslationSourceInfo.From(MissingTextSource.Log)) ?? template;
+    }
+
     private void PrintSystemInfo()
     {
-        _logger.LogInformation("更好的原神 {Version}", Global.Version);
+        _logger.LogInformation(Tr("更好的原神 {Version}"), Global.Version);
         var systemInfo = TaskContext.Instance().SystemInfo;
         var width = systemInfo.GameScreenSize.Width;
         var height = systemInfo.GameScreenSize.Height;
         var dpiScale = TaskContext.Instance().DpiScale;
-        _logger.LogInformation("遮罩窗口已启动，游戏大小{Width}x{Height}，素材缩放{Scale}，DPI缩放{Dpi}",
+        _logger.LogInformation(Tr("遮罩窗口已启动，游戏大小{Width}x{Height}，素材缩放{Scale}，DPI缩放{Dpi}"),
             width, height, systemInfo.AssetScale.ToString("F"), dpiScale);
 
         if (width * 9 != height * 16)
