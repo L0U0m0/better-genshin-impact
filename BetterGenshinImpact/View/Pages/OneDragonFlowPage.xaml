@@ -302,9 +302,13 @@
                           MinWidth="200"
                           Height="34"
                           Margin="10,0,10,0"
-                          DisplayMemberPath="Name"
                           ItemsSource="{Binding ConfigList}"
                           SelectedItem="{Binding SelectedConfig, Mode=TwoWay}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name, Converter={StaticResource LocalizedDisplayConverter}}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
                     <b:Interaction.Triggers>
                         <b:EventTrigger EventName="SelectionChanged">
                             <b:InvokeCommandAction Command="{Binding ConfigDropDownChangedCommand}"
