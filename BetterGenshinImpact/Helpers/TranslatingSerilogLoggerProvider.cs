@@ -8,18 +8,26 @@ using Serilog.Events;
 
 namespace BetterGenshinImpact.Helpers;
 
+/// <summary>
+/// Wraps a specific Serilog <see cref="Serilog.ILogger"/> pipeline and translates the log
+/// template before it reaches that pipeline's sinks. Intended for the UI-facing sinks
+/// (overlay RichTextBox + console) only — the file sink pipeline is wired separately
+/// (see App.xaml.cs) so that logs on disk stay untranslated for bug-report triage.
+/// </summary>
 public sealed class TranslatingSerilogLoggerProvider : ILoggerProvider
 {
+    private readonly Serilog.ILogger _baseLogger;
     private readonly ITranslationService _translationService;
 
-    public TranslatingSerilogLoggerProvider(ITranslationService translationService)
+    public TranslatingSerilogLoggerProvider(Serilog.ILogger baseLogger, ITranslationService translationService)
     {
+        _baseLogger = baseLogger;
         _translationService = translationService;
     }
 
     public Microsoft.Extensions.Logging.ILogger CreateLogger(string categoryName)
     {
-        return new TranslatingSerilogLogger(categoryName, _translationService);
+        return new TranslatingSerilogLogger(categoryName, _baseLogger, _translationService);
     }
 
     public void Dispose()
@@ -31,10 +39,10 @@ public sealed class TranslatingSerilogLoggerProvider : ILoggerProvider
         private readonly ITranslationService _translationService;
         private readonly Serilog.ILogger _logger;
 
-        public TranslatingSerilogLogger(string categoryName, ITranslationService translationService)
+        public TranslatingSerilogLogger(string categoryName, Serilog.ILogger baseLogger, ITranslationService translationService)
         {
             _translationService = translationService;
-            _logger = Serilog.Log.Logger.ForContext("SourceContext", categoryName);
+            _logger = baseLogger.ForContext("SourceContext", categoryName);
         }
 
         public IDisposable BeginScope<TState>(TState state) where TState : notnull
