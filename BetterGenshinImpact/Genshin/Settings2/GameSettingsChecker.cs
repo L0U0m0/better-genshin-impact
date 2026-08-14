@@ -30,8 +30,61 @@ public class GameSettingsChecker
         TextLanguage.TraditionalChinese => "zh-Hant",
         TextLanguage.English => "en",
         TextLanguage.French => "fr",
+        TextLanguage.Italian => "it",
         _ => null
     };
+
+    /// <summary>
+    /// Maps every game text language BGI can currently name to a BCP-47 tag, regardless of
+    /// whether it ships an OCR dictionary (unlike <see cref="ToOcrCultureName"/>, which is
+    /// deliberately scoped to dictionary-having languages only). Used purely to render a
+    /// human-readable language name in the warning below.
+    /// </summary>
+    private static string? ToCultureTag(TextLanguage lang) => lang switch
+    {
+        TextLanguage.English => "en",
+        TextLanguage.SimplifiedChinese => "zh-Hans",
+        TextLanguage.TraditionalChinese => "zh-Hant",
+        TextLanguage.French => "fr",
+        TextLanguage.German => "de",
+        TextLanguage.Spanish => "es",
+        TextLanguage.Portugese => "pt",
+        TextLanguage.Russian => "ru",
+        TextLanguage.Japanese => "ja",
+        TextLanguage.Korean => "ko",
+        TextLanguage.Thai => "th",
+        TextLanguage.Vietnamese => "vi",
+        TextLanguage.Indonesian => "id",
+        TextLanguage.Italian => "it",
+        _ => null
+    };
+
+    /// <summary>
+    /// Human-readable name for <paramref name="lang"/>, used in the OCR-dictionary warning
+    /// instead of the raw enum. Previously the warning interpolated the enum value directly:
+    /// for named members that printed the (English) member name (e.g. "French"), but for any
+    /// value with no matching member -- true for every language added to the game after this
+    /// enum was last updated -- structured logging just prints the bare integer, which is what
+    /// produced the unreadable "(16)" in the log. Falls back to the enum's ToString() (member
+    /// name, or the raw number if still unmapped) when the language has no known culture tag.
+    /// </summary>
+    private static string GetLanguageDisplayName(TextLanguage lang)
+    {
+        var tag = ToCultureTag(lang);
+        if (tag == null)
+        {
+            return lang.ToString();
+        }
+
+        try
+        {
+            return new CultureInfo(tag).NativeName;
+        }
+        catch
+        {
+            return lang.ToString();
+        }
+    }
 
     /// <summary>
     /// The Serilog pipeline doesn't route ILogger calls through ITranslationService (see App.xaml.cs),
@@ -125,7 +178,7 @@ public class GameSettingsChecker
             var lang = (TextLanguage)settings.DeviceLanguageType;
             if (!HasOcrDictionary(lang))
             {
-                TaskControl.Logger.LogWarning(Tr("当前游戏语言{Lang}不是简体中文，部分功能可能无法正常使用。The game language is not Simplified Chinese, some functions may not work properly"), lang);
+                TaskControl.Logger.LogWarning(Tr("当前游戏语言{Lang}不是简体中文，部分功能可能无法正常使用。The game language is not Simplified Chinese, some functions may not work properly"), GetLanguageDisplayName(lang));
             }
         }
         catch (Exception e)
