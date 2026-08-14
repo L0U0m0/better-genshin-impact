@@ -33,6 +33,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
+using Serilog.Extensions.Logging;
 using Serilog.Sinks.RichTextBox.Abstraction;
 using Wpf.Ui;
 using Wpf.Ui.DependencyInjection;
@@ -52,6 +53,17 @@ public partial class App : Application
     // https://docs.microsoft.com/dotnet/core/extensions/dependency-injection
     // https://docs.microsoft.com/dotnet/core/extensions/configuration
     // https://docs.microsoft.com/dotnet/core/extensions/logging
+    //
+    // Logging fan-out: two independent Serilog pipelines are built in ConfigureServices
+    // and kept in these fields so OnExit can flush both explicitly.
+    // - _fileLogger: File sink only, always raw/untranslated (bug-report triage relies on it).
+    // - _uiLogger: Console + (optional) overlay RichTextBox sinks. Wrapped by
+    //   TranslatingSerilogLoggerProvider for non-zh-Hans UI cultures so overlay/console text
+    //   is translated; wrapped by a plain SerilogLoggerProvider (no translation) for zh-Hans,
+    //   matching the original pre-i18n behavior.
+    private static Serilog.Core.Logger? _fileLogger;
+    private static Serilog.Core.Logger? _uiLogger;
+
     private static readonly IHost _host = Host.CreateDefaultBuilder()
         .CheckIntegration()
         .UseElevated()
@@ -74,16 +86,24 @@ public partial class App : Application
                 var richTextBox = new RichTextBoxImpl();
                 services.AddSingleton<IRichTextBox>(richTextBox);
 
-                var loggerConfiguration = new LoggerConfiguration()
-                    .WriteTo.Logger(fileLoggerConfiguration => fileLoggerConfiguration
-                        .Enrich.WithProperty("BgiInstance", instanceIdentity)
-                        .WriteTo.File(logFile,
-                            outputTemplate:
-                            "[{Timestamp:HH:mm:ss.fff}] [{Level:u3}] [{BgiInstance}] {SourceContext}{NewLine}{Message}{NewLine}{Exception}{NewLine}",
-                            rollingInterval: RollingInterval.Day,
-                            shared: true,
-                            retainedFileCountLimit: 31,
-                            retainedFileTimeLimit: TimeSpan.FromDays(21)))
+                // File pipeline: always raw/untranslated. This is what bug reports triage on,
+                // so it must reflect exactly what the original (Chinese) log strings say.
+                var fileLoggerConfiguration = new LoggerConfiguration()
+                    .Enrich.WithProperty("BgiInstance", instanceIdentity)
+                    .WriteTo.File(logFile,
+                        outputTemplate:
+                        "[{Timestamp:HH:mm:ss.fff}] [{Level:u3}] [{BgiInstance}] {SourceContext}{NewLine}{Message}{NewLine}{Exception}{NewLine}",
+                        rollingInterval: RollingInterval.Day,
+                        shared: true,
+                        retainedFileCountLimit: 31,
+                        retainedFileTimeLimit: TimeSpan.FromDays(21))
+                    .MinimumLevel.Debug()
+                    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                    .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Warning);
+
+                // UI pipeline: console + (optional) overlay RichTextBox. Candidate for translation
+                // below, gated the same way the file pipeline never is.
+                var uiLoggerConfiguration = new LoggerConfiguration()
                     .WriteTo.Console(outputTemplate:
                         "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}")
                     .MinimumLevel.Debug()
@@ -91,30 +111,42 @@ public partial class App : Application
                     .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Warning);
                 if (all.MaskWindowConfig is { MaskEnabled: true, ShowLogBox: true })
                 {
-                    loggerConfiguration.WriteTo.RichTextBox(richTextBox, LogEventLevel.Information,
+                    uiLoggerConfiguration.WriteTo.RichTextBox(richTextBox, LogEventLevel.Information,
                         "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}");
                 }
 
-                Log.Logger = loggerConfiguration.CreateLogger();
+                _fileLogger = fileLoggerConfiguration.CreateLogger();
+                _uiLogger = uiLoggerConfiguration.CreateLogger();
+                // Ambient default kept pointing at the raw/file pipeline in case anything
+                // outside our own ILoggerProvider wiring reaches for Serilog.Log.Logger.
+                Log.Logger = _fileLogger;
+
                 services.AddSingleton<IMissingTranslationReporter, SupabaseMissingTranslationReporter>();
                 services.AddSingleton<ITranslationService, JsonTranslationService>();
 
-                services.AddLogging(c => c.AddSerilog());
-                // if ("zh-Hans".Equals(all.OtherConfig.UiCultureInfoName, StringComparison.OrdinalIgnoreCase))
-                // {
-                //     services.AddLogging(c => c.AddSerilog());
-                // }
-                // else
-                // {
-                //     services.AddLogging(logging =>
-                //     {
-                //         logging.ClearProviders();
-                //         logging.SetMinimumLevel(LogLevel.Debug);
-                //         logging.AddFilter("Microsoft", LogLevel.Warning);
-                //         logging.AddFilter("Microsoft.Hosting.Lifetime", LogLevel.Warning);
-                //         logging.Services.AddSingleton<ILoggerProvider, TranslatingSerilogLoggerProvider>();
-                //     });
-                // }
+                services.AddLogging(logging =>
+                {
+                    logging.ClearProviders();
+                    logging.SetMinimumLevel(LogLevel.Debug);
+                    logging.AddFilter("Microsoft", LogLevel.Warning);
+                    logging.AddFilter("Microsoft.Hosting.Lifetime", LogLevel.Warning);
+
+                    // File sink: plain forwarding, never translated.
+                    logging.AddProvider(new SerilogLoggerProvider(_fileLogger, dispose: false));
+
+                    // UI sinks (console + overlay): translated, except for zh-Hans where the
+                    // original text already is the target language — same gate the disabled
+                    // provider used before it was switched off upstream (e3c451cd9).
+                    if ("zh-Hans".Equals(all.OtherConfig.UiCultureInfoName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        logging.AddProvider(new SerilogLoggerProvider(_uiLogger, dispose: false));
+                    }
+                    else
+                    {
+                        logging.Services.AddSingleton<ILoggerProvider>(sp =>
+                            new TranslatingSerilogLoggerProvider(_uiLogger, sp.GetRequiredService<ITranslationService>()));
+                    }
+                });
 
                 services.AddLocalization();
 
@@ -292,6 +324,9 @@ public partial class App : Application
 
         await _host.StopAsync();
         _host.Dispose();
+        // Two independent Serilog pipelines (see ConfigureServices) must both be flushed;
+        // Log.CloseAndFlush() alone only covers whichever one Log.Logger points at.
+        _uiLogger?.Dispose();
         Log.CloseAndFlush();
 
         // 释放控制台窗口
