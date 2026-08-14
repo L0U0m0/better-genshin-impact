@@ -41,4 +41,10 @@ public enum TextLanguage
     Thai,
     Vietnamese,
     Indonesian,
+
+    // Values 14-15 are unmapped: miHoYo added more text languages after this enum was
+    // written and no authoritative list of their deviceLanguageType ids was found. 16
+    // is confirmed by a live probe (settings.DeviceLanguageType) with the game's text
+    // language set to Italiano, see GameSettingsChecker.HasOcrDictionary.
+    Italian = 16,
 }
