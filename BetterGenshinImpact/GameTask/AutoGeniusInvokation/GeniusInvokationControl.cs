@@ -129,7 +129,7 @@ public class GeniusInvokationControl
             if (!SystemControl.IsGenshinImpactActiveByProcess())
             {
                 var name = SystemControl.GetActiveByProcess();
-                _logger.LogWarning($"当前获取焦点的窗口为: {name}，不是原神，暂停");
+                _logger.LogWarning("当前获取焦点的窗口为: {Name}，不是原神，暂停", name);
                 throw new RetryException("当前获取焦点的窗口不是原神");
             }
         }, TimeSpan.FromSeconds(1), 100);

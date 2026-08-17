@@ -106,7 +106,7 @@ public class AutoTrackTask(AutoTrackParam param) : BaseIndependentTask
 
         // 从任务文字中提取距离
         var distance = GetDistanceFromMissionText(textRaList);
-        Logger.LogInformation("任务追踪：{Text}", "距离" + distance + "m");
+        Logger.LogInformation("任务追踪：距离{Distance}m", distance);
         if (distance >= 150)
         {
             // 距离大于150米，先传送到最近的传送点

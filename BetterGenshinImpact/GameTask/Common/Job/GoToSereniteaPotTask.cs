@@ -105,7 +105,7 @@ internal class GoToSereniteaPotTask
             if (list.Count > 0)
             {
                 dongTianName = list[0].Text;
-                Logger.LogInformation("领取尘歌壶奖励:{text}", "洞天名称：" + dongTianName);
+                Logger.LogInformation("领取尘歌壶奖励:洞天名称：{Name}", dongTianName);
                 await Task.Delay(100, ct);
                 break;
             }
@@ -227,7 +227,7 @@ internal class GoToSereniteaPotTask
                 if (list.Count > 0)
                 {
                     dongTianName = list[0].Text;
-                    Logger.LogInformation("领取尘歌壶奖励:{text}", "洞天名称：" + dongTianName);
+                    Logger.LogInformation("领取尘歌壶奖励:洞天名称：{Name}", dongTianName);
                     await Task.Delay(100, ct);
                     for(int z  = 1; z < 5; z++) { 
                         TaskContext.Instance().PostMessageSimulator.SimulateAction(GIActions.OpenMap); await Delay(1000, ct);
@@ -300,8 +300,8 @@ internal class GoToSereniteaPotTask
             }
         }
         Logger.LogInformation("领取尘歌壶奖励:{text}", "寻找阿圆");
-        using CancellationTokenSource treeCts = new();
-        using var cancellationRegistration = ct.Register(treeCts.Cancel);
+        CancellationTokenSource treeCts = new();
+        await using var cancellationRegistration = ct.Register(treeCts.Cancel);
         // 中键回正视角
         Simulation.SendInput.Mouse.MiddleButtonClick();
         await Delay(900, ct);

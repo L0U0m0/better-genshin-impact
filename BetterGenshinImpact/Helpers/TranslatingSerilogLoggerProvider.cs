@@ -74,17 +74,40 @@ public sealed class TranslatingSerilogLoggerProvider : ILoggerProvider
             }
 
             var (template, values) = ExtractTemplateAndValues(state, formatter, exception);
-            var translatedTemplate = RuntimeHelper.IsDebuggerAttached
-                ? template
-                : _translationService.Translate(template, TranslationSourceInfo.From(MissingTextSource.Log));
-
-            if (values.Length == 0)
+            if (RuntimeHelper.IsDebuggerAttached)
             {
-                _logger.Write(serilogLevel.Value, exception, translatedTemplate);
+                Write(serilogLevel.Value, exception, template, values);
                 return;
             }
 
-            _logger.Write(serilogLevel.Value, exception, translatedTemplate, values);
+            var sourceInfo = TranslationSourceInfo.From(MissingTextSource.Log);
+            var translatedTemplate = _translationService.Translate(template, sourceInfo);
+
+            // Many call sites pass a Chinese literal as a template argument, e.g.
+            // LogInformation("自动烹饪：{Text}", "自动点击确认"). Translating only the template
+            // would leave the argument untranslated in the rendered line, so string
+            // arguments go through the same dictionary (Translate is a no-op for text
+            // without CJK characters, so dynamic values in the game language are untouched).
+            for (var i = 0; i < values.Length; i++)
+            {
+                if (values[i] is string { Length: > 0 } s)
+                {
+                    values[i] = _translationService.Translate(s, sourceInfo);
+                }
+            }
+
+            Write(serilogLevel.Value, exception, translatedTemplate, values);
+        }
+
+        private void Write(LogEventLevel level, Exception? exception, string template, object?[] values)
+        {
+            if (values.Length == 0)
+            {
+                _logger.Write(level, exception, template);
+                return;
+            }
+
+            _logger.Write(level, exception, template, values);
         }
 
         private (string Template, object?[] Values) ExtractTemplateAndValues<TState>(
