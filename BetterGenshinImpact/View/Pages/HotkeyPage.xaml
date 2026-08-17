@@ -59,7 +59,7 @@
                                         <ui:Button Height="33"
                                                    VerticalAlignment="Center"
                                                    Command="{Binding SwitchHotKeyTypeCommand}"
-                                                   Content="{Binding HotKeyTypeName, Mode=OneWay}"
+                                                   Content="{Binding HotKeyTypeName, Converter={StaticResource LocalizedDisplayConverter}, Mode=OneWay}"
                                                    IsEnabled="{Binding SwitchHotkeyTypeEnabled, Mode=OneWay}"
                                                    Visibility="{Binding IsDirectory, Converter={StaticResource BooleanToVisibilityRevertConverter}, Mode=OneWay}" />
                                     </DataTemplate>
