@@ -40,7 +40,7 @@
                    BorderThickness="1"
                    CornerRadius="{DynamicResource ControlCornerRadius}">
             <Grid Margin="4">
-                <ui:Grid ColumnDefinitions="*,235" Visibility="Hidden">
+                <ui:Grid ColumnDefinitions="*,300" Visibility="Hidden">
                     <Grid x:Name="TreeColumnStar" Grid.Column="0" />
                 </ui:Grid>
                 <ui:TreeListView BorderThickness="0" ItemsSource="{Binding HotKeySettingModels}">
@@ -53,7 +53,7 @@
                                     </DataTemplate>
                                 </ui:GridViewColumn.CellTemplate>
                             </ui:GridViewColumn>
-                            <ui:GridViewColumn Width="100" Header="快捷键类型">
+                            <ui:GridViewColumn Width="165" Header="快捷键类型">
                                 <ui:GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <ui:Button Height="33"
