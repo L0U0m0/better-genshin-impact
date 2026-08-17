@@ -1235,7 +1235,7 @@ public partial class AutoSkipTrigger : ITaskTrigger
             for (var i = 0; i < rects.Count; i++)
             {
                 content.CaptureRectArea.Derive(rects[i]).Click();
-                _logger.LogInformation("提交物品：{Text}", "1. 选择物品" + i);
+                _logger.LogInformation("提交物品：1. 选择物品{Index}", i);
                 TaskControl.Sleep(800);
 
                 using var ra1 = TaskControl.CaptureToRectArea(forceNew: true);
@@ -1243,7 +1243,7 @@ public partial class AutoSkipTrigger : ITaskTrigger
                 if (!btnBlackConfirmRa.IsEmpty())
                 {
                     btnBlackConfirmRa.Click();
-                    _logger.LogInformation("提交物品：{Text}", "2. 放入" + i);
+                    _logger.LogInformation("提交物品：2. 放入{Index}", i);
                     TaskControl.Sleep(200);
                 }
             }

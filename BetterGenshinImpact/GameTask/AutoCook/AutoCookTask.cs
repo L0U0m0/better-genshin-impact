@@ -87,14 +87,14 @@ public class AutoCookTask : ISoloTask
                     if (currentColorCount <= peakColorCount.Value - triggerDropCount)
                     {
                         Simulation.SendInput.Keyboard.KeyPress(User32.VK.VK_SPACE);
-                        _logger.LogInformation("自动烹饪：{Text}", $"烹饪条像素数量较峰值下降超过{triggerDropCount}，按下空格。峰值:{peakColorCount.Value} 当前:{currentColorCount}");
+                        _logger.LogInformation("自动烹饪：烹饪条像素数量较峰值下降超过{TriggerDropCount}，按下空格。峰值:{Peak} 当前:{Current}", triggerDropCount, peakColorCount.Value, currentColorCount);
                         ResetPeakState(ref peakColorCount, ref peakCandidate, ref peakCandidateStableFrames);
                     }
                 }
                 else if (TryBuildPeak(currentColorCount, peakMinCount, ref peakCandidate, ref peakCandidateStableFrames, out var builtPeak))
                 {
                     peakColorCount = builtPeak;
-                    _logger.LogInformation("自动烹饪：{Text}", $"识别到完美烹饪条峰值像素数:{builtPeak}");
+                    _logger.LogInformation("自动烹饪：识别到完美烹饪条峰值像素数:{Peak}", builtPeak);
                 }
             }
 
