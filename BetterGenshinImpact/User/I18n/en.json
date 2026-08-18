@@ -1151,5 +1151,14 @@
   "未播放": "Not Playing",
   "输入方式": "Input Mode",
   "后台": "Background",
-  "前台": "Foreground"
+  "前台": "Foreground",
+  "识别当前页面的领取按钮或礼物图标并点击，需要配置快捷键进行触发": "Detects and clicks the claim button or gift icon on the current screen; a hotkey must be configured to trigger it",
+  "模式选择": "Mode",
+  "点按一次会领取当前页面可见图标；按住持续会在松开快捷键时立即停止": "Click once claims every icon visible on the current screen; hold continuously runs until the hotkey is released",
+  "点按一次": "Click once",
+  "按住持续": "Hold continuously",
+  "未找到领取图标时滚轮下滑": "Scroll down when no claim icon is found",
+  "仅在按住持续模式下可用": "Only available in hold-continuously mode",
+  "滚轮下滑幅度": "Scroll-down amount",
+  "数值越大，每次未找到领取图标时向下滚动越多": "Higher values scroll further down each time no claim icon is found"
 }
