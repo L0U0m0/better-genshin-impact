@@ -1138,5 +1138,18 @@
   "重云结局5:告别": "Chongyun — Finale 5: Goodbye",
   "重云结局6:小小的遗憾": "Chongyun — Finale 6: Small Regrets",
   "默认配置": "Default config",
-  "自定义": "Custom"
+  "自定义": "Custom",
+  "我的曲库": "My Scores",
+  "曲谱目录：": "Score folder: ",
+  "尚未选择曲谱目录": "none selected",
+  "选择目录": "Choose Folder",
+  "删除记录": "Remove from History",
+  "全部格式": "All Formats",
+  "全部乐器": "All Instruments",
+  "曲库还是空的": "Your library is still empty",
+  "尚未选择有效的曲谱目录": "No valid score folder selected",
+  "未播放": "Not Playing",
+  "输入方式": "Input Mode",
+  "后台": "Background",
+  "前台": "Foreground"
 }

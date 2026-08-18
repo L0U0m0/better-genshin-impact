@@ -235,9 +235,11 @@
                                    VerticalAlignment="Center"
                                    FontSize="12"
                                    Foreground="{DynamicResource TextFillColorTertiaryBrush}"
-                                   Text="{Binding ViewModel.MusicFolderDisplayText, StringFormat=曲谱目录：{0}}"
                                    TextTrimming="CharacterEllipsis"
-                                   ToolTip="{Binding ViewModel.Config.MusicConfig.MusicFolder}" />
+                                   ToolTip="{Binding ViewModel.Config.MusicConfig.MusicFolder}">
+                            <Run Text="曲谱目录：" />
+                            <Run Text="{Binding ViewModel.MusicFolderDisplayText, Converter={StaticResource LocalizedDisplayConverter}}" />
+                        </TextBlock>
                         <ui:Button Grid.Column="2"
                                    Width="36"
                                    Height="34"
@@ -485,7 +487,7 @@
                                            HorizontalAlignment="Center"
                                            TextAlignment="Center"
                                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                           Text="{Binding ViewModel.LibraryStatusText}"
+                                           Text="{Binding ViewModel.LibraryStatusText, Converter={StaticResource LocalizedDisplayConverter}}"
                                            TextWrapping="Wrap" />
                             </StackPanel>
                         </Border>
@@ -584,7 +586,7 @@
                             <TextBlock MaxWidth="260"
                                        FontSize="15"
                                        FontWeight="SemiBold"
-                                       Text="{Binding ViewModel.CurrentTrackName}"
+                                       Text="{Binding ViewModel.CurrentTrackName, Converter={StaticResource LocalizedDisplayConverter}}"
                                        TextTrimming="CharacterEllipsis" />
                             <TextBlock Margin="0,4,0,0"
                                        FontSize="12"
@@ -652,7 +654,7 @@
                                    Margin="0,0,7,0"
                                    VerticalAlignment="Center"
                                    FontSize="12"
-                                   Text="{Binding ViewModel.InputModeDisplayText}" />
+                                   Text="{Binding ViewModel.InputModeDisplayText, Converter={StaticResource LocalizedDisplayConverter}}" />
                         <ui:ToggleSwitch VerticalAlignment="Center"
                                          IsChecked="{Binding ViewModel.UseBackgroundInput, Mode=TwoWay}"
                                          ToolTip="{Binding ViewModel.InputModeToolTip}" />
