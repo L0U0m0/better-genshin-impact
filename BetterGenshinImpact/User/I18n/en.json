@@ -1152,5 +1152,18 @@
   "发生致命异常，正在弹窗提示，同时已记录日志。": "A fatal exception occurred; showing a popup notification and the exception has been logged.",
   "弹窗调度超时，异常已记录，进程即将退出。": "Popup scheduling timed out; the exception has been logged and the process is about to exit.",
   "应用程序启动失败：": "Application failed to start: ",
-  "BetterGI 启动失败": "BetterGI Failed to Start"
+  "BetterGI 启动失败": "BetterGI Failed to Start",
+  "我的曲库": "My Scores",
+  "曲谱目录：": "Score folder: ",
+  "尚未选择曲谱目录": "none selected",
+  "选择目录": "Choose Folder",
+  "删除记录": "Remove from History",
+  "全部格式": "All Formats",
+  "全部乐器": "All Instruments",
+  "曲库还是空的": "Your library is still empty",
+  "尚未选择有效的曲谱目录": "No valid score folder selected",
+  "未播放": "Not Playing",
+  "输入方式": "Input Mode",
+  "后台": "Background",
+  "前台": "Foreground"
 }
