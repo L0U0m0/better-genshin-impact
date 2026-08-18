@@ -213,7 +213,13 @@
                               Width="180"
                               Margin="0,0,36,0"
                               ItemsSource="{Binding OneKeyClaimRewardHotkeyMode}"
-                              SelectedItem="{Binding Config.MacroConfig.OneKeyClaimRewardHotkeyMode, Mode=TwoWay}" />
+                              SelectedItem="{Binding Config.MacroConfig.OneKeyClaimRewardHotkeyMode, Mode=TwoWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Converter={StaticResource LocalizedDisplayConverter}}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
                 </Grid>
                 <Grid Margin="16">
                     <Grid.RowDefinitions>
