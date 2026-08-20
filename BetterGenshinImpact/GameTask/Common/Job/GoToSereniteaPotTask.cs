@@ -606,7 +606,6 @@ internal class GoToSereniteaPotTask
     // 处理最后收尾操作
     private async Task Finished(CancellationToken ct)
     {
-        var isMainUi = false;
         Logger.LogInformation("领取尘歌壶奖励:{text}", "退出到主页");
         // 识别page 关闭按钮。
         using var ra6 = CaptureToRectArea();
@@ -615,36 +614,14 @@ internal class GoToSereniteaPotTask
             await Delay(1000, ct);
         }
 
-        var quitOption = await _chooseTalkOptionTask.SingleSelectText(this.ayuanByeString, ct, skipTimes: 20);
-        if (quitOption != TalkOptionRes.FoundAndClick)
-        {
-            using var mainUiCapture = CaptureToRectArea();
-            if (!Bv.IsInMainUi(mainUiCapture))
-            {
-                Logger.LogError("领取尘歌壶奖励:{text}", "阿圆对话框退出出错。");
-                return;
-            }
-            else
-            {
-                isMainUi = true;
-            }
-        }
-
+        var isMainUi = await _chooseTalkOptionTask.ClickChatExitUntilMainUi(ct);
         if (!isMainUi)
         {
-            await Delay(300, ct);
-            await NewRetry.WaitForAction(() =>
-            {
-                using var ra = CaptureToRectArea();
-                if (!Bv.IsInMainUi(ra))
-                {
-                    ra.Click();
-                    return false;
-                }
-                else
-                    return true;
-            }, ct);
+            Logger.LogError("领取尘歌壶奖励:{text}", "阿圆对话框退出出错。");
+            return;
         }
+
+        await Delay(500, ct);
 
         // TP回主世界
         var tp = new TpTask(ct);
