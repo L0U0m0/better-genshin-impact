@@ -13,12 +13,14 @@ using OpenCvSharp;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
 using BetterGenshinImpact.GameTask.Model.Area;
+using Microsoft.Extensions.Localization;
 
 namespace BetterGenshinImpact.GameTask.AutoPick;
 
@@ -58,8 +60,41 @@ public partial class AutoPickTrigger : ITaskTrigger
     // 外部配置
     private AutoPickExternalConfig? _externalConfig;
 
+    /// <summary>
+    /// 游戏语言，用于选择拾取名单/DoNotPick本地化文案
+    /// </summary>
+    private readonly CultureInfo _gameCulture;
+
+    /// <summary>
+    /// DoNotPick() 用到的本地化文案（详见方法内注释）。
+    /// 均为在 TextMap 中找到确凿依据的复合词片段；未能确定对应关系的
+    /// （长时间 / 眶螂）不做本地化，继续沿用原始中文子串判断。
+    /// </summary>
+    private readonly string _reputationWithLocalized;
+    private readonly string _meetingPointLocalized;
+    private readonly string _frostmoonEnclaveLocalized;
+    private readonly string _clinkClankLocalized;
+    private readonly string _krumkakeCraftshopLocalized;
+    private readonly string _favoniusKeepLocalized;
+    private readonly string _cliffwatchCampLocalized;
+    private readonly string _witchsGardenLocalized;
+    private readonly string _lunarArcanumLocalized;
+
     public AutoPickTrigger()
     {
+        _gameCulture = new CultureInfo(TaskContext.Instance().Config.OtherConfig.GameCultureInfoName);
+
+        IStringLocalizer<AutoPickTrigger> stringLocalizer =
+            App.GetService<IStringLocalizer<AutoPickTrigger>>() ?? throw new NullReferenceException();
+        _reputationWithLocalized = stringLocalizer.WithCultureGet(_gameCulture, "」的声望");
+        _meetingPointLocalized = stringLocalizer.WithCultureGet(_gameCulture, "聚所");
+        _frostmoonEnclaveLocalized = stringLocalizer.WithCultureGet(_gameCulture, "霜月之坊");
+        _clinkClankLocalized = stringLocalizer.WithCultureGet(_gameCulture, "叮铃哐啷");
+        _krumkakeCraftshopLocalized = stringLocalizer.WithCultureGet(_gameCulture, "蛋卷工坊");
+        _favoniusKeepLocalized = stringLocalizer.WithCultureGet(_gameCulture, "西风戍垒");
+        _cliffwatchCampLocalized = stringLocalizer.WithCultureGet(_gameCulture, "望崖营壁");
+        _witchsGardenLocalized = stringLocalizer.WithCultureGet(_gameCulture, "魔女的花园");
+        _lunarArcanumLocalized = stringLocalizer.WithCultureGet(_gameCulture, "月谕圣牌");
     }
 
     public AutoPickTrigger(AutoPickExternalConfig? config) : this()
@@ -79,7 +114,7 @@ public partial class AutoPickTrigger : ITaskTrigger
 
         if (config.Mode == AutoPickMode.Blacklist)
         {
-            blackList = ReadJson(@"Assets\Config\Pick\default_pick_black_lists.json");
+            blackList = ReadJson(ResolveLocalizedPickListPath(@"Assets\Config\Pick\default_pick_black_lists.json"));
             blackList.UnionWith(ReadText(@"User\pick_black_lists.txt"));
             fuzzyBlackList = ReadTextList(@"User\pick_fuzzy_black_lists.txt");
 
@@ -90,7 +125,7 @@ public partial class AutoPickTrigger : ITaskTrigger
         }
         else
         {
-            whitelistModeFinalPickList = ReadJson(@"Assets\Config\Pick\default_pick_white_lists.json");
+            whitelistModeFinalPickList = ReadJson(ResolveLocalizedPickListPath(@"Assets\Config\Pick\default_pick_white_lists.json"));
             whitelistModeFinalPickList.UnionWith(ReadText(@"User\pick_whitelist_mode_pick_lists.txt"));
             if (config.WhitelistModeDoNotPickEnabled)
             {
@@ -103,6 +138,21 @@ public partial class AutoPickTrigger : ITaskTrigger
         _fuzzyBlackList = fuzzyBlackList;
         _whiteList = whiteList;
         _whitelistModeFinalPickList = whitelistModeFinalPickList;
+    }
+
+    /// <summary>
+    /// 若存在当前游戏语言对应的本地化拾取名单文件（如
+    /// default_pick_black_lists.en.json，与原始文件同目录，随本地化 json 一起
+    /// 打包进仓库，构建时随 Assets\Config\** 通配符一起复制到输出目录），
+    /// 优先使用；否则回退到原始文件（zh-Hans 默认名单，行为不变）。
+    /// </summary>
+    private string ResolveLocalizedPickListPath(string defaultRelativePath)
+    {
+        var dir = Path.GetDirectoryName(defaultRelativePath) ?? string.Empty;
+        var fileNameNoExt = Path.GetFileNameWithoutExtension(defaultRelativePath);
+        var ext = Path.GetExtension(defaultRelativePath);
+        var localizedRelativePath = Path.Combine(dir, $"{fileNameNoExt}.{_gameCulture.Name}{ext}");
+        return File.Exists(Global.Absolute(localizedRelativePath)) ? localizedRelativePath : defaultRelativePath;
     }
 
     private HashSet<string> ReadJson(string jsonFilePath)
@@ -405,6 +455,77 @@ public partial class AutoPickTrigger : ITaskTrigger
 
     private bool DoNotPick(string text)
     {
+        // zh-Hans（及未知游戏语言）：保留原始的中文子串判断，逻辑与改动前完全一致。
+        if (_gameCulture.Name == "zh-Hans")
+        {
+            return DoNotPickZhHans(text);
+        }
+
+        // 以下两项未能在 TextMap 中找到确凿的多语言复合词依据（长时间：太宽泛，
+        // 命中304+条无关文本；眶螂：TextMap 中查无此词，可能是已失效/拼写有误的
+        // 内部引用），继续沿用原始中文判断——对非中文客户端只是不再拦截这两种
+        // （本就未知的）情况，不会产生新的误拾取。
+        if (text.Contains("长时间"))
+        {
+            return true;
+        }
+
+        if (text.Contains("眶螂"))
+        {
+            return true;
+        }
+
+        // 纳塔部落声望特殊处理，不拾取（原判断："我在" + 声望/回声/悬木人/流泉）。
+        // TextMap 证据：所有阵营声望询问句在 EN/FR/IT 中都遵循同一模式
+        // "About my reputation with ..." / "... réputation auprès ..." /
+        // "... reputazione presso ..."，而城市声望（"我在蒙德城的声望…"）用的是
+        // "reputation in/at"，不含 "with"，因此该片段不会误伤城市声望文案。
+        if (text.Contains(_reputationWithLocalized))
+        {
+            return true;
+        }
+
+        // 挪德卡莱聚所，不拾取
+        if (text.Contains(_meetingPointLocalized))
+        {
+            return true;
+        }
+
+        // 霜月之坊
+        if (text.Contains(_frostmoonEnclaveLocalized))
+        {
+            return true;
+        }
+
+        // 叮铃哐啷（军团/大作战等）/ 叮铃哐啷蛋卷工坊
+        if (text.Contains(_clinkClankLocalized) || text.Contains(_krumkakeCraftshopLocalized))
+        {
+            return true;
+        }
+
+        // 西风戍垒（原中文判断写作"西风成垒"，经 TextMap 核实为上游拼写错误，
+        // 正确地名是"西风戍垒"——此处按正确地名翻译，中文分支不受影响）
+        // / 望崖营壁 / 魔女的花园
+        if (text.Contains(_favoniusKeepLocalized) || text.Contains(_cliffwatchCampLocalized) ||
+            text.Contains(_witchsGardenLocalized))
+        {
+            return true;
+        }
+
+        if (text.Contains(_lunarArcanumLocalized))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// DoNotPick() 原始实现（zh-Hans客户端 / 游戏语言未知时使用），逐字保留，
+    /// 确保本次本地化改动对中文客户端的行为零变化。
+    /// </summary>
+    private static bool DoNotPickZhHans(string text)
+    {
         // 唯一一个动态拾取项，特殊处理，不拾取
         if (text.Contains("长时间"))
         {
@@ -438,7 +559,7 @@ public partial class AutoPickTrigger : ITaskTrigger
         {
             return true;
         }
-        
+
         if (text.Contains("月谕圣牌"))
         {
             return true;
