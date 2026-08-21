@@ -676,20 +676,25 @@ public partial class AutoPickTrigger : ITaskTrigger
         int start = 0;
         int end = span.Length - 1;
 
-        // 1. 从左边开始，删除非「字符和中文的字符
+        // 1. 从左边开始，删除非「字符、非中文、非(任意语言)字母的字符
+        // 注：原判断只保留中文范围(0x4E00-0x9FFF)，导致非中文游戏客户端(EN/FR/IT等)
+        // 的OCR结果——本就不含「」也不含中文字符——被整体清空为空字符串，
+        // 拾取判断随即静默跳过（无日志、不拾取）。加入 char.IsLetter 使拉丁/
+        // 西里尔等其他文字的字母同样视为有效内容起止边界；中文字符本身也满足
+        // IsLetter，故中文客户端行为不变。
         while (start <= end)
         {
             char c = span[start];
-            if (c == '「' || (c >= 0x4E00 && c <= 0x9FFF)) // 「字符或中文字符
+            if (c == '「' || (c >= 0x4E00 && c <= 0x9FFF) || char.IsLetter(c)) // 「字符、中文字符或任意语言字母
                 break;
             start++;
         }
 
-        // 2. 从右边开始，删除非」字符和中文的字符
+        // 2. 从右边开始，删除非」字符、非中文、非字母的字符
         while (end >= start)
         {
             char c = span[end];
-            if (c == '」' || c == '！' || (c >= 0x4E00 && c <= 0x9FFF)) // 」字符或中文字符
+            if (c == '」' || c == '！' || (c >= 0x4E00 && c <= 0x9FFF) || char.IsLetter(c)) // 」字符、中文字符或任意语言字母
                 break;
             end--;
         }
