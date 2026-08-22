@@ -312,7 +312,7 @@
                               Margin="0,0,0,4"
                               VerticalAlignment="Center"
                               Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
-                              Text="{Binding UpdateProgressText}" />
+                              Text="{Binding UpdateProgressText, Converter={StaticResource LocalizedDisplayConverter}}" />
                 <ProgressBar Grid.Row="1"
                              IsIndeterminate="{Binding IsProgressIndeterminate}"
                              Maximum="100"
