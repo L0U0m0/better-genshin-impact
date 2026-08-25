@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using BetterGenshinImpact.Core.Config;
 using BetterGenshinImpact.Core.Recognition.OpenCv.Model;
+using BetterGenshinImpact.GameTask.Common;
 using BetterGenshinImpact.GameTask.Common.BgiVision;
 using BetterGenshinImpact.Helpers;
+using Microsoft.Extensions.Logging;
 using OpenCvSharp;
 
 namespace BetterGenshinImpact.Core.Recognition.OpenCv.FeatureMatch;
@@ -19,6 +22,37 @@ public static class Feature2DExtensions
     private static DescriptorMatcher GetMatcher(DescriptorMatcherType type)
     {
         return MatcherFactory[type];
+    }
+
+    private static int _emptyQueryDumpCount;
+
+    /// <summary>
+    /// 诊断：查询图完全没有特征点时记录其统计信息，并把前几张图落盘，方便排查“地图遮罩不工作”类问题。
+    /// </summary>
+    private static void DumpEmptyQueryDiagnostics(Mat queryMat)
+    {
+        try
+        {
+            Cv2.MeanStdDev(queryMat, out var mean, out var std);
+            var logger = TaskControl.Logger;
+            var n = System.Threading.Interlocked.Increment(ref _emptyQueryDumpCount);
+            string dumpInfo = "";
+            if (n <= 3)
+            {
+                var dir = Global.Absolute(@"log\dump");
+                System.IO.Directory.CreateDirectory(dir);
+                var path = System.IO.Path.Combine(dir, $"empty_query_{DateTime.Now:HHmmss_fff}.png");
+                Cv2.ImWrite(path, queryMat);
+                dumpInfo = path;
+            }
+
+            logger.LogWarning("特征匹配：查询图无特征点 size={Size} type={Type} mean={Mean:F1} std={Std:F1} {Dump}",
+                $"{queryMat.Width}x{queryMat.Height}", queryMat.Type().ToString(), mean.Val0, std.Val0, dumpInfo);
+        }
+        catch
+        {
+            // 诊断本身绝不能抛异常
+        }
     }
 
     #region 生成并保存特征
@@ -146,6 +180,13 @@ public static class Feature2DExtensions
         feature2D.DetectAndCompute(queryMat, queryMatMask, out var queryKeyPoints, queryDescriptors);
 #pragma warning restore CS8604 // 引用类型参数可能为 null。
         speedTimer.Record("模板生成KeyPoint");
+        if (queryKeyPoints.Length == 0 || queryDescriptors.Empty())
+        {
+            // 查询图无特征点：直接判定失败，避免 knnMatch 抛出 OpenCVException(type=0)
+            DumpEmptyQueryDiagnostics(queryMat);
+            return default;
+        }
+
         var matches = GetMatcher(matcherType).KnnMatch(queryDescriptors, trainDescriptors, k: 2);
         speedTimer.Record("FlannMatch");
 
@@ -249,6 +290,13 @@ public static class Feature2DExtensions
         feature2D.DetectAndCompute(queryMat, queryMatMask, out var queryKeyPoints, queryDescriptors);
 #pragma warning restore CS8604 // 引用类型参数可能为 null。
         speedTimer.Record("模板生成KeyPoint");
+        if (queryKeyPoints.Length == 0 || queryDescriptors.Empty())
+        {
+            // 查询图无特征点：直接判定失败，避免 knnMatch 抛出 OpenCVException(type=0)
+            DumpEmptyQueryDiagnostics(queryMat);
+            return [];
+        }
+
         var matches = GetMatcher(matcherType).KnnMatch(queryDescriptors, trainDescriptors, k: 2);
         speedTimer.Record("FlannMatch");
 
