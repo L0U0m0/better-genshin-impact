@@ -341,6 +341,7 @@ public class MapMaskTrigger : ITaskTrigger
 
         const int s = TeyvatMap.BigMap256ScaleTo2048;
         var rect2048 = new Rect(rect256.X * s, rect256.Y * s, rect256.Width * s, rect256.Height * s);
+        _logger.LogDebug("大地图定位结果 rect256={Rect256} rect2048={Rect2048}", rect256.ToString(), rect2048.ToString());
         QueueUiUpdate(new PendingUiUpdate { BigMapViewport = rect2048 });
     }
 

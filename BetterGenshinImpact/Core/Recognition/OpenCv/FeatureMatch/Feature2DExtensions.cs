@@ -312,6 +312,8 @@ public static class Feature2DExtensions
 
         if (goodMatches.Count < 7)
         {
+            TaskControl.Logger.LogDebug("特征匹配失败：good={Good}/{Total} keypoints={Kp} query={Size}",
+                goodMatches.Count, matches.Length, queryKeyPoints.Length, $"{queryMat.Width}x{queryMat.Height}");
             return [];
         }
 
