@@ -19,6 +19,7 @@ using BetterGenshinImpact.GameTask.GetGridIcons;
 using BetterGenshinImpact.GameTask.Model.GameUI;
 using BetterGenshinImpact.GameTask.UseRedeemCode;
 using BetterGenshinImpact.Helpers;
+using BetterGenshinImpact.Helpers.Ui;
 using BetterGenshinImpact.Service.Interface;
 using BetterGenshinImpact.View.Pages;
 using BetterGenshinImpact.View.Windows;
@@ -144,6 +145,8 @@ public partial class TaskSettingsPageViewModel : ViewModel
     public static List<string> AvatarIndexList = ["", "1", "2", "3", "4"];
     public static List<string> LeyLineOutcropTypeList = ["启示之花", "藏金之花"];
     public static List<string> LeyLineOutcropCountryList = ["蒙德", "璃月", "稻妻", "须弥", "枫丹", "纳塔", "挪德卡莱", "至冬"];
+    public static List<string> LeyLineOutcropTypeListWithEmpty = ["", .. LeyLineOutcropTypeList];
+    public static List<string> LeyLineOutcropCountryListWithEmpty = ["", .. LeyLineOutcropCountryList];
 
     [ObservableProperty]
     private List<string> _autoMusicLevelList = ["传说", "大师", "困难", "普通", "所有"];
@@ -284,6 +287,7 @@ public partial class TaskSettingsPageViewModel : ViewModel
             Owner = Application.Current.MainWindow,
             WindowStartupLocation = WindowStartupLocation.CenterOwner,
         };
+        WindowHelper.CenterOnVisibleOwner(messageBox);
 
         var result = await messageBox.ShowDialogAsync();
         var accepted = result == Wpf.Ui.Controls.MessageBoxResult.Primary;
