@@ -938,7 +938,16 @@ namespace BetterGenshinImpact.ViewModel
                 return labelName;
             }
 
-            return $"点位 {point.Id}";
+            return string.Format(Tr("点位 {0}"), point.Id);
+        }
+
+        /// <summary>
+        /// The popup title is data-bound, so AutoTranslateInterceptor skips it: the fallback literal
+        /// built here is translated at the call site.
+        /// </summary>
+        private static string Tr(string text)
+        {
+            return App.GetService<ITranslationService>()?.Translate(text, TranslationSourceInfo.From(MissingTextSource.UiDynamicBinding)) ?? text;
         }
 
         [RelayCommand]

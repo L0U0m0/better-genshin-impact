@@ -85,14 +85,14 @@ public partial class MaskMapPointInfoPopupViewModel : ObservableObject
             var service = App.GetService<IMaskMapPointService>();
             if (service == null)
             {
-                TextError = "地图服务未就绪";
+                TextError = Tr("地图服务未就绪");
                 return;
             }
 
             var info = await service.GetPointInfoAsync(point, ct);
             ct.ThrowIfCancellationRequested();
 
-            Text = string.IsNullOrEmpty(info.Text) ? "暂无描述" : info.Text;
+            Text = string.IsNullOrEmpty(info.Text) ? Tr("暂无描述") : info.Text;
             IsTextLoading = false;
             if (info.UrlList is { Count: > 0 })
             {
@@ -117,14 +117,14 @@ public partial class MaskMapPointInfoPopupViewModel : ObservableObject
                     {
                         if (GifSourceUri == null && GifSourceStream == null)
                         {
-                            ImageError = "图片加载失败";
+                            ImageError = Tr("图片加载失败");
                         }
                     }
                     else
                     {
                         if (Image == null)
                         {
-                            ImageError = "图片加载失败";
+                            ImageError = Tr("图片加载失败");
                         }
                     }
                 }
@@ -135,7 +135,7 @@ public partial class MaskMapPointInfoPopupViewModel : ObservableObject
                 catch (Exception ex)
                 {
                     _logger.LogDebug(ex, "加载点位图片失败");
-                    ImageError = "图片加载失败";
+                    ImageError = Tr("图片加载失败");
                 }
                 finally
                 {
@@ -149,7 +149,7 @@ public partial class MaskMapPointInfoPopupViewModel : ObservableObject
         catch (Exception ex)
         {
             _logger.LogDebug(ex, "查询地图点位详情失败");
-            TextError = "查询失败";
+            TextError = Tr("查询失败");
         }
         finally
         {
@@ -162,6 +162,15 @@ public partial class MaskMapPointInfoPopupViewModel : ObservableObject
     public void SetHiddenState(bool isHidden)
     {
         IsCurrentPointHidden = isHidden;
+    }
+
+    /// <summary>
+    /// Text/TextError/ImageError are filled from code, so AutoTranslateInterceptor never sees these
+    /// literals (it skips data-bound properties). They are translated at the call site instead.
+    /// </summary>
+    private static string Tr(string text)
+    {
+        return App.GetService<ITranslationService>()?.Translate(text, TranslationSourceInfo.From(MissingTextSource.UiDynamicBinding)) ?? text;
     }
 
     private void DisposeImageStream()

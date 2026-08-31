@@ -12,6 +12,8 @@
         xmlns:controls="clr-namespace:BetterGenshinImpact.View.Controls"
         xmlns:gif="https://github.com/XamlAnimatedGif/XamlAnimatedGif"
         xmlns:sys="clr-namespace:System;assembly=System.Runtime"
+        xmlns:behavior="clr-namespace:BetterGenshinImpact.View.Behavior"
+        behavior:AutoTranslateInterceptor.EnableAutoTranslate="True"
         Title="MaskWindow"
         Width="500"
         Height="800"
@@ -699,7 +701,7 @@
                         <ui:ProgressRing Width="18" Height="18" IsIndeterminate="True" Margin="0,0,10,0" />
                         <TextBlock Foreground="White"
                                    FontSize="13"
-                                   Text="{Binding MapPointsLoadingText}" />
+                                   Text="{Binding MapPointsLoadingText, Converter={StaticResource LocalizedDisplayConverter}}" />
                     </StackPanel>
                 </Border>
             </Grid>
@@ -789,7 +791,7 @@
                                        Foreground="#B3FFFFFF"
                                        TextWrapping="Wrap"
                                        Visibility="{Binding TextError, Converter={StaticResource BooleanToVisibilityRevertConverter}}"
-                                       Text="{Binding TextError}" />
+                                       Text="{Binding TextError, Converter={StaticResource LocalizedDisplayConverter}}" />
 
                             <ItemsControl Margin="0,8,0,0"
                                           ItemsSource="{Binding UrlList}"
@@ -881,7 +883,7 @@
                                                Foreground="#B3FFFFFF"
                                                TextWrapping="Wrap"
                                                Visibility="{Binding ImageError, Converter={StaticResource BooleanToVisibilityRevertConverter}}"
-                                               Text="{Binding ImageError}" />
+                                               Text="{Binding ImageError, Converter={StaticResource LocalizedDisplayConverter}}" />
                                 </Grid>
                             </Border>
 
