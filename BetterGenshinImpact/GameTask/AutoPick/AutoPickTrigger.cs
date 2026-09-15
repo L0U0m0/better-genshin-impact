@@ -128,15 +128,19 @@ public partial class AutoPickTrigger : ITaskTrigger
 
         IStringLocalizer<AutoPickTrigger> stringLocalizer =
             App.GetService<IStringLocalizer<AutoPickTrigger>>() ?? throw new NullReferenceException();
-        _reputationWithLocalized = stringLocalizer.WithCultureGet(_gameCulture, "」的声望");
-        _meetingPointLocalized = stringLocalizer.WithCultureGet(_gameCulture, "聚所");
-        _frostmoonEnclaveLocalized = stringLocalizer.WithCultureGet(_gameCulture, "霜月之坊");
-        _clinkClankLocalized = stringLocalizer.WithCultureGet(_gameCulture, "叮铃哐啷");
-        _krumkakeCraftshopLocalized = stringLocalizer.WithCultureGet(_gameCulture, "蛋卷工坊");
-        _favoniusKeepLocalized = stringLocalizer.WithCultureGet(_gameCulture, "西风戍垒");
-        _cliffwatchCampLocalized = stringLocalizer.WithCultureGet(_gameCulture, "望崖营壁");
-        _witchsGardenLocalized = stringLocalizer.WithCultureGet(_gameCulture, "魔女的花园");
-        _lunarArcanumLocalized = stringLocalizer.WithCultureGet(_gameCulture, "月谕圣牌");
+        // ProcessOcrText() rimuove ogni spazio dal testo OCR ("GiardinodellaStrega"):
+        // i frammenti localizzati devono essere confrontati senza spazi, altrimenti
+        // nelle lingue con spazi (en/fr/it) DoNotPick() non scatta mai.
+        static string NoSpaces(string s) => string.Concat(s.Where(c => !char.IsWhiteSpace(c)));
+        _reputationWithLocalized = NoSpaces(stringLocalizer.WithCultureGet(_gameCulture, "」的声望"));
+        _meetingPointLocalized = NoSpaces(stringLocalizer.WithCultureGet(_gameCulture, "聚所"));
+        _frostmoonEnclaveLocalized = NoSpaces(stringLocalizer.WithCultureGet(_gameCulture, "霜月之坊"));
+        _clinkClankLocalized = NoSpaces(stringLocalizer.WithCultureGet(_gameCulture, "叮铃哐啷"));
+        _krumkakeCraftshopLocalized = NoSpaces(stringLocalizer.WithCultureGet(_gameCulture, "蛋卷工坊"));
+        _favoniusKeepLocalized = NoSpaces(stringLocalizer.WithCultureGet(_gameCulture, "西风戍垒"));
+        _cliffwatchCampLocalized = NoSpaces(stringLocalizer.WithCultureGet(_gameCulture, "望崖营壁"));
+        _witchsGardenLocalized = NoSpaces(stringLocalizer.WithCultureGet(_gameCulture, "魔女的花园"));
+        _lunarArcanumLocalized = NoSpaces(stringLocalizer.WithCultureGet(_gameCulture, "月谕圣牌"));
     }
 
     /// <summary>
@@ -387,15 +391,22 @@ public partial class AutoPickTrigger : ITaskTrigger
 
         speedTimer.Record($"识别到拾取键");
 
+        var scale = _runtime.SystemInfo.AssetScale;
+        var config = _config.AutoPickConfig;
+
         if (_externalConfig is { ForceInteraction: true })
         {
+            if (_externalConfig.SkipDialog && HasChatIcon(content, foundRectArea, config, scale))
+            {
+                // 对话气泡：脚本要求强制拾取但跳过 NPC 对话
+                return;
+            }
+
             LogPick(content, "直接拾取");
             InputHub.Foreground.Keyboard.KeyPress(_autoPickAssets.PickVk);
             return;
         }
 
-        var scale = _runtime.SystemInfo.AssetScale;
-        var config = _config.AutoPickConfig;
         EnsureLists(config);
 
         // 存在 L 键位是千星奇遇，无需拾取
@@ -591,6 +602,20 @@ public partial class AutoPickTrigger : ITaskTrigger
         }
 
         speedTimer.DebugPrint();
+    }
+
+    /// <summary>
+    /// F 键右侧的图标位是否为对话气泡（NPC 对话）。与主流程中的判断使用同一模板与区域。
+    /// </summary>
+    private static bool HasChatIcon(CaptureContent content, Region foundRectArea, AutoPickConfig config, double scale)
+    {
+        var iconRoi = new Rect(
+            foundRectArea.X + (int)(config.ItemIconLeftOffset * scale), foundRectArea.Y,
+            (int)((config.ItemTextLeftOffset - config.ItemIconLeftOffset) * scale), foundRectArea.Height);
+        var chatIconRo = RecognitionAssets.Get("AutoSkip", "ChatIcon", content.CaptureRectArea).Clone();
+        chatIconRo.RegionOfInterest = iconRoi;
+        using var chatIconRa = content.CaptureRectArea.Find(chatIconRo);
+        return !chatIconRa.IsEmpty();
     }
 
     private bool DoNotPick(string text)
