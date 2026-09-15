@@ -264,9 +264,15 @@ public partial class AutoPickTrigger : ITaskTrigger
 
         if (_externalConfig is { ForceInteraction: true })
         {
-            if (_externalConfig.SkipDialog && HasChatIcon(content, foundRectArea, config, scale))
+            if (_externalConfig.SkipDialog && HasIconNextToPickKey(content, foundRectArea, config, scale, "AutoSkip", "ChatIcon"))
             {
                 // 对话气泡：脚本要求强制拾取但跳过 NPC 对话
+                return;
+            }
+
+            if (_externalConfig.SkipMechanism && HasIconNextToPickKey(content, foundRectArea, config, scale, "AutoPick", "SettingsIcon"))
+            {
+                // 设置/机关图标：解谜、宝藏屏障、电梯、活动等，强制拾取时跳过
                 return;
             }
 
@@ -464,17 +470,18 @@ public partial class AutoPickTrigger : ITaskTrigger
     }
 
     /// <summary>
-    /// F 键右侧的图标位是否为对话气泡（NPC 对话）。与主流程中的判断使用同一模板与区域。
+    /// F 键右侧的图标位是否为指定图标（对话气泡 / 设置机关图标）。与主流程中的判断使用同一模板与区域。
     /// </summary>
-    private static bool HasChatIcon(CaptureContent content, Region foundRectArea, AutoPickConfig config, double scale)
+    private static bool HasIconNextToPickKey(CaptureContent content, Region foundRectArea, AutoPickConfig config, double scale,
+        string assetGroup, string assetName)
     {
         var iconRoi = new Rect(
             foundRectArea.X + (int)(config.ItemIconLeftOffset * scale), foundRectArea.Y,
             (int)((config.ItemTextLeftOffset - config.ItemIconLeftOffset) * scale), foundRectArea.Height);
-        var chatIconRo = RecognitionAssets.Get("AutoSkip", "ChatIcon", content.CaptureRectArea).Clone();
-        chatIconRo.RegionOfInterest = iconRoi;
-        using var chatIconRa = content.CaptureRectArea.Find(chatIconRo);
-        return !chatIconRa.IsEmpty();
+        var iconRo = RecognitionAssets.Get(assetGroup, assetName, content.CaptureRectArea).Clone();
+        iconRo.RegionOfInterest = iconRoi;
+        using var iconRa = content.CaptureRectArea.Find(iconRo);
+        return !iconRa.IsEmpty();
     }
 
     private bool DoNotPick(string text)
