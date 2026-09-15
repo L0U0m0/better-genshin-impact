@@ -4,6 +4,7 @@ using BetterGenshinImpact.GameTask.AutoPathing.Model;
 using System.Threading.Tasks;
 using BetterGenshinImpact.Core.Config;
 using BetterGenshinImpact.GameTask.Common;
+using BetterGenshinImpact.GameTask.Common.Exceptions;
 using Microsoft.Extensions.Logging;
 
 namespace BetterGenshinImpact.Core.Script.Dependence;
@@ -14,6 +15,25 @@ public class AutoPathingScript
     private string _rootPath;
     private readonly LimitedFile _autoPathingFile;
 
+    /// <summary>
+    /// Ultimo errore di Run/RunFile. Le due funzioni inghiottono le eccezioni del pathing
+    /// (per non far cadere lo script JS che le chiama), quindi un teletrasporto fallito
+    /// perche' il waypoint non e' attivato finiva solo nel log e lo script proseguiva come
+    /// se il percorso fosse riuscito. Esposti al JS come pathingScript.lastErrorKind /
+    /// pathingScript.lastErrorMessage (binding case-insensitive). Kind: "" nessun errore,
+    /// "TpPointNotActivate" (waypoint non attivato / pannello di teletrasporto non apparso),
+    /// "Other" per tutto il resto. Azzerati a ogni Run.
+    /// </summary>
+    public string LastErrorKind { get; private set; } = "";
+
+    public string LastErrorMessage { get; private set; } = "";
+
+    private void RecordError(Exception e)
+    {
+        LastErrorKind = e is TpPointNotActivate ? "TpPointNotActivate" : "Other";
+        LastErrorMessage = e.Message;
+    }
+
     public AutoPathingScript(string rootPath, object? config)
     {
         _config = config;
@@ -23,6 +43,8 @@ public class AutoPathingScript
 
     public async Task Run(string json)
     {
+        LastErrorKind = "";
+        LastErrorMessage = "";
         try
         {
             var task = PathingTask.BuildFromJson(json);
@@ -36,6 +58,7 @@ public class AutoPathingScript
         }
         catch (Exception e)
         {
+            RecordError(e);
             TaskControl.Logger.LogDebug(e,"执行地图追踪时候发生错误");
             TaskControl.Logger.LogError("执行地图追踪时候发生错误: {Msg}",e.Message);
         }
@@ -50,6 +73,7 @@ public class AutoPathingScript
         }
         catch (Exception e)
         {
+            RecordError(e);
             TaskControl.Logger.LogDebug(e,"读取文件时发生错误");
             TaskControl.Logger.LogError("读取文件时发生错误: {Msg}",e.Message);
         }
