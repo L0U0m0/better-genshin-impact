@@ -3249,5 +3249,14 @@
   "默认配置": "Configurazione predefinita",
   "鼠标移动的时间间隔（毫秒）": "Intervallo movimento mouse (ms)",
   "（实验功能）配置组 - ": "(Sperimentale) Gruppo di configurazione - ",
-  "🔹 本软件开源且免费，喜欢的可以点🌟Star -> ": "🔹 Questo software è open source e gratuito. Se ti piace, lascia una 🌟Star -> "
+  "🔹 本软件开源且免费，喜欢的可以点🌟Star -> ": "🔹 Questo software è open source e gratuito. Se ti piace, lascia una 🌟Star -> ",
+  "邀约分支[{Text}]关键词命中，选择[{Option}]": "Ramo dell'invito [{Text}]: parola chiave trovata, scelgo [{Option}]",
+  "交互键点击(后台)": "Tasto di interazione premuto (in background)",
+  "点击感叹号选项": "Clic sull'opzione con il punto esclamativo",
+  "点击{msg}气泡选项": "Clic sull'opzione a fumetto {msg}",
+  "无气泡图标，但存在交互键，直接按下交互键": "Nessuna icona a fumetto ma tasto di interazione presente: lo premo direttamente",
+  "关闭弹出页": "Chiudo la finestra a comparsa",
+  "1. 选择物品": "1. Seleziono l'oggetto",
+  "2. 放入": "2. Inserisco",
+  "2. 仍旧存在物品": "2. L'oggetto e' ancora presente"
 }
