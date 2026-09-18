@@ -34,6 +34,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
+using Serilog.Extensions.Logging;
 using Serilog.Sinks.RichTextBox.Abstraction;
 using Wpf.Ui;
 using Wpf.Ui.DependencyInjection;
@@ -48,6 +49,12 @@ namespace BetterGenshinImpact;
 
 public partial class App : Application
 {
+    // Logging fan-out: le due pipeline Serilog costruite in ConfigureServices.
+    //   _fileLogger -> log su disco, sempre in cinese (triage dei bug upstream);
+    //   _uiLogger   -> console + riquadro log dell overlay, tradotto per le culture non zh-Hans.
+    private static Serilog.Core.Logger? _fileLogger;
+    private static Serilog.Core.Logger? _uiLogger;
+
     // The.NET Generic Host provides dependency injection, configuration, logging, and other services.
     // https://docs.microsoft.com/dotnet/core/extensions/generic-host
     // https://docs.microsoft.com/dotnet/core/extensions/dependency-injection
@@ -75,35 +82,6 @@ public partial class App : Application
                 var richTextBox = new RichTextBoxImpl();
                 services.AddSingleton<IRichTextBox>(richTextBox);
 
-                var loggerConfiguration = new LoggerConfiguration()
-                    .WriteTo.Logger(fileLoggerConfiguration => fileLoggerConfiguration
-                        .Enrich.WithProperty("BgiInstance", instanceIdentity)
-                        .WriteTo.File(logFile,
-                            outputTemplate:
-                            "[{Timestamp:HH:mm:ss.fff}] [{Level:u3}] [{BgiInstance}] {SourceContext}{NewLine}{Message}{NewLine}{Exception}{NewLine}",
-                            rollingInterval: RollingInterval.Day,
-                            shared: true,
-                            retainedFileCountLimit: 31,
-                            retainedFileTimeLimit: TimeSpan.FromDays(21)))
-                    .WriteTo.Console(outputTemplate:
-                        "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}")
-                    .MinimumLevel.Debug()
-                    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
-                    .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Warning);
-                // 日志遮罩输出：仅当“遮罩启用且日志框可见”时才真正写入，隐藏时避免不必要的 UI 开销（#3161）。
-                // 条件改为运行时每次写入时动态判断，因此启动后通过快捷键切换 ShowLogBox 也能即时恢复日志（#3357）。
-                loggerConfiguration.WriteTo.Sink(
-                    new ConditionalLogEventSink(
-                        new LoggerConfiguration()
-                            .WriteTo.RichTextBox(richTextBox, LogEventLevel.Information,
-                                "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}")
-                            .CreateLogger(),
-                        () => all.MaskWindowConfig is { MaskEnabled: true, ShowLogBox: true }),
-                    LogEventLevel.Information);
-
-                Log.Logger = loggerConfiguration.CreateLogger();
-                services.AddLogging(c => c.AddSerilog());
-
                 services.AddLocalization();
                 var i18nService = I18nService.Instance;
                 var uiLanguage = all.OtherConfig.UiCultureInfoName switch
@@ -121,6 +99,67 @@ public partial class App : Application
 
                 i18nService.ChangeLanguage(uiLanguage);
                 services.AddSingleton(i18nService);
+
+                // Logging fan-out: due pipeline Serilog indipendenti.
+                //   file -> sempre grezza (cinese), e' quella su cui si fa triage dei bug;
+                //   UI   -> console + riquadro log dell'overlay, passata per
+                //           TranslatingSerilogLoggerProvider quando la lingua UI non e' zh-Hans.
+                // Upstream ne tiene una sola: senza questa separazione i log dell'overlay
+                // restano in cinese anche con la UI tradotta (regressione vista su 0.65).
+                var fileLoggerConfiguration = new LoggerConfiguration()
+                    .Enrich.WithProperty("BgiInstance", instanceIdentity)
+                    .WriteTo.File(logFile,
+                        outputTemplate:
+                        "[{Timestamp:HH:mm:ss.fff}] [{Level:u3}] [{BgiInstance}] {SourceContext}{NewLine}{Message}{NewLine}{Exception}{NewLine}",
+                        rollingInterval: RollingInterval.Day,
+                        shared: true,
+                        retainedFileCountLimit: 31,
+                        retainedFileTimeLimit: TimeSpan.FromDays(21))
+                    .MinimumLevel.Debug()
+                    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                    .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Warning);
+
+                var uiLoggerConfiguration = new LoggerConfiguration()
+                    .WriteTo.Console(outputTemplate:
+                        "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}")
+                    .MinimumLevel.Debug()
+                    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                    .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Warning);
+                // 日志遮罩输出：仅当“遮罩启用且日志框可见”时才真正写入，隐藏时避免不必要的 UI 开销（#3161）。
+                // 条件改为运行时每次写入时动态判断，因此启动后通过快捷键切换 ShowLogBox 也能即时恢复日志（#3357）。
+                uiLoggerConfiguration.WriteTo.Sink(
+                    new ConditionalLogEventSink(
+                        new LoggerConfiguration()
+                            .WriteTo.RichTextBox(richTextBox, LogEventLevel.Information,
+                                "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}")
+                            .CreateLogger(),
+                        () => all.MaskWindowConfig is { MaskEnabled: true, ShowLogBox: true }),
+                    LogEventLevel.Information);
+
+                _fileLogger = fileLoggerConfiguration.CreateLogger();
+                _uiLogger = uiLoggerConfiguration.CreateLogger();
+                // Il default ambientale resta la pipeline grezza, per chiunque raggiunga
+                // Serilog.Log.Logger fuori dal nostro cablaggio di ILoggerProvider.
+                Log.Logger = _fileLogger;
+
+                services.AddLogging(logging =>
+                {
+                    logging.ClearProviders();
+                    logging.SetMinimumLevel(LogLevel.Debug);
+                    logging.AddFilter("Microsoft", LogLevel.Warning);
+                    logging.AddFilter("Microsoft.Hosting.Lifetime", LogLevel.Warning);
+
+                    logging.AddProvider(new SerilogLoggerProvider(_fileLogger, dispose: false));
+
+                    if ("zh-Hans".Equals(uiLanguage, StringComparison.OrdinalIgnoreCase))
+                    {
+                        logging.AddProvider(new SerilogLoggerProvider(_uiLogger, dispose: false));
+                    }
+                    else
+                    {
+                        logging.AddProvider(new TranslatingSerilogLoggerProvider(_uiLogger));
+                    }
+                });
 
                 services.AddNavigationViewPageProvider();
                 services.AddSingleton(InstanceBootstrap.Current);
@@ -319,6 +358,9 @@ public partial class App : Application
 
         await _host.StopAsync();
         _host.Dispose();
+        // Due pipeline Serilog indipendenti (vedi ConfigureServices): Log.CloseAndFlush()
+        // da solo copre solo quella puntata da Log.Logger.
+        _uiLogger?.Dispose();
         Log.CloseAndFlush();
 
         // 释放控制台窗口
