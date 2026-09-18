@@ -69,6 +69,7 @@ public class GoToSereniteaPotTask : ISoloTask<SereniteaPotParam, NoData>
     private readonly string ayuanHuoling2String;
     private readonly string ayuanBelieveString;
     private readonly string ayuanShopString;
+    private readonly string ayuanNoCompanionExpString;
 
     /// <summary>
     /// 识别到的洞天名称，用于寻找阿圆前调整站位；未识别时为空字符串
@@ -93,6 +94,7 @@ public class GoToSereniteaPotTask : ISoloTask<SereniteaPotParam, NoData>
         this.ayuanHuoling2String = stringLocalizer.WithCultureGet(cultureInfo, "<壶灵>");
         this.ayuanBelieveString = stringLocalizer.WithCultureGet(cultureInfo, "信任");
         this.ayuanShopString = stringLocalizer.WithCultureGet(cultureInfo, "洞天百宝");
+        this.ayuanNoCompanionExpString = stringLocalizer.WithCultureGet(cultureInfo, "无法领取好感经验");
     }
 
     private async Task<bool> IntoSereniteaPot(CancellationToken ct)
@@ -484,7 +486,7 @@ public class GoToSereniteaPotTask : ISoloTask<SereniteaPotParam, NoData>
                 RecognitionType = RecognitionTypes.Ocr,
                 RegionOfInterest = new Rect((int)(ra.Width * 0.35), (int)(ra.Height * 0.45), (int)(ra.Width * 0.3), (int)(ra.Height * 0.05))
             });
-            var tem = list.FirstOrDefault(a => a.Text.Contains("无法领取好感经验"));
+            var tem = list.FirstOrDefault(a => a.Text.Contains(this.ayuanNoCompanionExpString));
             if (tem != null)
             {
                 tem.Click();
