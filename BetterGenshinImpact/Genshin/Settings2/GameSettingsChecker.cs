@@ -8,6 +8,7 @@ using BetterGenshinImpact.Service.Interface;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 
+using BetterGenshinImpact.Service.I18n;
 namespace BetterGenshinImpact.Genshin.Settings2;
 
 public class GameSettingsChecker
@@ -87,13 +88,14 @@ public class GameSettingsChecker
     }
 
     /// <summary>
-    /// The Serilog pipeline doesn't route ILogger calls through ITranslationService (see App.xaml.cs),
-    /// so log messages that must be readable in the non-Chinese UI are translated explicitly at the call
-    /// site, on the raw template (placeholders preserved), before being handed to the logger.
+    /// I log non passano per il markup {i18n:T} delle view, quindi i messaggi che devono restare
+    /// leggibili fuori dal cinese vengono tradotti esplicitamente al call site, sul template grezzo
+    /// (segnaposto preservati), prima di essere passati al logger. Da 0.65 la traduzione arriva da
+    /// I18nService (I18n v2), non piu' dalla pipeline a iniezione rimossa a monte con #3566.
     /// </summary>
     private static string Tr(string template)
     {
-        return App.GetService<ITranslationService>()?.Translate(template, TranslationSourceInfo.From(MissingTextSource.Log)) ?? template;
+        return I18nService.Instance.Translate(template);
     }
 
     /// <summary>
