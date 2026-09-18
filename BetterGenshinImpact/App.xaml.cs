@@ -143,22 +143,29 @@ public partial class App : Application
                             shared: true,
                             retainedFileCountLimit: 31,
                             retainedFileTimeLimit: TimeSpan.FromDays(21)))
-                    .WriteTo.Console(outputTemplate:
-                        "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}")
                     .MinimumLevel.Debug()
                     .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                     .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Warning);
                 loggerConfiguration.WriteTo.Sink(
                     new ExternalLogSink(externalLogHub, instanceIdentity),
                     LogEventLevel.Debug);
+                // Console e riquadro log dell'overlay passano per il dizionario I18n (it.json): il file
+                // e l'ExternalLogSink restano grezzi (cinese) per il triage dei bug upstream.
+                loggerConfiguration.WriteTo.Sink(
+                    new TranslatingLogEventSink(new LoggerConfiguration()
+                        .WriteTo.Console(outputTemplate:
+                            "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}")
+                        .MinimumLevel.Debug()
+                        .CreateLogger()),
+                    LogEventLevel.Debug);
                 // 日志遮罩输出：仅当“遮罩启用且日志框可见”时才真正写入，隐藏时避免不必要的 UI 开销（#3161）。
                 // 条件改为运行时每次写入时动态判断，因此启动后通过快捷键切换 ShowLogBox 也能即时恢复日志（#3357）。
                 loggerConfiguration.WriteTo.Sink(
                     new ConditionalLogEventSink(
-                        new LoggerConfiguration()
+                        new TranslatingLogEventSink(new LoggerConfiguration()
                             .Filter.ByIncludingOnly(QuestVoiceLog.IsOverlayVisible)
                             .WriteTo.Sink(new BoundedRichTextBoxSink(richTextBox), LogEventLevel.Information)
-                            .CreateLogger(),
+                            .CreateLogger()),
                         () => all.MaskWindowConfig is { MaskEnabled: true, ShowLogBox: true }),
                     LogEventLevel.Information);
 
