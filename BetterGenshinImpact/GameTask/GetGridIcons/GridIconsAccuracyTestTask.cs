@@ -144,16 +144,16 @@ public class GridIconsAccuracyTestTask : ISoloTask
                 total_count++;
                 if (predName == null)
                 {
-                    logger.LogInformation($"模型没有识别，应为：{itemName}|{itemStarNum}星，❌，正确率{total_acc / total_count:0.00}");
+                    logger.LogInformation("模型没有识别，应为：{ItemName}|{ItemStarNum}星，❌，正确率{Accuracy:0.00}", itemName, itemStarNum, total_acc / total_count);
                 }
                 else if (itemName.Contains(predName) && predStarNum == itemStarNum)
                 {
                     total_acc++;
-                    logger.LogInformation($"{predName}|{predStarNum}星，✔，正确率{total_acc / total_count:0.00}");
+                    logger.LogInformation("{PredName}|{PredStarNum}星，✔，正确率{Accuracy:0.00}", predName, predStarNum, total_acc / total_count);
                 }
                 else
                 {
-                    logger.LogInformation($"{predName}|{predStarNum}星，应为：{itemName}|{itemStarNum}星，❌，正确率{total_acc / total_count:0.00}");
+                    logger.LogInformation("{PredName}|{PredStarNum}星，应为：{ItemName}|{ItemStarNum}星，❌，正确率{Accuracy:0.00}", predName, predStarNum, itemName, itemStarNum, total_acc / total_count);
                 }
 
                 count--;

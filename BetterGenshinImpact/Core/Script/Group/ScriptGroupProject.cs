@@ -249,7 +249,7 @@ public partial class ScriptGroupProject : ObservableObject
             OtherConfig.AutoRestart autoRestart = TaskContext.Instance().Config.OtherConfig.AutoRestartConfig;
             if (!pathingTask.SuccessEnd)
             {
-                TaskControl.Logger.LogWarning($"此追踪脚本未正常走完！");
+                TaskControl.Logger.LogWarning("此追踪脚本未正常走完！");
                 if (autoRestart.Enabled && autoRestart.IsPathingFailureExceptional && !pathingTask.SuccessEnd)
                 {
                     throw new Exception($"路径追踪任务未完全走完，判定失败，触发异常！");
@@ -291,7 +291,7 @@ public partial class ScriptGroupProject : ObservableObject
                 }
                 else
                 {
-                    TaskControl.Logger.LogWarning($"实际战斗次数({pathingTask.SuccessFight})<预期战斗次数（{fightCount}），判定失败，此次不纳入成功锄地规划的统计上限！");
+                    TaskControl.Logger.LogWarning("实际战斗次数({ActualFightCount})<预期战斗次数（{ExpectedFightCount}），判定失败，此次不纳入成功锄地规划的统计上限！", pathingTask.SuccessFight, fightCount);
                 }
 
             }

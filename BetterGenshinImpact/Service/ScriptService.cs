@@ -57,7 +57,7 @@ public partial class ScriptService : IScriptService
         {
             if (IsCurrentHourEqual(project.GroupInfo.Config.PathingConfig.SkipDuring))
             {
-                _logger.LogInformation($"{project.Name}任务已到禁止执行时段，将跳过！");
+                _logger.LogInformation("{Name}任务已到禁止执行时段，将跳过！", project.Name);
                 return true;
             }
 
@@ -67,11 +67,11 @@ public partial class ScriptService : IScriptService
                 int index = tcc.GetExecutionOrder();
                 if (index == -1)
                 {
-                    _logger.LogInformation($"{project.Name}周期配置参数错误，配置将不生效，任务正常执行！");
+                    _logger.LogInformation("{Name}周期配置参数错误，配置将不生效，任务正常执行！", project.Name);
                 }
                 else if (index != tcc.Index)
                 {
-                    _logger.LogInformation($"{project.Name}任务已经不在执行周期（当前值${index}!=配置值${tcc.Index}），将跳过此任务！");
+                    _logger.LogInformation("{Name}任务已经不在执行周期（当前值${Index}!=配置值${ConfigIndex}），将跳过此任务！", project.Name, index, tcc.Index);
                     return true;
                 }
                
@@ -91,13 +91,13 @@ public partial class ScriptService : IScriptService
                 string message;
                 if (FarmingStatsRecorder.IsDailyFarmingLimitReached(task.FarmingInfo,out message))
                 {
-                    _logger.LogInformation($"{project.Name}:{message},跳过此任务！");
+                    _logger.LogInformation("{Name}:{Message},跳过此任务！", project.Name, message);
                     return true;
                 }
             }
             catch (Exception e)
             {
-                TaskControl.Logger.LogError($"锄地规划统计异常：{e.Message}");
+                TaskControl.Logger.LogError("锄地规划统计异常：{Msg}", e.Message);
             }
 
             
@@ -105,7 +105,7 @@ public partial class ScriptService : IScriptService
         string skipMessage;
         if (ExecutionRecordStorage.IsSkipTask(project,out skipMessage))
         {
-            TaskControl.Logger.LogInformation($"{project.Name}:{skipMessage},跳过此任务！");
+            TaskControl.Logger.LogInformation("{Name}:{Message},跳过此任务！", project.Name, skipMessage);
             return true;
         }
         return false; // 不跳过
@@ -242,7 +242,7 @@ public partial class ScriptService : IScriptService
                             if (preExecutionProjects.Count > 0)
                             {
    
-                                _logger.LogInformation($"存在{preExecutionProjects.Count}个需优先执行的任务！");
+                                _logger.LogInformation("存在{Count}个需优先执行的任务！", preExecutionProjects.Count);
                                 // 设置执行状态，进入优先执行任务
                                 RunnerContext.Instance.IsPreExecution = true;
                                 //重新构造需要执行的配置组

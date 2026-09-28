@@ -708,11 +708,11 @@ public class AutoFightJsonTask : ISoloTask
             {
                 try
                 {
-                    Logger.LogInformation($"切换为拾取队伍：{_taskParam.KazuhaPartyName}");
+                    Logger.LogInformation("切换为拾取队伍：{PartyName}", _taskParam.KazuhaPartyName);
                     var success = await new SwitchPartyTask().Start(_taskParam.KazuhaPartyName, _ct);
                     if (success)
                     {
-                        Logger.LogInformation($"成功切换队伍为{_taskParam.KazuhaPartyName}");
+                        Logger.LogInformation("成功切换队伍为{PartyName}", _taskParam.KazuhaPartyName);
                         switchPartyFlag = true;
                         RunnerContext.Instance.PartyName = _taskParam.KazuhaPartyName;
                         RunnerContext.Instance.ClearCombatScenes();
@@ -829,11 +829,11 @@ public class AutoFightJsonTask : ISoloTask
             {
                 try
                 {
-                    Logger.LogInformation($"切换为原队伍：{oldPartyName}");
+                    Logger.LogInformation("切换为原队伍：{PartyName}", oldPartyName);
                     var success = await new SwitchPartyTask().Start(oldPartyName, _ct);
                     if (success)
                     {
-                        Logger.LogInformation($"切换为原队伍{oldPartyName}");
+                        Logger.LogInformation("切换为原队伍{PartyName}", oldPartyName);
                         switchPartyFlag = true;
                         RunnerContext.Instance.PartyName = oldPartyName;
                         RunnerContext.Instance.ClearCombatScenes();

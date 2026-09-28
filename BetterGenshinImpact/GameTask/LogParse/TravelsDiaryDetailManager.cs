@@ -177,7 +177,7 @@ public class TravelsDiaryDetailManager
                     }
                     else
                     {
-                        TaskControl.Logger.LogError($"米游社札记数据:{month.year}_{month.month}获取成功！");
+                        TaskControl.Logger.LogError("米游社札记数据:{Year}_{Month}获取成功！", month.year, month.month);
 
                     }
 
@@ -197,7 +197,7 @@ public class TravelsDiaryDetailManager
             }
             else
             {
-                TaskControl.Logger.LogError($"token未登录，请重新登录获取，此次将不新最新数据！");
+                TaskControl.Logger.LogError("token未登录，请重新登录获取，此次将不新最新数据！");
             }
 
 

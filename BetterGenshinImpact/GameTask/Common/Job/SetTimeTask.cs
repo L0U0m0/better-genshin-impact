@@ -49,7 +49,7 @@ public class SetTimeTask
         int h = (int)Math.Floor(hour + minute / 60.0);
         int m = hour * 60 + minute - h * 60;
         h = ((h % 24) + 24) % 24;
-        Logger.LogInformation($"设置时间到 {h} 点 {m} 分");
+        Logger.LogInformation("设置时间到 {Hour} 点 {Minute} 分", h, m);
         Simulation.SendInput.Keyboard.KeyPress(User32.VK.VK_ESCAPE);
         await Delay(800, ct);
         GameCaptureRegion.GameRegion1080PPosClick(50, 700);

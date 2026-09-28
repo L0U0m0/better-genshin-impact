@@ -203,7 +203,8 @@ namespace BetterGenshinImpact.GameTask.AutoFishing
             _logger.LogInformation("→ {Text}", "自动钓鱼，启动！");
             _logger.LogWarning("请不要携带任何{Msg}，极有可能会误识别导致拖慢速度！", "跟宠");
             _logger.LogInformation(
-                $"当前参数：{param.WholeProcessTimeoutSeconds}，{param.ThrowRodTimeOutTimeoutSeconds}，{param.FishingTimePolicy}, {param.SaveScreenshotOnKeyTick}, {param.GameCultureInfo}");
+                "当前参数：{WholeProcessTimeoutSeconds}，{ThrowRodTimeOutTimeoutSeconds}，{FishingTimePolicy}, {SaveScreenshotOnKeyTick}, {GameCultureInfo}",
+                param.WholeProcessTimeoutSeconds, param.ThrowRodTimeOutTimeoutSeconds, param.FishingTimePolicy, param.SaveScreenshotOnKeyTick, param.GameCultureInfo);
             TaskContext.Instance().Config.AutoFishingConfig.Enabled = false;
             _logger.LogInformation("全自动运行时，自动切换实时任务中的半自动钓鱼功能为关闭状态");
 
@@ -220,7 +221,7 @@ namespace BetterGenshinImpact.GameTask.AutoFishing
                         if (!SystemControl.IsGenshinImpactActiveByProcess())
                         {
                             var name = SystemControl.GetActiveByProcess();
-                            _logger.LogWarning($"当前获取焦点的窗口为: {name}，不是原神，停止执行");
+                            _logger.LogWarning("当前获取焦点的窗口为: {Name}，不是原神，停止执行", name);
                             return;
                         }
 

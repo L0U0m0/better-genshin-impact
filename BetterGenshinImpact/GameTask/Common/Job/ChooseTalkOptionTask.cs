@@ -259,7 +259,7 @@ public partial class ChooseTalkOptionTask
         int highConfidencePixels = Cv2.CountNonZero(mask);
         double rate = highConfidencePixels * 1.0 / (mask.Width * mask.Height);
         Debug.WriteLine($"识别到橙色文字区域占比:{rate}");
-        _logger.LogInformation($"识别到橙色文字区域占比:{rate}");
+        _logger.LogInformation("识别到橙色文字区域占比:{Rate}", rate);
         return rate > 0.1;
     }
 }

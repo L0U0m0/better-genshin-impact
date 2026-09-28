@@ -452,11 +452,11 @@ public class AutoFightTask : ISoloTask
                                 if (_finishDetectConfig.DelayTimes.TryGetValue(command.Name, out var time))
                                 {
                                     delayTime = time;
-                                    // Logger.LogInformation($"{command.Name}结束后，延时检查为{delayTime}毫秒");
+                                    // Logger.LogInformation("{CommandName}结束后，延时检查为{DelayTime}毫秒", command.Name, delayTime);
                                 }
                                 else
                                 {
-                                    // Logger.LogInformation($"延时检查为{delayTime}毫秒");
+                                    // Logger.LogInformation("延时检查为{DelayTime}毫秒", delayTime);
                                 }
                                 
                                 fightEndFlag = await CheckFightFinish(delayTime, detectDelayTime);
@@ -573,7 +573,7 @@ public class AutoFightTask : ISoloTask
 
         if (_taskParam.BattleThresholdForLoot>=2 && countFight < _taskParam.BattleThresholdForLoot)
         {
-            Logger.LogInformation($"战斗人次（{countFight}）低于配置人次（{_taskParam.BattleThresholdForLoot}），跳过此次拾取！");
+            Logger.LogInformation("战斗人次（{CountFight}）低于配置人次（{Threshold}），跳过此次拾取！", countFight, _taskParam.BattleThresholdForLoot);
             return;
         }
         
@@ -672,11 +672,11 @@ public class AutoFightTask : ISoloTask
             {
                 try
                 {
-                    Logger.LogInformation($"切换为拾取队伍：{_taskParam.KazuhaPartyName}");
+                    Logger.LogInformation("切换为拾取队伍：{PartyName}", _taskParam.KazuhaPartyName);
                     var success = await new SwitchPartyTask().Start(_taskParam.KazuhaPartyName, ct);
                     if (success)
                     {
-                        Logger.LogInformation($"成功切换队伍为{_taskParam.KazuhaPartyName}");
+                        Logger.LogInformation("成功切换队伍为{PartyName}", _taskParam.KazuhaPartyName);
                         switchPartyFlag = true;
                         RunnerContext.Instance.PartyName = _taskParam.KazuhaPartyName;
                         RunnerContext.Instance.ClearCombatScenes();
@@ -808,11 +808,11 @@ public class AutoFightTask : ISoloTask
             {
                 try
                 {
-                    Logger.LogInformation($"切换为原队伍：{oldPartyName}");
+                    Logger.LogInformation("切换为原队伍：{PartyName}", oldPartyName);
                     var success = await new SwitchPartyTask().Start(oldPartyName, ct);
                     if (success)
                     {
-                        Logger.LogInformation($"切换为原队伍{oldPartyName}");
+                        Logger.LogInformation("切换为原队伍{PartyName}", oldPartyName);
                         switchPartyFlag = true;
                         RunnerContext.Instance.PartyName = oldPartyName;
                         RunnerContext.Instance.ClearCombatScenes();
@@ -965,9 +965,9 @@ public class AutoFightTask : ISoloTask
                 return true;
             }
 
-            // Logger.LogInformation($"未识别到战斗结束yellow{b3.Item0},{b3.Item1},{b3.Item2}");
-            // Logger.LogInformation($"未识别到战斗结束white{whiteTile.Item0},{whiteTile.Item1},{whiteTile.Item2}");
-            Logger.LogInformation($"未识别到战斗结束: yellow{b3.Item0},{b3.Item1},{b3.Item2};white{whiteTile.Item0},{whiteTile.Item1},{whiteTile.Item2}");
+            // Logger.LogInformation("未识别到战斗结束yellow{YellowItem0},{YellowItem1},{YellowItem2}", b3.Item0, b3.Item1, b3.Item2);
+            // Logger.LogInformation("未识别到战斗结束white{WhiteItem0},{WhiteItem1},{WhiteItem2}", whiteTile.Item0, whiteTile.Item1, whiteTile.Item2);
+            Logger.LogInformation("未识别到战斗结束: yellow{YellowItem0},{YellowItem1},{YellowItem2};white{WhiteItem0},{WhiteItem1},{WhiteItem2}", b3.Item0, b3.Item1, b3.Item2, whiteTile.Item0, whiteTile.Item1, whiteTile.Item2);
 
             if (finishDetectConfig.RotateFindEnemyEnabled)
             {

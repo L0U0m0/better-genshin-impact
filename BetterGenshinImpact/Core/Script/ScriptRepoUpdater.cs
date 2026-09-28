@@ -794,7 +794,7 @@ public class ScriptRepoUpdater : Singleton<ScriptRepoUpdater>
                 if (!Directory.Exists(repoPath))
                 {
                     // 如果仓库不存在，执行浅克隆操作
-                    _logger.LogInformation($"浅克隆仓库: {repoUrl} 到 {repoPath}");
+                    _logger.LogInformation("浅克隆仓库: {Url} 到 {Path}", repoUrl, repoPath);
 
                     CloneRepository(repoUrl, repoPath, "release", onCheckoutProgress);
                     SaveFolderMapping(repoUrl.TrimEnd('/'), Path.GetFileName(repoPath));
@@ -833,7 +833,7 @@ public class ScriptRepoUpdater : Singleton<ScriptRepoUpdater>
                     if (origin.Url != repoUrl)
                     {
                         // 远程URL已更改，克隆到临时文件夹后基于目录结构重合度决定存放位置
-                        _logger.LogInformation($"远程URL已更改: 从 {origin.Url} 到 {repoUrl}");
+                        _logger.LogInformation("远程URL已更改: 从 {OldUrl} 到 {NewUrl}", origin.Url, repoUrl);
                         repo?.Dispose();
                         repo = null;
 
@@ -919,7 +919,7 @@ public class ScriptRepoUpdater : Singleton<ScriptRepoUpdater>
                     }
                     else
                     {
-                        _logger.LogInformation($"检测到远程更新: 本地 {currentCommitSha?[..7] ?? "无"} -> 远程 {remoteCommitSha[..7]}");
+                        _logger.LogInformation("检测到远程更新: 本地 {LocalSha} -> 远程 {RemoteSha}", currentCommitSha?[..7] ?? "无", remoteCommitSha[..7]);
                         repo?.Dispose();
                         repo = null;
                         CloneRepository(repoUrl, repoPath, "release", onCheckoutProgress);
@@ -995,7 +995,7 @@ public class ScriptRepoUpdater : Singleton<ScriptRepoUpdater>
                 // 保存到按仓库区分的 repo_updated 文件
                 var updatedRepoJsonPath = GetRepoUpdatedJsonPathForFolder(repoFolderName);
                 await File.WriteAllTextAsync(updatedRepoJsonPath, updatedContent);
-                _logger.LogInformation($"已标记repo.json中的更新节点并保存到: {updatedRepoJsonPath}");
+                _logger.LogInformation("已标记repo.json中的更新节点并保存到: {Path}", updatedRepoJsonPath);
             }
         }
         catch (Exception ex)
@@ -1407,7 +1407,7 @@ public class ScriptRepoUpdater : Singleton<ScriptRepoUpdater>
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"从中央仓库读取文件失败: {relPath}");
+            _logger.LogError(ex, "从中央仓库读取文件失败: {Path}", relPath);
             return null;
         }
     }
@@ -1443,7 +1443,7 @@ public class ScriptRepoUpdater : Singleton<ScriptRepoUpdater>
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"从中央仓库读取二进制文件失败: {relPath}");
+            _logger.LogError(ex, "从中央仓库读取二进制文件失败: {Path}", relPath);
             return null;
         }
     }
@@ -1499,7 +1499,7 @@ public class ScriptRepoUpdater : Singleton<ScriptRepoUpdater>
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"从Git仓库读取文件失败: {filePath}");
+            _logger.LogError(ex, "从Git仓库读取文件失败: {Path}", filePath);
             return null;
         }
     }
@@ -1556,7 +1556,7 @@ public class ScriptRepoUpdater : Singleton<ScriptRepoUpdater>
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"从Git仓库读取二进制文件失败: {filePath}");
+            _logger.LogError(ex, "从Git仓库读取二进制文件失败: {Path}", filePath);
             return null;
         }
     }
@@ -1580,7 +1580,7 @@ public class ScriptRepoUpdater : Singleton<ScriptRepoUpdater>
 
             if (commit == null)
             {
-                _logger.LogError($"仓库HEAD未指向任何提交。HEAD: {repo.Head?.CanonicalName ?? "null"}");
+                _logger.LogError("仓库HEAD未指向任何提交。HEAD: {HeadName}", repo.Head?.CanonicalName ?? "null");
                 throw new Exception("仓库HEAD未指向任何提交");
             }
 
@@ -1596,8 +1596,8 @@ public class ScriptRepoUpdater : Singleton<ScriptRepoUpdater>
                 {
                     // 调试信息：列出当前树中的所有条目
                     // var availableEntries = string.Join(", ", currentTree.Select(e => e.Name));
-                    // _logger.LogError($"在路径 '{string.Join("/", pathParts.Take(i))}' 中未找到 '{pathParts[i]}'");
-                    // _logger.LogError($"可用的条目: {availableEntries}");
+                    // _logger.LogError("在路径 '{CurrentPath}' 中未找到 '{MissingPart}'", string.Join("/", pathParts.Take(i)), pathParts[i]);
+                    // _logger.LogError("可用的条目: {Entries}", availableEntries);
                     // throw new Exception($"仓库中不存在路径: {sourcePath}");
                     return;
                 }
@@ -1728,7 +1728,7 @@ public class ScriptRepoUpdater : Singleton<ScriptRepoUpdater>
         // 返回凭据处理器
         return (url, usernameFromUrl, types) =>
         {
-            _logger.LogInformation($"使用配置的Git凭据进行身份验证");
+            _logger.LogInformation("使用配置的Git凭据进行身份验证");
             return new UsernamePasswordCredentials
             {
                 Username = credential?.UserName ?? "",
@@ -2689,11 +2689,11 @@ public class ScriptRepoUpdater : Singleton<ScriptRepoUpdater>
                 try
                 {
                     Directory.Delete(targetPackagesDir, true);
-                    // _logger.LogInformation($"已清理旧依赖目录: {targetPackagesDir}");
+                    // _logger.LogInformation("已清理旧依赖目录: {Path}", targetPackagesDir);
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogWarning($"清理依赖目录失败: {ex.Message}");
+                    _logger.LogWarning("清理依赖目录失败: {Error}", ex.Message);
                 }
             }
 
@@ -2777,7 +2777,7 @@ public class ScriptRepoUpdater : Singleton<ScriptRepoUpdater>
 
                                 if (!downloaded)
                                 {
-                                     _logger.LogWarning($"依赖未找到: {packagePath} (in {Path.GetFileName(currentFile)})");
+                                     _logger.LogWarning("依赖未找到: {PackagePath} (in {FileName})", packagePath, Path.GetFileName(currentFile));
                                 }
                             }
                             else
@@ -2793,7 +2793,7 @@ public class ScriptRepoUpdater : Singleton<ScriptRepoUpdater>
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogWarning($"分析文件依赖出错: {currentFile}, {ex.Message}");
+                    _logger.LogWarning("分析文件依赖出错: {File}, {Error}", currentFile, ex.Message);
                 }
             }
         }
@@ -3096,7 +3096,7 @@ public class ScriptRepoUpdater : Singleton<ScriptRepoUpdater>
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"获取匹配文件时发生错误: {pattern}");
+            _logger.LogError(ex, "获取匹配文件时发生错误: {Pattern}", pattern);
         }
 
         return matchedFiles;
@@ -3133,7 +3133,7 @@ public class ScriptRepoUpdater : Singleton<ScriptRepoUpdater>
                 manifestContent = ReadFileFromGitRepository(repoPath, $"{scriptPath}/manifest.json");
                 if (manifestContent == null)
                 {
-                    _logger.LogWarning($"脚本manifest文件不存在: {scriptPath}/manifest.json");
+                    _logger.LogWarning("脚本manifest文件不存在: {ScriptPath}/manifest.json", scriptPath);
                     return backupFiles;
                 }
             }
@@ -3143,7 +3143,7 @@ public class ScriptRepoUpdater : Singleton<ScriptRepoUpdater>
                 var scriptManifestPath = Path.Combine(repoPath, scriptPath, "manifest.json");
                 if (!File.Exists(scriptManifestPath))
                 {
-                    _logger.LogWarning($"脚本manifest文件不存在: {scriptManifestPath}");
+                    _logger.LogWarning("脚本manifest文件不存在: {Path}", scriptManifestPath);
                     return backupFiles;
                 }
                 manifestContent = File.ReadAllText(scriptManifestPath);
@@ -3154,7 +3154,7 @@ public class ScriptRepoUpdater : Singleton<ScriptRepoUpdater>
 
             if (manifest.SavedFiles == null || manifest.SavedFiles.Length == 0)
             {
-                _logger.LogInformation($"脚本 {scriptPath} 没有需要保存的文件");
+                _logger.LogInformation("脚本 {ScriptPath} 没有需要保存的文件", scriptPath);
                 return backupFiles;
             }
 
@@ -3162,7 +3162,7 @@ public class ScriptRepoUpdater : Singleton<ScriptRepoUpdater>
             var (first, remainingPath) = GetFirstFolderAndRemainingPath(scriptPath);
             if (!PathMapper.TryGetValue(first, out var userPath))
             {
-                _logger.LogWarning($"未知的脚本路径映射: {scriptPath}");
+                _logger.LogWarning("未知的脚本路径映射: {ScriptPath}", scriptPath);
                 return backupFiles;
             }
 
@@ -3192,7 +3192,7 @@ public class ScriptRepoUpdater : Singleton<ScriptRepoUpdater>
                     }
                     else
                     {
-                        _logger.LogWarning($"需要备份的文件夹不存在: {dirPath}");
+                        _logger.LogWarning("需要备份的文件夹不存在: {Path}", dirPath);
                     }
                 }
                 else
@@ -3215,20 +3215,20 @@ public class ScriptRepoUpdater : Singleton<ScriptRepoUpdater>
                         }
                         catch (Exception ex)
                         {
-                            _logger.LogError(ex, $"备份文件失败: {matchedFile}");
+                            _logger.LogError(ex, "备份文件失败: {File}", matchedFile);
                         }
                     }
 
                     if (matchedFiles.Count == 0)
                     {
-                        _logger.LogWarning($"没有找到匹配的文件: {savedFile}");
+                        _logger.LogWarning("没有找到匹配的文件: {File}", savedFile);
                     }
                 }
             }
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"备份脚本文件时发生错误: {scriptPath}");
+            _logger.LogError(ex, "备份脚本文件时发生错误: {ScriptPath}", scriptPath);
         }
 
         return backupFiles;
@@ -3258,7 +3258,7 @@ public class ScriptRepoUpdater : Singleton<ScriptRepoUpdater>
                 manifestContent = ReadFileFromGitRepository(repoPath, $"{scriptPath}/manifest.json");
                 if (manifestContent == null)
                 {
-                    _logger.LogWarning($"脚本manifest文件不存在: {scriptPath}/manifest.json");
+                    _logger.LogWarning("脚本manifest文件不存在: {ScriptPath}/manifest.json", scriptPath);
                     return;
                 }
             }
@@ -3268,7 +3268,7 @@ public class ScriptRepoUpdater : Singleton<ScriptRepoUpdater>
                 var scriptManifestPath = Path.Combine(repoPath, scriptPath, "manifest.json");
                 if (!File.Exists(scriptManifestPath))
                 {
-                    _logger.LogWarning($"脚本manifest文件不存在: {scriptManifestPath}");
+                    _logger.LogWarning("脚本manifest文件不存在: {Path}", scriptManifestPath);
                     return;
                 }
                 manifestContent = File.ReadAllText(scriptManifestPath);
@@ -3279,7 +3279,7 @@ public class ScriptRepoUpdater : Singleton<ScriptRepoUpdater>
 
             if (manifest.SavedFiles == null || manifest.SavedFiles.Length == 0)
             {
-                _logger.LogInformation($"脚本 {scriptPath} 没有需要恢复的文件");
+                _logger.LogInformation("脚本 {ScriptPath} 没有需要恢复的文件", scriptPath);
                 return;
             }
 
@@ -3287,7 +3287,7 @@ public class ScriptRepoUpdater : Singleton<ScriptRepoUpdater>
             var (first, remainingPath) = GetFirstFolderAndRemainingPath(scriptPath);
             if (!PathMapper.TryGetValue(first, out var userPath))
             {
-                _logger.LogWarning($"未知的脚本路径映射: {scriptPath}");
+                _logger.LogWarning("未知的脚本路径映射: {ScriptPath}", scriptPath);
                 return;
             }
 
@@ -3312,13 +3312,13 @@ public class ScriptRepoUpdater : Singleton<ScriptRepoUpdater>
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogError(ex, $"恢复文件失败: {file} -> {restorePath}");
+                        _logger.LogError(ex, "恢复文件失败: {File} -> {RestorePath}", file, restorePath);
                     }
                 }
             }
             else
             {
-                _logger.LogWarning($"备份目录不存在: {backupScriptDir}");
+                _logger.LogWarning("备份目录不存在: {Path}", backupScriptDir);
             }
 
             // 清理Temp目录下该脚本的备份
@@ -3336,7 +3336,7 @@ public class ScriptRepoUpdater : Singleton<ScriptRepoUpdater>
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"恢复脚本文件时发生错误: {scriptPath}");
+            _logger.LogError(ex, "恢复脚本文件时发生错误: {ScriptPath}", scriptPath);
         }
     }
 }

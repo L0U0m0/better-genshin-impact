@@ -140,12 +140,13 @@ public static class FarmingStatsRecorder
             // 保存更新后的数据
             SaveDailyData(dailyData.FilePath, dailyData);
             TaskControl.Logger.LogInformation(
-                $"锄地进度:[小怪:{ft.TotalNormalMobCount}/{cap.DailyMobCap}" +
-                $",精英:{ft.TotalEliteMobCount}/{cap.DailyEliteCap}]"+(dailyData.EnableMiyousheStats()?"(合并米游社数据)":""));
+                "锄地进度:[小怪:{TotalNormalMobCount}/{DailyMobCap}" +
+                ",精英:{TotalEliteMobCount}/{DailyEliteCap}]"+(dailyData.EnableMiyousheStats()?"(合并米游社数据)":""),
+                ft.TotalNormalMobCount, cap.DailyMobCap, ft.TotalEliteMobCount, cap.DailyEliteCap);
         }
         catch (Exception e)
         {
-            TaskControl.Logger.LogError($"锄地进度记录失败：{e.Message}");
+            TaskControl.Logger.LogError("锄地进度记录失败：{Msg}", e.Message);
         }
     }
     
@@ -186,12 +187,12 @@ public static class FarmingStatsRecorder
                     }
                     else
                     {
-                        TaskControl.Logger.LogError($"米游社旅行札记未有数据！");
+                        TaskControl.Logger.LogError("米游社旅行札记未有数据！");
                     }
                 }
                 catch (Exception e)
                 {
-                    TaskControl.Logger.LogError($"米游社数据更新失败，请检查cookie是否过期：{e.Message}");
+                    TaskControl.Logger.LogError("米游社数据更新失败，请检查cookie是否过期：{Msg}", e.Message);
                 }
             }
 

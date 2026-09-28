@@ -265,7 +265,7 @@ namespace BetterGenshinImpact.GameTask.AutoFishing
                 }
                 if (ChooseBaitFailures.Get().Count(f => f == selectedBait) >= MAX_FAILED_TIMES)
                 {
-                    logger.LogWarning($"本次将忽略{selectedBait.GetDescription()}");
+                    logger.LogWarning("本次将忽略{bait}", selectedBait.GetDescription());
                 }
 
                 SelectedBait.Set(null);
@@ -847,13 +847,13 @@ namespace BetterGenshinImpact.GameTask.AutoFishing
             {
                 if (leftButtonClicked)
                 {
-                    logger.LogInformation($"收杆成功");
+                    logger.LogInformation("收杆成功");
 
                     return Status.Failure;
                 }
                 else
                 {
-                    logger.LogInformation($"{seconds}秒没有咬杆，本次收杆");
+                    logger.LogInformation("{Seconds}秒没有咬杆，本次收杆", seconds);
                     leftButtonClicked = true;
                     input.Mouse.LeftButtonClick();
                     waitFishBiteTimeout = timeProvider.GetLocalNow().AddSeconds(2);

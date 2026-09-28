@@ -733,7 +733,7 @@ public partial class PathExecutor
                 }
                 catch (Exception e)
                 {
-                    Logger.LogError(e, $"[{avatar.Name}] 赶路逻辑异常");
+                    Logger.LogError(e, "[{AvatarName}] 赶路逻辑异常", avatar.Name);
                     return false;
                 }
 
@@ -758,7 +758,7 @@ public partial class PathExecutor
                             {
                                 if (SpaceAtSecondPlaceExist(state))
                                 {
-                                    Logger.LogInformation($"自动赶路：{avatar.Name}接近节点，关闭飞行状态");
+                                    Logger.LogInformation("自动赶路：{AvatarName}接近节点，关闭飞行状态", avatar.Name);
                                     Simulation.SendInput.SimulateAction(GIActions.ElementalSkill, KeyType.KeyDown);
                                     for (var retries = 0; retries < 20; retries++)
                                     {
@@ -787,7 +787,7 @@ public partial class PathExecutor
                         {
                             state.FlyingState = false;
                             _lastLandingTime = DateTime.UtcNow;
-                            Logger.LogInformation($"自动赶路：{avatar.Name}飞行结束");
+                            Logger.LogInformation("自动赶路：{AvatarName}飞行结束", avatar.Name);
                             await SafeLanding(ct);
                             return false;
                         }
@@ -821,7 +821,7 @@ public partial class PathExecutor
 
                                 avatar.LastSkillTime = DateTime.UtcNow;
                                 state.FlyingState = true;
-                                Logger.LogInformation($"自动赶路：{avatar.Name}启动飞行");
+                                Logger.LogInformation("自动赶路：{AvatarName}启动飞行", avatar.Name);
                                 return true;
                             }
                         }
@@ -831,7 +831,7 @@ public partial class PathExecutor
                 }
                 catch (Exception e)
                 {
-                    Logger.LogError(e, $"[{avatar.Name}] 赶路逻辑异常");
+                    Logger.LogError(e, "[{AvatarName}] 赶路逻辑异常", avatar.Name);
                     state.FlyingState = false;
                     return false;
                 }
@@ -1082,7 +1082,7 @@ public partial class PathExecutor
                 }
                 catch (Exception e)
                 {
-                    Logger.LogError(e, $"[{avatar.Name}] 赶路逻辑异常");
+                    Logger.LogError(e, "[{AvatarName}] 赶路逻辑异常", avatar.Name);
                     state.FlyingState = false;
                     return false;
                 }

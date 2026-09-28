@@ -834,7 +834,7 @@ public partial class PathExecutor
                         }
                         else
                         {
-                            Logger.LogWarning($"距离过远（{position.X},{position.Y}）->（{waypoint.X},{waypoint.Y}）={distance}，重试多次后仍然失败，放弃此路径点！");
+                            Logger.LogWarning("距离过远（{PositionX},{PositionY}）->（{WaypointX},{WaypointY}）={Distance}，重试多次后仍然失败，放弃此路径点！", position.X, position.Y, waypoint.X, waypoint.Y, distance);
                             throw new HandledException("目标距离过远，可能是当前点位无法识别，放弃此路径！");
                         }
                     }
@@ -843,13 +843,13 @@ public partial class PathExecutor
                         // 取余减少日志输出频率
                         if (distanceTooFarRetryCount % 5 == 0)
                         {
-                            Logger.LogWarning($"距离过远（{position.X},{position.Y}）->（{waypoint.X},{waypoint.Y}）={distance}，重试");
+                            Logger.LogWarning("距离过远（{PositionX},{PositionY}）->（{WaypointX},{WaypointY}）={Distance}，重试", position.X, position.Y, waypoint.X, waypoint.Y, distance);
                         }
                         // 取余减少判断频率
                         if (distanceTooFarRetryCount % 10 == 0)
                         {
                             await ResolveAnomalies(screen);
-                            Logger.LogInformation($"重置到上次正确识别的坐标 ({prevNotTooFarPosition.X},{prevNotTooFarPosition.Y})");
+                            Logger.LogInformation("重置到上次正确识别的坐标 ({PrevPositionX},{PrevPositionY})", prevNotTooFarPosition.X, prevNotTooFarPosition.Y);
                             Navigation.SetPrevPosition(prevNotTooFarPosition.X, prevNotTooFarPosition.Y);
                             // 淡入淡出特效
                             await Delay(500, ct);
@@ -1297,7 +1297,7 @@ public partial class PathExecutor
                 if (prePosition != default)
                 {
                     position = prePosition;
-                    Logger.LogInformation(@$"未识别到具体路径，取上次点位");
+                    Logger.LogInformation("未识别到具体路径，取上次点位");
                 }
             }else if (waypoint.Misidentification.HandlingMode == "mapRecognition"){
                 //大地图识别坐标
@@ -1310,7 +1310,7 @@ public partial class PathExecutor
                 }
                 catch (Exception e)
                 {
-                    Logger.LogInformation(@$"地图中心点识别失败！");
+                    Logger.LogInformation("地图中心点识别失败！");
                 }
                
                 Simulation.SendInput.Keyboard.KeyPress(User32.VK.VK_ESCAPE);
@@ -1318,16 +1318,16 @@ public partial class PathExecutor
                 await WaitForCloseMap(10,200);
                 DateTime end = DateTime.Now;
                 time=(int)(end - start).TotalMilliseconds;
-                Logger.LogInformation(@$"未识别到具体路径，打开地图计算中心点({position.X},{position.Y})");
+                Logger.LogInformation("未识别到具体路径，打开地图计算中心点({PositionX},{PositionY})", position.X, position.Y);
             }
             
             /*if (prePosition!=default)
             {*/
                 //position = InterpolatePointByTime(prePosition,new Point2f((float)waypoint.GameX,(float)waypoint.GameY),preTime,DateTime.Now,preTime.AddMilliseconds(maxAutoPositionTime));
-                //Logger.LogInformation(@$"未识别到具体路径，预测其路径为（{position.X},{position.Y}）,开始结束点位为：（{prePosition.X},{prePosition.Y}）（{waypoint.GameX},{waypoint.GameY}）");
+                //Logger.LogInformation("未识别到具体路径，预测其路径为（{PositionX},{PositionY}）,开始结束点位为：（{PrevPositionX},{PrevPositionY}）（{WaypointGameX},{WaypointGameY}）", position.X, position.Y, prePosition.X, prePosition.Y, waypoint.GameX, waypoint.GameY);
                 //Point2f GetBigMapCenterPoint(string mapName)
 
-               // Logger.LogInformation(@$"未识别到具体路径，打开地图计算中心点({position.X},{position.Y})");
+               // Logger.LogInformation("未识别到具体路径，打开地图计算中心点({PositionX},{PositionY})", position.X, position.Y);
                 //position =prePosition;
            // }
 

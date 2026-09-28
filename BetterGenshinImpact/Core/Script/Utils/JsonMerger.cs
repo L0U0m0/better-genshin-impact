@@ -72,7 +72,7 @@ public class JsonMerger
             string newfile=Path.Combine(Path.GetDirectoryName(filePath),refValue);
             return GetCtrJObject(newfile);
         }
-        //TaskControl.Logger.LogInformation($"路径追踪匹配控制文件：{filePath}");
+        //TaskControl.Logger.LogInformation("路径追踪匹配控制文件：{FilePath}", filePath);
         return jObject;
     }
 
@@ -103,7 +103,7 @@ public class JsonMerger
          }
          catch (Exception e)
          {
-             TaskControl.Logger.LogError($"加载追踪控制文件或合并异常，请检查{pathingPath} 所在目录：{e.Message}");
+             TaskControl.Logger.LogError("加载追踪控制文件或合并异常，请检查{PathingPath} 所在目录：{Msg}", pathingPath, e.Message);
          }
          
          return json;

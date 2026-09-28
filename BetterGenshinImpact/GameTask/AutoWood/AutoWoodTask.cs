@@ -84,10 +84,10 @@ public partial class AutoWoodTask : ISoloTask
             //     if (key != ElementIdentifierId.Z)
             //     {
             //         _zKey = key.ToVK();
-            //         Logger.LogInformation($"自动伐木检测到用户改键 {ElementIdentifierId.Z.ToName()} 改为 {key.ToName()}");
+            //         Logger.LogInformation("自动伐木检测到用户改键 {OldKey} 改为 {NewKey}", ElementIdentifierId.Z.ToName(), key.ToName());
             //         if (key == ElementIdentifierId.LeftShift || key == ElementIdentifierId.RightShift)
             //         {
-            //             Logger.LogInformation($"用户改键 {key.ToName()} 可能不受模拟支持，若使用正常则忽略");
+            //             Logger.LogInformation("用户改键 {NewKey} 可能不受模拟支持，若使用正常则忽略", key.ToName());
             //         }
             //     }
             // }

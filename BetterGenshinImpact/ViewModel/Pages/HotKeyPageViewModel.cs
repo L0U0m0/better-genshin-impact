@@ -845,7 +845,7 @@ public partial class HotKeyPageViewModel : ObservableObject, IViewModel
 
                     // var pName = SystemControl.GetActiveProcessName();
                     // Debug.WriteLine($"当前处于前台的程序：{pName}，原神是否位于前台：{SystemControl.IsGenshinImpactActive()}");
-                    // TaskControl.Logger.LogInformation($"当前处于前台的程序：{pName}");
+                    // TaskControl.Logger.LogInformation("当前处于前台的程序：{Name}", pName);
                 }
             ));
 

@@ -65,7 +65,7 @@ public class TaskControl
                     // 检查键是否被按下
                     if (IsKeyPressed(key)) // 强制转换 VK 枚举为 int
                     {
-                        Logger.LogWarning($"解除{key}的按下状态.");
+                        Logger.LogWarning("解除{Key}的按下状态.", key);
                         Simulation.SendInput.Keyboard.KeyUp(key);
                     }
                 }
@@ -101,7 +101,7 @@ public class TaskControl
             if (!SystemControl.IsGenshinImpactActiveByProcess())
             {
                 var name = SystemControl.GetActiveByProcess();
-                Logger.LogWarning($"当前获取焦点的窗口为: {name}，不是原神，暂停");
+                Logger.LogWarning("当前获取焦点的窗口为: {Name}，不是原神，暂停", name);
                 throw new RetryException("当前获取焦点的窗口不是原神");
             }
         }

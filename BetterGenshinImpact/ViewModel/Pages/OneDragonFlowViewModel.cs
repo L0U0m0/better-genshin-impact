@@ -549,7 +549,7 @@ public partial class OneDragonFlowViewModel : ViewModel
             if (cmdOptions.OneDragonConfigName != null)
             {
                 // 从命令行参数中提取一条龙配置名称。
-                _logger.LogInformation($"参数指定的一条龙配置：{cmdOptions.OneDragonConfigName}");
+                _logger.LogInformation("参数指定的一条龙配置：{ConfigName}", cmdOptions.OneDragonConfigName);
                 var argsOneDragonConfig = ConfigList.FirstOrDefault(x =>
                     string.Equals(x.Name, cmdOptions.OneDragonConfigName, StringComparison.Ordinal));
                 if (argsOneDragonConfig != null)
@@ -573,7 +573,7 @@ public partial class OneDragonFlowViewModel : ViewModel
     [RelayCommand]
     public async Task OnOneKeyExecute()
     {
-        _logger.LogInformation($"启用一条龙配置：{SelectedConfig.Name}");
+        _logger.LogInformation("启用一条龙配置：{Name}", SelectedConfig.Name);
 
         // 启动等待之前先进行取消操作的初始化，便于在任务开始前终止任务.
         CancellationContext.Instance.Set();
@@ -605,7 +605,7 @@ public partial class OneDragonFlowViewModel : ViewModel
         int finishOneTaskcount = 1;
         int finishTaskcount = 1;
         int enabledTaskCountall = taskListCopy.Count(t => t.IsEnabled);
-        _logger.LogInformation($"启用任务总数量: {enabledTaskCountall}");
+        _logger.LogInformation("启用任务总数量: {Count}", enabledTaskCountall);
         
         ReadScriptGroup();
         foreach (var task in ScriptGroupsdefault)
@@ -621,7 +621,7 @@ public partial class OneDragonFlowViewModel : ViewModel
         }
 
         int enabledoneTaskCount = taskListCopy.Count(t => t.IsEnabled);
-        _logger.LogInformation($"启用一条龙任务的数量: {enabledoneTaskCount}");
+        _logger.LogInformation("启用一条龙任务的数量: {Count}", enabledoneTaskCount);
 
         await ScriptService.StartGameTask();
         if (CancellationContext.Instance.IsCancellationRequested)
@@ -633,7 +633,7 @@ public partial class OneDragonFlowViewModel : ViewModel
         SaveConfig();
         int enabledTaskCount = taskListCopy.Count(t =>
             t.IsEnabled && !ScriptGroupsdefault.Any(d => d.Name == t.Name));
-        _logger.LogInformation($"启用配置组任务的数量: {enabledTaskCount}");
+        _logger.LogInformation("启用配置组任务的数量: {Count}", enabledTaskCount);
 
         if (enabledoneTaskCount <= 0)
         {
@@ -647,7 +647,7 @@ public partial class OneDragonFlowViewModel : ViewModel
             {
                 if (ScriptGroupsdefault.Any(defaultSg => defaultSg.Name == task.Name))
                 {
-                    _logger.LogInformation($"一条龙任务执行: {finishOneTaskcount++}/{enabledoneTaskCount}");
+                    _logger.LogInformation("一条龙任务执行: {Done}/{Total}", finishOneTaskcount++, enabledoneTaskCount);
                     await new TaskRunner().RunThreadAsync(async () =>
                     {
                         await task.Action();
@@ -668,7 +668,7 @@ public partial class OneDragonFlowViewModel : ViewModel
 
                         if (SelectedConfig.TaskEnabledList[task.Id])
                         {
-                            _logger.LogInformation($"配置组任务执行: {finishTaskcount++}/{enabledTaskCount}");
+                            _logger.LogInformation("配置组任务执行: {Done}/{Total}", finishTaskcount++, enabledTaskCount);
                             await Task.Delay(500);
                             string filePath = Path.Combine(_basePath, _scriptGroupPath, $"{task.Name}.json");
                             var group = ScriptGroup.FromJson(await File.ReadAllTextAsync(filePath));

@@ -53,7 +53,7 @@ namespace BetterGenshinImpact.GameTask.AutoFishing
 
         protected override void Initialize()
         {
-            _logger.LogInformation($"钓鱼任务将在{_seconds}秒后超时");
+            _logger.LogInformation("钓鱼任务将在{Seconds}秒后超时", _seconds);
             _timeout = _timeProvider.GetLocalNow().AddSeconds(_seconds);
         }
 
@@ -62,7 +62,7 @@ namespace BetterGenshinImpact.GameTask.AutoFishing
             if ((!Abort.Exists() || !Abort.Get()) && _timeProvider.GetLocalNow() >= _timeout)
             {
                 Abort.Set(true);
-                _logger.LogInformation($"{_seconds}秒超时已到，结束任务");
+                _logger.LogInformation("{Seconds}秒超时已到，结束任务", _seconds);
             }
             return Status.Running;
         }
@@ -101,7 +101,7 @@ namespace BetterGenshinImpact.GameTask.AutoFishing
             if (_timeProvider.GetLocalNow() >= _timeout)
             {
                 Abort.Set(true);
-                _logger.LogInformation($"{_seconds}秒没有{Name}，结束任务");
+                _logger.LogInformation("{Seconds}秒没有{Name}，结束任务", _seconds, Name);
                 return Status.Failure;
             }
             else

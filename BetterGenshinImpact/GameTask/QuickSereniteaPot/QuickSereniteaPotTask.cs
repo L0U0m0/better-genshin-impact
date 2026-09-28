@@ -115,11 +115,11 @@ public class QuickSereniteaPotTask
 
             if (isEnter || isLeave) {
                 string action = isEnter ? "进入" : "离开";
-                TaskControl.Logger.LogInformation($"快速进出尘歌壶:识别到 {action}尘歌壶");
+                TaskControl.Logger.LogInformation("快速进出尘歌壶:识别到 {Direction}尘歌壶", action);
                 
                 // 按F触发交互
                 Simulation.SendInput.SimulateAction(GIActions.PickUpOrInteract);
-                TaskControl.Logger.LogInformation($"快速进出尘歌壶:F{action}尘歌壶");
+                TaskControl.Logger.LogInformation("快速进出尘歌壶:F{Direction}尘歌壶", action);
                 TaskControl.CheckAndSleep(200);
                 // 点击进入/离开尘歌壶
                 // 如果不是联机状态，此时玩家应已进入传送界面，本次点击不会影响实际功能

@@ -63,7 +63,7 @@ public class TaskProgressManager
                 }
                 catch (Exception ex)
                 {
-                    Logger.LogInformation($"删除文件失败：{file} - {ex.Message}");
+                    Logger.LogInformation("删除文件失败：{File} - {Msg}", file, ex.Message);
                 }
                 continue;
             }
@@ -77,7 +77,7 @@ public class TaskProgressManager
             }
             catch (Exception ex)
             {
-                Logger.LogInformation($"读取文件失败：{file} - {ex.Message}");
+                Logger.LogInformation("读取文件失败：{File} - {Msg}", file, ex.Message);
             }
         }
 
