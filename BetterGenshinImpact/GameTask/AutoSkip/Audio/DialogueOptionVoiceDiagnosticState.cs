@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 using System.Globalization;
@@ -23,23 +24,26 @@ public partial class DialogueOptionVoiceDiagnosticState : ObservableObject
     private string _peakText = "--";
 
     [ObservableProperty]
-    private string _statusText = "诊断未开启";
+    private string _statusText = I18nService.Instance.Translate("诊断未开启");
 
     [ObservableProperty]
     private string _verdictText = "—";
 
     [ObservableProperty]
-    private string _decisionText = "未在等待选项";
+    private string _decisionText = I18nService.Instance.Translate("未在等待选项");
 
-    public string ThresholdText { get; } =
-        $"起播 {DialogueOptionVoiceThresholds.SpeechProbability:F2}  ·  疑似 {DialogueOptionVoiceThresholds.MaybeSpeechProbability:F2}  ·  " +
-        $"起播确认 {DialogueOptionVoiceThresholds.SpeechRiseMilliseconds}ms  ·  结束静音 {DialogueOptionVoiceThresholds.SilenceMilliseconds / 1000d:F1}s";
+    public string ThresholdText { get; } = string.Format(
+        I18nService.Instance.Translate("起播 {0:F2}  ·  疑似 {1:F2}  ·  起播确认 {2}ms  ·  结束静音 {3:F1}s"),
+        DialogueOptionVoiceThresholds.SpeechProbability,
+        DialogueOptionVoiceThresholds.MaybeSpeechProbability,
+        DialogueOptionVoiceThresholds.SpeechRiseMilliseconds,
+        DialogueOptionVoiceThresholds.SilenceMilliseconds / 1000d);
 
     [ObservableProperty]
-    private string _recordingButtonText = "开始录制";
+    private string _recordingButtonText = I18nService.Instance.Translate("开始录制");
 
     [ObservableProperty]
-    private string _recordingStatusText = "录音将保存到 log\\VadDiagnostics";
+    private string _recordingStatusText = I18nService.Instance.Translate("录音将保存到 log\\VadDiagnostics");
 
     internal bool IsRecordingRequested => Volatile.Read(ref _recordingRequested) != 0;
 
@@ -47,16 +51,16 @@ public partial class DialogueOptionVoiceDiagnosticState : ObservableObject
     {
         var requested = IsRecordingRequested;
         Interlocked.Exchange(ref _recordingRequested, requested ? 0 : 1);
-        RecordingButtonText = requested ? "开始录制" : "停止并保存";
-        RecordingStatusText = requested ? "正在停止录制…" : "等待音频帧后开始录制…";
+        RecordingButtonText = requested ? I18nService.Instance.Translate("开始录制") : I18nService.Instance.Translate("停止并保存");
+        RecordingStatusText = requested ? I18nService.Instance.Translate("正在停止录制…") : I18nService.Instance.Translate("等待音频帧后开始录制…");
     }
 
     internal void SetRecordingStarted(string filePath)
     {
         Dispatch(() =>
         {
-            RecordingButtonText = "停止并保存";
-            RecordingStatusText = $"正在录制：{filePath}";
+            RecordingButtonText = I18nService.Instance.Translate("停止并保存");
+            RecordingStatusText = string.Format(I18nService.Instance.Translate("正在录制：{0}"), filePath);
         });
     }
 
@@ -65,10 +69,10 @@ public partial class DialogueOptionVoiceDiagnosticState : ObservableObject
         Interlocked.Exchange(ref _recordingRequested, 0);
         Dispatch(() =>
         {
-            RecordingButtonText = "开始录制";
+            RecordingButtonText = I18nService.Instance.Translate("开始录制");
             RecordingStatusText = filePath == null
-                ? "录音将保存到 log\\VadDiagnostics"
-                : $"已保存：{filePath}";
+                ? I18nService.Instance.Translate("录音将保存到 log\\VadDiagnostics")
+                : string.Format(I18nService.Instance.Translate("已保存：{0}"), filePath);
         });
     }
 
@@ -80,9 +84,9 @@ public partial class DialogueOptionVoiceDiagnosticState : ObservableObject
             ProbabilityText = "--";
             RmsText = "--";
             PeakText = "--";
-            StatusText = "诊断未开启";
+            StatusText = I18nService.Instance.Translate("诊断未开启");
             VerdictText = "—";
-            DecisionText = "未在等待选项";
+            DecisionText = I18nService.Instance.Translate("未在等待选项");
         });
     }
 
@@ -108,7 +112,7 @@ public partial class DialogueOptionVoiceDiagnosticState : ObservableObject
             ProbabilityText = result.Probability.ToString("F6", CultureInfo.InvariantCulture);
             RmsText = result.Rms.ToString("F5", CultureInfo.InvariantCulture);
             PeakText = result.Peak.ToString("F5", CultureInfo.InvariantCulture);
-            StatusText = "持续检测中";
+            StatusText = I18nService.Instance.Translate("持续检测中");
             VerdictText = verdictText;
             DecisionText = decisionText;
         });

@@ -1,4 +1,5 @@
 using BetterGenshinImpact.Core.Config;
+using BetterGenshinImpact.Service.I18n;
 using BetterGenshinImpact.Service.Interface;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -75,16 +76,16 @@ internal sealed class DialogueOptionVoiceDiagnosticService : BackgroundService
                     var decisionText = BuildDecisionText();
                     if (result == null)
                     {
-                        _state.SetWaiting("等待完整音频帧", decisionText);
+                        _state.SetWaiting(I18nService.Instance.Translate("等待完整音频帧"), decisionText);
                     }
                     else
                     {
                         var probability = result.Value.Probability;
                         var verdict = probability >= DialogueOptionVoiceThresholds.SpeechProbability
-                            ? "说话"
+                            ? I18nService.Instance.Translate("说话")
                             : probability > DialogueOptionVoiceThresholds.MaybeSpeechProbability
-                                ? "疑似语音"
-                                : "静音";
+                                ? I18nService.Instance.Translate("疑似语音")
+                                : I18nService.Instance.Translate("静音");
                         _state.SetSample(result.Value, verdict, decisionText);
                     }
                 }
@@ -96,7 +97,7 @@ internal sealed class DialogueOptionVoiceDiagnosticService : BackgroundService
                     ReleaseDetector();
                     _unavailableProcessId = processId;
                     _detectorRetryAfter = DateTime.Now.Add(DetectorRetryDelay);
-                    _state.SetWaiting("检测失败，稍后重试", BuildDecisionText());
+                    _state.SetWaiting(I18nService.Instance.Translate("检测失败，稍后重试"), BuildDecisionText());
                 }
 
                 await Task.Delay(UpdateInterval, stoppingToken);
@@ -119,7 +120,7 @@ internal sealed class DialogueOptionVoiceDiagnosticService : BackgroundService
         if (process == null || process.Id <= 0)
         {
             ReleaseDetector();
-            _state.SetWaiting("未找到游戏进程", BuildDecisionText());
+            _state.SetWaiting(I18nService.Instance.Translate("未找到游戏进程"), BuildDecisionText());
             return null;
         }
 
@@ -132,7 +133,7 @@ internal sealed class DialogueOptionVoiceDiagnosticService : BackgroundService
         ReleaseDetector();
         if (_unavailableProcessId == processId && DateTime.Now < _detectorRetryAfter)
         {
-            _state.SetWaiting("检测器初始化失败，等待重试", BuildDecisionText());
+            _state.SetWaiting(I18nService.Instance.Translate("检测器初始化失败，等待重试"), BuildDecisionText());
             return null;
         }
 
@@ -141,7 +142,7 @@ internal sealed class DialogueOptionVoiceDiagnosticService : BackgroundService
             _detector = DialogueOptionVoiceDetector.Create(processId);
             _unavailableProcessId = null;
             _detectorRetryAfter = DateTime.MinValue;
-            _state.SetWaiting("等待完整音频帧", BuildDecisionText());
+            _state.SetWaiting(I18nService.Instance.Translate("等待完整音频帧"), BuildDecisionText());
             _logger.LogDebug("自动剧情：Silero VAD 持续诊断采样来源 游戏进程音频 PID={ProcessId}", processId);
             return _detector;
         }
@@ -149,7 +150,7 @@ internal sealed class DialogueOptionVoiceDiagnosticService : BackgroundService
         {
             _unavailableProcessId = processId;
             _detectorRetryAfter = DateTime.Now.Add(DetectorRetryDelay);
-            _state.SetWaiting("检测器初始化失败，等待重试", BuildDecisionText());
+            _state.SetWaiting(I18nService.Instance.Translate("检测器初始化失败，等待重试"), BuildDecisionText());
             _logger.LogWarning(e, "自动剧情：初始化 Silero VAD 持续诊断失败，稍后重试");
             return null;
         }
@@ -197,22 +198,31 @@ internal sealed class DialogueOptionVoiceDiagnosticService : BackgroundService
         var trigger = GameTaskManager.TriggerDictionary?.GetValueOrDefault("AutoSkip") as AutoSkipTrigger;
         if (trigger == null || !trigger.VoiceWaiter.TryGetProgress(out var progress))
         {
-            return "未在等待选项";
+            return I18nService.Instance.Translate("未在等待选项");
         }
 
         if (progress.IsFallback)
         {
-            return "等待选项 · 回退固定延迟";
+            return I18nService.Instance.Translate("等待选项 · 回退固定延迟");
         }
 
         if (progress.HeardSpeech)
         {
-            return $"等待选项 · 已确认说话 · 静音 {progress.QuietMilliseconds / 1000d:F1}s / {progress.RequiredQuietMilliseconds / 1000d:F1}s";
+            return string.Format(
+                I18nService.Instance.Translate("等待选项 · 已确认说话 · 静音 {0:F1}s / {1:F1}s"),
+                progress.QuietMilliseconds / 1000d,
+                progress.RequiredQuietMilliseconds / 1000d);
         }
 
         return progress.InStartGrace
-            ? $"等待选项 · 未起播 · 宽限 {progress.WaitingMilliseconds / 1000d:F1}s / {DialogueOptionAudioWaiter.SpeechStartGraceMilliseconds / 1000d:F1}s"
-            : $"等待选项 · 未起播 · 静音 {progress.QuietMilliseconds / 1000d:F1}s / {progress.RequiredQuietMilliseconds / 1000d:F1}s";
+            ? string.Format(
+                I18nService.Instance.Translate("等待选项 · 未起播 · 宽限 {0:F1}s / {1:F1}s"),
+                progress.WaitingMilliseconds / 1000d,
+                DialogueOptionAudioWaiter.SpeechStartGraceMilliseconds / 1000d)
+            : string.Format(
+                I18nService.Instance.Translate("等待选项 · 未起播 · 静音 {0:F1}s / {1:F1}s"),
+                progress.QuietMilliseconds / 1000d,
+                progress.RequiredQuietMilliseconds / 1000d);
     }
 
     private static Process? FindGameProcess()
