@@ -3462,14 +3462,13 @@
                     <ui:TextBlock Grid.Row="0"
                                   Grid.Column="0"
                                   FontTypography="Body"
-                                  Text="自动连招（实验）"
+                                  Text="{i18n:T 自动连招（实验）}"
                                   TextWrapping="Wrap" />
                     <ui:TextBlock Grid.Row="1"
                                   Grid.Column="0"
                                   Foreground="{ui:ThemeResource TextFillColorTertiaryBrush}"
-                                  TextWrapping="Wrap">
-                        启动本任务后识别队伍，构建连招行为树
-                    </ui:TextBlock>
+                                  Text="{i18n:T 启动本任务后识别队伍，构建连招行为树}"
+                                  TextWrapping="Wrap" />
                     <ui:Button Grid.Row="0"
                                Grid.RowSpan="2"
                                Grid.Column="1"
@@ -3534,13 +3533,12 @@
                     <ui:TextBlock Grid.Row="0"
                                   Grid.Column="0"
                                   FontTypography="Body"
-                                  TextWrapping="Wrap">
-                        决策LLM服务地址
-                    </ui:TextBlock>
+                                  Text="{i18n:T 决策LLM服务地址}"
+                                  TextWrapping="Wrap" />
                     <ui:TextBlock Grid.Row="2"
                                   Grid.Column="0"
                                   Foreground="{ui:ThemeResource TextFillColorTertiaryBrush}"
-                                  Text="必须使用 HTTPS 地址，否则密钥会明文传输；本机地址（localhost/127.0.0.1）除外；Anthropic 可留空使用官方地址，填写时不要带 /v1"
+                                  Text="{i18n:T 必须使用 HTTPS 地址，否则密钥会明文传输；本机地址（localhost/127.0.0.1）除外；Anthropic 可留空使用官方地址，填写时不要带 /v1}"
                                   TextWrapping="Wrap" />
                     <ui:TextBox Grid.Row="0"
                                 Grid.RowSpan="3"
@@ -3563,9 +3561,8 @@
                     <ui:TextBlock Grid.Row="0"
                                   Grid.Column="0"
                                   FontTypography="Body"
-                                  TextWrapping="Wrap">
-                        LLM模型名
-                    </ui:TextBlock>
+                                  Text="{i18n:T LLM模型名}"
+                                  TextWrapping="Wrap" />
                     <!-- 下拉与按钮放在同一个固定宽度的容器里：容器与其余各行的值控件对齐，
                          内部用 * 吸收按钮宽度的变化，避免按钮文字长度反过来把下拉挤扁。 -->
                     <Grid Grid.Row="0"
@@ -3604,13 +3601,12 @@
                     <ui:TextBlock Grid.Row="0"
                                   Grid.Column="0"
                                   FontTypography="Body"
-                                  TextWrapping="Wrap">
-                        LLM服务密钥
-                    </ui:TextBlock>
+                                  Text="{i18n:T LLM服务密钥}"
+                                  TextWrapping="Wrap" />
                     <ui:TextBlock Grid.Row="1"
                                   Grid.Column="0"
                                   Foreground="{ui:ThemeResource TextFillColorTertiaryBrush}"
-                                  Text="注意保护好密钥"
+                                  Text="{i18n:T 注意保护好密钥}"
                                   TextWrapping="Wrap" />
                     <ui:PasswordBox Grid.Row="0"
                                     Grid.RowSpan="2"
@@ -3632,13 +3628,12 @@
                     <ui:TextBlock Grid.Row="0"
                                   Grid.Column="0"
                                   FontTypography="Body"
-                                  TextWrapping="Wrap">
-                        额外提示词
-                    </ui:TextBlock>
+                                  Text="{i18n:T 额外提示词}"
+                                  TextWrapping="Wrap" />
                     <ui:TextBlock Grid.Row="1"
                                   Grid.Column="0"
                                   Foreground="{ui:ThemeResource TextFillColorTertiaryBrush}"
-                                  Text="追加给 LLM 的自定义要求，如“使用芭芭拉重击来输出”；留空则不注入"
+                                  Text="{i18n:T 追加给 LLM 的自定义要求，如“使用芭芭拉重击来输出”；留空则不注入}"
                                   TextWrapping="Wrap" />
                     <ui:TextBox Grid.Row="0"
                                 Grid.RowSpan="2"
