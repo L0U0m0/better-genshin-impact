@@ -3877,5 +3877,5 @@
   "已隐藏 BetterGI 桌面分身，RDP 连接保持不变": "Desktop virtuale BetterGI nascosto, la connessione RDP resta attiva",
   "正在应用音频设置": "Applicazione delle impostazioni audio",
   "必须使用 HTTPS 地址，否则密钥会明文传输；本机地址（localhost/127.0.0.1）除外；Anthropic 可留空使用官方地址，填写时不要带 /v1": "Deve usare un indirizzo HTTPS, altrimenti la chiave viaggia in chiaro; fanno eccezione gli indirizzi locali (localhost/127.0.0.1); per Anthropic si può lasciare vuoto per usare l'indirizzo ufficiale e, se lo compili, non aggiungere /v1",
-  "命令行启动一条龙失败：{0}": "Avvio da riga di comando di Un Drago fallito: {0}"
+  "命令行启动一条龙失败：{0}": "Avvio da riga di comando della routine completa fallito: {0}"
 }
