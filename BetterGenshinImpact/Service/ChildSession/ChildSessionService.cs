@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using BetterGenshinImpact.Core.Config;
+using BetterGenshinImpact.Service.I18n;
 using BetterGenshinImpact.View.Windows;
 using BetterGenshinImpact.Service.Instance;
 using BetterGenshinImpact.Service.Interface;
@@ -58,7 +59,7 @@ public sealed class ChildSessionService : IDisposable
 
     public event EventHandler? AudioReconnectCompleted;
 
-    public string StatusText { get; private set; } = "桌面分身尚未启动";
+    public string StatusText { get; private set; } = I18nService.Instance.Translate("桌面分身尚未启动");
 
     public bool IsDesktopVisible => _desktopWindow?.IsVisible == true;
 
@@ -168,7 +169,7 @@ public sealed class ChildSessionService : IDisposable
 
             try
             {
-                ConnectCore("正在启动 BetterGI 桌面分身");
+                ConnectCore(I18nService.Instance.Translate("正在启动 BetterGI 桌面分身"));
             }
             catch
             {
@@ -216,7 +217,7 @@ public sealed class ChildSessionService : IDisposable
     {
         ThrowIfDisposed();
         _desktopWindow?.Hide();
-        RefreshState("已隐藏 BetterGI 桌面分身，RDP 连接保持不变");
+        RefreshState(I18nService.Instance.Translate("已隐藏 BetterGI 桌面分身，RDP 连接保持不变"));
     }
 
     public void ShowChildSessionDesktop()
@@ -225,7 +226,7 @@ public sealed class ChildSessionService : IDisposable
         var window = EnsureDesktopWindow();
         ShowDesktopWindow(window);
         window.RdpHost.SendShowDesktopShortcut();
-        RefreshState("已向 BetterGI 桌面分身发送 Win+D");
+        RefreshState(I18nService.Instance.Translate("已向 BetterGI 桌面分身发送 Win+D"));
     }
 
     public void ShowChildSessionTaskView()
@@ -234,7 +235,7 @@ public sealed class ChildSessionService : IDisposable
         var window = EnsureDesktopWindow();
         ShowDesktopWindow(window);
         window.RdpHost.SendTaskViewShortcut();
-        RefreshState("已向 BetterGI 桌面分身发送 Win+Tab");
+        RefreshState(I18nService.Instance.Translate("已向 BetterGI 桌面分身发送 Win+Tab"));
     }
 
     public void SetSmartSizing(bool enabled)
@@ -242,21 +243,21 @@ public sealed class ChildSessionService : IDisposable
         ThrowIfDisposed();
         EnsureDesktopWindow().RdpHost.SetSmartSizing(enabled);
         _config.SmartSizingEnabled = enabled;
-        RefreshState(enabled ? "窗口显示模式已切换为自适应" : "窗口显示模式已切换为 1:1");
+        RefreshState(enabled ? I18nService.Instance.Translate("窗口显示模式已切换为自适应") : I18nService.Instance.Translate("窗口显示模式已切换为 1:1"));
     }
 
     public void SetKeepAspectRatio(bool enabled)
     {
         ThrowIfDisposed();
         _config.KeepAspectRatio = enabled;
-        RefreshState(enabled ? "桌面分身窗口将保持宽高比" : "桌面分身窗口不再保持宽高比");
+        RefreshState(enabled ? I18nService.Instance.Translate("桌面分身窗口将保持宽高比") : I18nService.Instance.Translate("桌面分身窗口不再保持宽高比"));
     }
 
     public void SetTopmost(bool enabled)
     {
         ThrowIfDisposed();
         _config.TopmostEnabled = enabled;
-        RefreshState(enabled ? "桌面分身窗口已置顶" : "桌面分身窗口已取消置顶");
+        RefreshState(enabled ? I18nService.Instance.Translate("桌面分身窗口已置顶") : I18nService.Instance.Translate("桌面分身窗口已取消置顶"));
     }
 
     public bool SetSendSystemShortcutsToRemote(bool enabled)
@@ -271,11 +272,11 @@ public sealed class ChildSessionService : IDisposable
         _config.SendSystemShortcutsToRemote = enabled;
         var window = EnsureDesktopWindow();
         window.RdpHost.SetSendSystemShortcutsToRemote(enabled);
-        var target = enabled ? "桌面分身" : "本机";
+        var target = enabled ? I18nService.Instance.Translate("桌面分身") : I18nService.Instance.Translate("本机");
         return ReconnectForRdpSettingChange(
             window,
             RdpSettingChange.SystemShortcuts,
-            $"系统组合键已改为在{target}生效");
+            string.Format(I18nService.Instance.Translate("系统组合键已改为在{0}生效"), target));
     }
 
     public bool SetAudioMuted(bool muted)
@@ -292,7 +293,7 @@ public sealed class ChildSessionService : IDisposable
         return ReconnectForRdpSettingChange(
             window,
             RdpSettingChange.Audio,
-            muted ? "桌面分身声音已关闭" : "桌面分身声音已开启");
+            muted ? I18nService.Instance.Translate("桌面分身声音已关闭") : I18nService.Instance.Translate("桌面分身声音已开启"));
     }
 
     public void SetGameMouseModeEnabled(bool enabled)
@@ -301,8 +302,8 @@ public sealed class ChildSessionService : IDisposable
         _instanceService.SetGameMouseModeEnabled(enabled);
         _config.GameMouseModeEnabled = enabled;
         RefreshState(enabled
-            ? "已切换为游戏鼠标模式"
-            : "已切换为普通鼠标模式");
+            ? I18nService.Instance.Translate("已切换为游戏鼠标模式")
+            : I18nService.Instance.Translate("已切换为普通鼠标模式"));
     }
 
     public void SetWatchModeEnabled(bool enabled)
@@ -348,10 +349,10 @@ public sealed class ChildSessionService : IDisposable
         await _launchSemaphore.WaitAsync();
         try
         {
-            RefreshState($"正在以管理员权限启动 {System.IO.Path.GetFileName(executablePath)}");
+            RefreshState(string.Format(I18nService.Instance.Translate("正在以管理员权限启动 {0}"), System.IO.Path.GetFileName(executablePath)));
             await ChildSessionProcessLauncher.LaunchElevatedAsync(childSessionId, executablePath);
             RefreshState(
-                $"已在桌面分身（会话 {childSessionId}）中以管理员权限启动 {System.IO.Path.GetFileName(executablePath)}");
+                string.Format(I18nService.Instance.Translate("已在桌面分身（会话 {0}）中以管理员权限启动 {1}"), childSessionId, System.IO.Path.GetFileName(executablePath)));
         }
         finally
         {
@@ -387,7 +388,7 @@ public sealed class ChildSessionService : IDisposable
             _connectionAttemptCompletionSource?.TrySetResult(false);
 
             TryDisconnectRdpHost();
-            RefreshState("正在断开 RDP 并注销 BetterGI 桌面分身");
+            RefreshState(I18nService.Instance.Translate("正在断开 RDP 并注销 BetterGI 桌面分身"));
 
             var terminatedSessionId = await Task.Run(() =>
                 expectedSessionId is { } targetSessionId
@@ -395,8 +396,8 @@ public sealed class ChildSessionService : IDisposable
                     : ChildSessionNativeMethods.TerminateChildSession());
             _desktopWindow?.Hide();
             RefreshState(terminatedSessionId is null
-                ? "当前没有桌面分身会话，桌面分身窗口已隐藏"
-                : $"桌面分身会话 {terminatedSessionId.Value} 已注销，桌面分身窗口已隐藏");
+                ? I18nService.Instance.Translate("当前没有桌面分身会话，桌面分身窗口已隐藏")
+                : string.Format(I18nService.Instance.Translate("桌面分身会话 {0} 已注销，桌面分身窗口已隐藏"), terminatedSessionId.Value));
         }
         finally
         {
@@ -424,16 +425,16 @@ public sealed class ChildSessionService : IDisposable
 
             var connectionText = ConnectedState switch
             {
-                0 => "未连接",
-                1 => "已连接",
-                2 => "正在连接",
-                _ => $"未知连接状态 {ConnectedState}"
+                0 => I18nService.Instance.Translate("未连接"),
+                1 => I18nService.Instance.Translate("已连接"),
+                2 => I18nService.Instance.Translate("正在连接"),
+                _ => string.Format(I18nService.Instance.Translate("未知连接状态 {0}"), ConnectedState)
             };
-            var sessionText = ChildSessionId?.ToString() ?? "无";
+            var sessionText = ChildSessionId?.ToString() ?? I18nService.Instance.Translate("无");
             var mainText = _lastOperationMessage ?? connectionText;
 
             StatusText =
-                $"{mainText} | RDP：{connectionText} | 桌面分身会话：{sessionText} | 功能已启用：{enabled}";
+                string.Format(I18nService.Instance.Translate("{0} | RDP：{1} | 桌面分身会话：{2} | 功能已启用：{3}"), mainText, connectionText, sessionText, enabled);
         }
         catch (Exception exception) when (IsExpectedChildSessionException(exception))
         {
@@ -571,11 +572,11 @@ public sealed class ChildSessionService : IDisposable
         {
             var childSessionId = GetRequiredChildSessionId();
             RefreshState(isAutomatic
-                ? "桌面分身已加载，正在自动以管理员权限启动 BetterGI"
-                : "正在以管理员权限启动 BetterGI");
+                ? I18nService.Instance.Translate("桌面分身已加载，正在自动以管理员权限启动 BetterGI")
+                : I18nService.Instance.Translate("正在以管理员权限启动 BetterGI"));
             await ChildSessionProcessLauncher.LaunchBetterGiAsync(childSessionId);
             RefreshState(
-                $"已在桌面分身（会话 {childSessionId}）中以管理员权限启动 BetterGI");
+                string.Format(I18nService.Instance.Translate("已在桌面分身（会话 {0}）中以管理员权限启动 BetterGI"), childSessionId));
         }
         finally
         {
@@ -591,7 +592,7 @@ public sealed class ChildSessionService : IDisposable
         var childSessionId = ChildSessionNativeMethods.TryGetChildSessionId();
         if (childSessionId is null)
         {
-            throw new InvalidOperationException("当前没有可用的桌面分身，请先启动桌面分身。");
+            throw new InvalidOperationException(I18nService.Instance.Translate("当前没有可用的桌面分身，请先启动桌面分身。"));
         }
 
         return childSessionId.Value;
@@ -679,7 +680,7 @@ public sealed class ChildSessionService : IDisposable
             _pendingRdpSettingChanges = RdpSettingChange.None;
             _rdpSettingsReconnectRetriesRemaining = 0;
             _rdpSettingsReconnectRetryInProgress = false;
-            RefreshState("自动重新连接完成，RDP 设置已生效");
+            RefreshState(I18nService.Instance.Translate("自动重新连接完成，RDP 设置已生效"));
 
             if (completedSettingChanges.HasFlag(RdpSettingChange.SystemShortcuts))
             {
@@ -693,7 +694,7 @@ public sealed class ChildSessionService : IDisposable
         }
         else
         {
-            RefreshState("桌面分身登录初始化完成");
+            RefreshState(I18nService.Instance.Translate("桌面分身登录初始化完成"));
         }
 
         if (!_autoLaunchBetterGiPending)
@@ -718,7 +719,7 @@ public sealed class ChildSessionService : IDisposable
         }
         catch (Exception exception) when (IsExpectedChildSessionException(exception))
         {
-            RefreshState($"自动启动 BetterGI 失败：{exception.GetBaseException().Message}");
+            RefreshState(string.Format(I18nService.Instance.Translate("自动启动 BetterGI 失败：{0}"), exception.GetBaseException().Message));
         }
     }
 
@@ -742,8 +743,7 @@ public sealed class ChildSessionService : IDisposable
             firstFailure.ErrorCode,
             firstFailure.ExtendedErrorCode);
         RefreshState(
-            $"RDP 自动重连暂未成功，{retryDelay.TotalSeconds:0} 秒后重试"
-            + $"（{retryNumber}/{RdpSettingsReconnectRetryCount}）");
+            string.Format(I18nService.Instance.Translate("RDP 自动重连暂未成功，{0:0} 秒后重试（{1}/{2}）"), retryDelay.TotalSeconds, retryNumber, RdpSettingsReconnectRetryCount));
 
         try
         {
@@ -754,7 +754,7 @@ public sealed class ChildSessionService : IDisposable
             }
 
             RefreshState(
-                $"正在重试 RDP 自动连接（{retryNumber}/{RdpSettingsReconnectRetryCount}）");
+                string.Format(I18nService.Instance.Translate("正在重试 RDP 自动连接（{0}/{1}）"), retryNumber, RdpSettingsReconnectRetryCount));
             _rdpSettingsReconnectRetryInProgress = false;
             EnsureDesktopWindow().RdpHost.ReconnectToChildSession(DefaultDesktopSize);
         }
@@ -768,7 +768,7 @@ public sealed class ChildSessionService : IDisposable
                 ? comException.ErrorCode
                 : 0;
             retryFailure = new ChildSessionConnectionFailedEventArgs(
-                $"RDP 自动重新连接失败：{actualException.Message}",
+                string.Format(I18nService.Instance.Translate("RDP 自动重新连接失败：{0}"), actualException.Message),
                 errorCode);
         }
         finally
@@ -799,8 +799,7 @@ public sealed class ChildSessionService : IDisposable
             firstFailure.ErrorCode,
             firstFailure.ExtendedErrorCode);
         RefreshState(
-            $"桌面分身首次初始化尚未完成，{retryDelay.TotalSeconds:0} 秒后自动重试"
-            + $"（{retryNumber}/{InitialConnectionRetryCount}）");
+            string.Format(I18nService.Instance.Translate("桌面分身首次初始化尚未完成，{0:0} 秒后自动重试（{1}/{2}）"), retryDelay.TotalSeconds, retryNumber, InitialConnectionRetryCount));
 
         try
         {
@@ -817,7 +816,7 @@ public sealed class ChildSessionService : IDisposable
             }
 
             RefreshState(
-                $"正在重试桌面分身连接（{retryNumber}/{InitialConnectionRetryCount}）");
+                string.Format(I18nService.Instance.Translate("正在重试桌面分身连接（{0}/{1}）"), retryNumber, InitialConnectionRetryCount));
             _connectionRetryInProgress = false;
             // OnLogonError 触发后 ActiveX 可能仍处于连接状态，必须先断开再重连。
             // 否则这里直接退出会丢失已捕获的真实错误，最终只剩外层连接超时。
@@ -833,7 +832,7 @@ public sealed class ChildSessionService : IDisposable
                 ? comException.ErrorCode
                 : 0;
             retryFailure = new ChildSessionConnectionFailedEventArgs(
-                $"重试桌面分身连接失败：{actualException.Message}",
+                string.Format(I18nService.Instance.Translate("重试桌面分身连接失败：{0}"), actualException.Message),
                 errorCode);
         }
         finally
@@ -877,19 +876,19 @@ public sealed class ChildSessionService : IDisposable
     private ChildSessionConnectionFailedEventArgs CreateConnectionTimeoutFailure()
     {
         var timeoutMessage =
-            $"桌面分身连接及登录初始化未能在 {ConnectionTimeout.TotalSeconds:0} 秒内完成。";
+            string.Format(I18nService.Instance.Translate("桌面分身连接及登录初始化未能在 {0:0} 秒内完成。"), ConnectionTimeout.TotalSeconds);
         var lastDiagnostic =
             _desktopWindow?.RdpHost.LastConnectionDiagnostic
             ?? _lastConnectionFailure;
         if (lastDiagnostic is null)
         {
             return new ChildSessionConnectionFailedEventArgs(
-                $"{timeoutMessage}\n\nRDP ActiveX 未报告更具体的失败原因。",
+                string.Format(I18nService.Instance.Translate("{0}\n\nRDP ActiveX 未报告更具体的失败原因。"), timeoutMessage),
                 ErrorTimeout);
         }
 
         return new ChildSessionConnectionFailedEventArgs(
-            $"{timeoutMessage}\n\nRDP ActiveX 最后报告：\n{lastDiagnostic.Message}",
+            string.Format(I18nService.Instance.Translate("{0}\n\nRDP ActiveX 最后报告：\n{1}"), timeoutMessage, lastDiagnostic.Message),
             lastDiagnostic.ErrorCode,
             lastDiagnostic.ExtendedErrorCode);
     }
@@ -960,7 +959,7 @@ public sealed class ChildSessionService : IDisposable
         RefreshState();
         if (window.RdpHost.ConnectedState == 0 && ChildSessionId is null)
         {
-            RefreshState($"{operationMessage}，将在下次 RDP 连接后应用");
+            RefreshState(string.Format(I18nService.Instance.Translate("{0}，将在下次 RDP 连接后应用"), operationMessage));
             return false;
         }
 
@@ -982,7 +981,7 @@ public sealed class ChildSessionService : IDisposable
             throw;
         }
 
-        RefreshState($"{operationMessage}，正在自动重新连接 RDP");
+        RefreshState(string.Format(I18nService.Instance.Translate("{0}，正在自动重新连接 RDP"), operationMessage));
         return true;
     }
 
