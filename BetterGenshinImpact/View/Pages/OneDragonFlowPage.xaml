@@ -1226,14 +1226,14 @@
                     <ui:CardControl Margin="0,0,0,12">
                         <ui:CardControl.Header>
                             <StackPanel Margin="0,0,16,0">
-                                <ui:TextBlock FontTypography="Body" Text="树脂使用" TextWrapping="Wrap" />
+                                <ui:TextBlock FontTypography="Body" Text="{i18n:T 树脂使用}" TextWrapping="Wrap" />
                                 <ContentControl Content="{Binding DomainResin, Mode=OneWay}" ContentTemplate="{StaticResource ResinUsageSummaryTemplate}"
                                                 Margin="0,4,0,0" FontSize="14" Foreground="{DynamicResource TextFillColorTertiaryBrush}"
                                                 HorizontalContentAlignment="Stretch" Focusable="False" />
                             </StackPanel>
                         </ui:CardControl.Header>
-                        <ui:Button Content="设置" MinWidth="88" Margin="0,0,36,0" Command="{Binding DomainResin.EditCommand, Mode=OneWay}"
-                                   AutomationProperties.Name="设置树脂使用" ToolTip="{Binding DomainResin.Summary, Mode=OneWay}" />
+                        <ui:Button Content="{i18n:T 设置}" MinWidth="88" Margin="0,0,36,0" Command="{Binding DomainResin.EditCommand, Mode=OneWay}"
+                                   AutomationProperties.Name="{i18n:T 设置树脂使用}" ToolTip="{Binding DomainResin.Summary, Mode=OneWay}" />
                     </ui:CardControl>
                     <ui:CardControl Margin="0,0,0,12">
                         <ui:CardControl.Icon>

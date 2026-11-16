@@ -113,11 +113,11 @@
                     </Grid.RowDefinitions>
                     <ui:TextBlock Grid.Row="0"
                                   FontTypography="Body"
-                                  Text="本机外部访问服务"
+                                  Text="{i18n:T 本机外部访问服务}"
                                   TextWrapping="Wrap" />
                     <ui:TextBlock Grid.Row="1"
                                   Foreground="{ui:ThemeResource TextFillColorTertiaryBrush}"
-                                  Text="仅监听 loopback；功能开关和端口将在重启 BetterGI 后生效"
+                                  Text="{i18n:T 仅监听 loopback；功能开关和端口将在重启 BetterGI 后生效}"
                                   TextWrapping="Wrap" />
                 </Grid>
             </ui:CardExpander.Header>
@@ -134,7 +134,7 @@
                     <ui:TextBlock Grid.Row="0" FontTypography="Body" Text="HTTP API" />
                     <ui:TextBlock Grid.Row="1"
                                   Foreground="{ui:ThemeResource TextFillColorTertiaryBrush}"
-                                  Text="提供 /api/v1/health 与 /api/v1/version"
+                                  Text="{i18n:T 提供 /api/v1/health 与 /api/v1/version}"
                                   TextWrapping="Wrap" />
                     <ui:ToggleSwitch Grid.Row="0"
                                      Grid.RowSpan="2"
@@ -152,10 +152,10 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <ui:TextBlock Grid.Row="0" FontTypography="Body" Text="WebSocket 实时日志" />
+                    <ui:TextBlock Grid.Row="0" FontTypography="Body" Text="{i18n:T WebSocket 实时日志}" />
                     <ui:TextBlock Grid.Row="1"
                                   Foreground="{ui:ThemeResource TextFillColorTertiaryBrush}"
-                                  Text="不鉴权并允许任意 Origin，启用后本机网页可读取日志，请注意敏感信息风险"
+                                  Text="{i18n:T 不鉴权并允许任意 Origin，启用后本机网页可读取日志，请注意敏感信息风险}"
                                   TextWrapping="Wrap" />
                     <ui:ToggleSwitch Grid.Row="0"
                                      Grid.RowSpan="2"
@@ -176,7 +176,7 @@
                     <ui:TextBlock Grid.Row="0" FontTypography="Body" Text="MCP Streamable HTTP" />
                     <ui:TextBlock Grid.Row="1"
                                   Foreground="{ui:ThemeResource TextFillColorTertiaryBrush}"
-                                  Text="在 /mcp 暴露与 HTTP API 相同的共享能力"
+                                  Text="{i18n:T 在 /mcp 暴露与 HTTP API 相同的共享能力}"
                                   TextWrapping="Wrap" />
                     <ui:ToggleSwitch Grid.Row="0"
                                      Grid.RowSpan="2"
@@ -191,9 +191,9 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0">
-                        <ui:TextBlock FontTypography="Body" Text="监听端口" />
+                        <ui:TextBlock FontTypography="Body" Text="{i18n:T 监听端口}" />
                         <ui:TextBlock Foreground="{ui:ThemeResource TextFillColorTertiaryBrush}"
-                                      Text="有效范围 1024～65535，HTTP、WebSocket 和 MCP 共用"
+                                      Text="{i18n:T 有效范围 1024～65535，HTTP、WebSocket 和 MCP 共用}"
                                       TextWrapping="Wrap" />
                     </StackPanel>
                     <ui:TextBox Grid.Column="1"
@@ -209,9 +209,9 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0">
-                        <ui:TextBlock FontTypography="Body" Text="访问令牌" />
+                        <ui:TextBlock FontTypography="Body" Text="{i18n:T 访问令牌}" />
                         <ui:TextBlock Foreground="{ui:ThemeResource TextFillColorTertiaryBrush}"
-                                      Text="HTTP API 与 MCP 共用；令牌变更立即生效"
+                                      Text="{i18n:T HTTP API 与 MCP 共用；令牌变更立即生效}"
                                       TextWrapping="Wrap" />
                         <ui:TextBlock Margin="0,4,0,0"
                                       FontFamily="Consolas"
@@ -223,9 +223,9 @@
                                 Orientation="Horizontal">
                         <ui:Button Margin="0,0,8,0"
                                    Command="{Binding CopyExternalAccessTokenCommand}"
-                                   Content="复制" />
+                                   Content="{i18n:T 复制}" />
                         <ui:Button Command="{Binding RegenerateExternalAccessTokenCommand}"
-                                   Content="重新生成" />
+                                   Content="{i18n:T 重新生成}" />
                     </StackPanel>
                 </Grid>
                 <Separator Margin="-18,0" BorderThickness="0,1,0,0" />
@@ -239,7 +239,7 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <ui:TextBlock Grid.Row="0" Grid.Column="0" Margin="0,0,12,0" FontTypography="Body" Text="状态" />
+                    <ui:TextBlock Grid.Row="0" Grid.Column="0" Margin="0,0,12,0" FontTypography="Body" Text="{i18n:T 状态}" />
                     <ui:TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding ExternalAccessState.StatusText}" />
                     <ui:TextBlock Grid.Row="1" Grid.Column="1"
                                   Foreground="{ui:ThemeResource TextFillColorTertiaryBrush}"
@@ -248,7 +248,7 @@
                     <ui:TextBlock Grid.Row="2" Grid.Column="0"
                                   Margin="0,0,12,0"
                                   FontTypography="Body"
-                                  Text="访问地址" />
+                                  Text="{i18n:T 访问地址}" />
                     <ui:TextBlock Grid.Row="2" Grid.Column="1"
                                   FontFamily="Consolas"
                                   Text="{Binding ExternalAccessState.Address}"
