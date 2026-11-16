@@ -269,7 +269,7 @@ namespace BetterGenshinImpact.GameTask.AutoFishing
                         if (!_runtime.IsOperable())
                         {
                             var name = SystemControl.GetActiveByProcess();
-                            _logger.LogWarning($"当前获取焦点的窗口为: {name}，不是原神，停止执行");
+                            _logger.LogWarning("当前获取焦点的窗口为: {Name}，不是原神，停止执行", name);
                             return;
                         }
 

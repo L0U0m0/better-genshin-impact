@@ -174,7 +174,7 @@ public class PickUpCollectHandler(GameRuntime runtime, AllConfig config) : IActi
                     }
                     else
                     {
-                        Logger.LogError($"未找到角色 {pickerName} 对应的动作");
+                        Logger.LogError("未找到角色 {PickerName} 对应的动作", pickerName);
                         return; 
                     }
                 }

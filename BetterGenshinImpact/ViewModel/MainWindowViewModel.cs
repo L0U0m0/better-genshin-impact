@@ -451,7 +451,7 @@ public partial class MainWindowViewModel : ObservableObject, IViewModel, IDispos
             }
             catch (Exception ex)
             {
-                _logger.LogWarning($"加载主窗口背景图失败：{path}，{ex.Message}");
+                _logger.LogWarning("加载主窗口背景图失败：{Path}，{Msg}", path, ex.Message);
             }
         }
 
@@ -591,7 +591,7 @@ public partial class MainWindowViewModel : ObservableObject, IViewModel, IDispos
         {
             Config.CommonConfig.CurrentThemeType = themeType;
             _configService.Save();
-            _logger.LogInformation($"主题类型已从 {originalThemeType} 修正为 {themeType}，因为当前系统不支持该主题效果");
+            _logger.LogInformation("主题类型已从 {OriginalTheme} 修正为 {NewTheme}，因为当前系统不支持该主题效果", originalThemeType, themeType);
         }
 
         if (WinePlatformAddon.IsRunningOnWine)

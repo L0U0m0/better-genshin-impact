@@ -243,7 +243,7 @@ public partial class ScriptGroupProject : ObservableObject
 
             if (!pathingResult.IsSuccess)
             {
-                TaskControl.Logger.LogWarning($"此追踪脚本未正常走完！");
+                TaskControl.Logger.LogWarning("此追踪脚本未正常走完！");
             }
         }
         else if (Type == "Shell")

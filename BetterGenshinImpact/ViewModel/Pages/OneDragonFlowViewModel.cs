@@ -537,7 +537,7 @@ public partial class OneDragonFlowViewModel : ViewModel
             if (cmdOptions.OneDragonConfigName != null)
             {
                 // 从命令行参数中提取一条龙配置名称。
-                _logger.LogInformation($"参数指定的一条龙配置：{cmdOptions.OneDragonConfigName}");
+                _logger.LogInformation("参数指定的一条龙配置：{ConfigName}", cmdOptions.OneDragonConfigName);
                 var argsOneDragonConfig = ConfigList.FirstOrDefault(x =>
                     string.Equals(x.Name, cmdOptions.OneDragonConfigName, StringComparison.Ordinal));
                 if (argsOneDragonConfig != null)
