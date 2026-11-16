@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -152,7 +153,7 @@ public partial class PuloniaTaskCreationDialogViewModel
         }
         catch (Exception ex) when (IsRepositoryOperationError(ex))
         {
-            await ThemedMessageBox.ErrorAsync("无法打开仓库管理：" + ex.Message);
+            await ThemedMessageBox.ErrorAsync(I18nService.Instance.Translate("无法打开仓库管理：") + ex.Message);
         }
         finally { IsRepositoryManagerOpen = false; }
         if (!_isClosed) await InitializeAsync(forceRefresh: true);

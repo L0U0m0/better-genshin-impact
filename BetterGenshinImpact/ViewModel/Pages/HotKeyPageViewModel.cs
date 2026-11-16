@@ -1230,7 +1230,7 @@ public partial class HotKeyPageViewModel : ObservableObject, IViewModel
         {
             Interlocked.Exchange(ref _lastNoRuntimeToastTick, now);
             // 长按类热键在后台线程回调，提示统一切回 UI 线程
-            UIDispatcherHelper.BeginInvoke(() => Toast.Warning("请先启动"));
+            UIDispatcherHelper.BeginInvoke(() => Toast.Warning(I18nService.Instance.Translate("请先启动")));
         }
 
         return false;

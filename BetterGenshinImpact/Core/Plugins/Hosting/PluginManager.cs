@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -519,8 +520,8 @@ public sealed class PluginManager
             entry.State = PluginState.LoadFailed;
             entry.Error = $"与当前版本的 BetterGI 不兼容：{e.Exception.GetBaseException().Message}";
             await ThemedMessageBox.WarningAsync(
-                $"插件“{entry.Manifest.Name}”与当前版本的 BetterGI 不兼容，已自动停用，相关功能改用内置实现。请更新该插件。\n\n{entry.Error}",
-                "插件已停用");
+                string.Format(I18nService.Instance.Translate("插件“{0}”与当前版本的 BetterGI 不兼容，已自动停用，相关功能改用内置实现。请更新该插件。\n\n{1}"), entry.Manifest.Name, entry.Error),
+                I18nService.Instance.Translate("插件已停用"));
         }
         catch (Exception exception)
         {

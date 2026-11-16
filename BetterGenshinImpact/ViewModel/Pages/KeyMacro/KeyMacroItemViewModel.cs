@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 using BetterGenshinImpact.Core.Config;
 using BetterGenshinImpact.GameTask.KeyMacro;
 using BetterGenshinImpact.GameTask.KeyMacro.Script;
@@ -222,7 +223,7 @@ public partial class KeyMacroItemViewModel : ObservableObject, IDisposable
 
         if (!_store.TryRename(Definition, value, out var error))
         {
-            Toast.Warning(error ?? "重命名失败");
+            Toast.Warning(error ?? I18nService.Instance.Translate("重命名失败"));
             EditingName = Definition.Name;
         }
     }
@@ -251,7 +252,7 @@ public partial class KeyMacroItemViewModel : ObservableObject, IDisposable
         {
             if (Definition.EffectiveHotkeyType == HotKeyTypeEnum.KeyboardMonitor && value.Modifiers != ModifierKeys.None)
             {
-                Toast.Warning("键鼠监听不支持组合键，请改用单键，或把类型切换为全局热键");
+                Toast.Warning(I18nService.Instance.Translate("键鼠监听不支持组合键，请改用单键，或把类型切换为全局热键"));
                 OnPropertyChanged();
                 return;
             }
@@ -363,7 +364,7 @@ public partial class KeyMacroItemViewModel : ObservableObject, IDisposable
             if (HotKey.Modifiers != ModifierKeys.None)
             {
                 Definition.Hotkey = string.Empty;
-                Toast.Information("按住循环只能使用键鼠监听，原来的组合键已清空，请重新设置单键或鼠标侧键");
+                Toast.Information(I18nService.Instance.Translate("按住循环只能使用键鼠监听，原来的组合键已清空，请重新设置单键或鼠标侧键"));
             }
         }
 

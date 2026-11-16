@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -390,8 +391,8 @@ public partial class PuloniaPlanEditingSession
     {
         if (keys.Count == 0) return 0;
         var answer = await ThemedMessageBox.ShowAsync(
-            $"清除{description}的路线 CD 记录（共 {keys.Count} 条）？\n\n清除后下次运行会执行这些路线；运行历史中的成功记录不受影响；此操作不能撤销。",
-            "清除路线 CD 记录", MessageBoxButton.YesNo, ThemedMessageBox.MessageBoxIcon.Warning, MessageBoxResult.No);
+            string.Format(I18nService.Instance.Translate("清除{0}的路线 CD 记录（共 {1} 条）？\n\n清除后下次运行会执行这些路线；运行历史中的成功记录不受影响；此操作不能撤销。"), description, keys.Count),
+            I18nService.Instance.Translate("清除路线 CD 记录"), MessageBoxButton.YesNo, ThemedMessageBox.MessageBoxIcon.Warning, MessageBoxResult.No);
         if (answer != MessageBoxResult.Yes) return 0;
         try
         {
@@ -409,7 +410,7 @@ public partial class PuloniaPlanEditingSession
         {
             var message = "清除路线 CD 记录失败：" + ex.Message;
             ReportStatus(message);
-            await ThemedMessageBox.ErrorAsync(message, "无法清除路线 CD 记录");
+            await ThemedMessageBox.ErrorAsync(message, I18nService.Instance.Translate("无法清除路线 CD 记录"));
             return 0;
         }
     }

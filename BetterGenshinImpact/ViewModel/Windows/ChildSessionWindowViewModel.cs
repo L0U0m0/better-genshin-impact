@@ -252,8 +252,8 @@ public partial class ChildSessionWindowViewModel : ViewModel
             // 默认按钮为「是」：这些条件只是风险提示，不应该挡住本来可以连上的用户。
             var result = await ThemedMessageBox.WarningAsync(
                 _childSessionService.EnvironmentIssueSummary
-                + "\n\n检测到可能影响桌面分身的环境设置。是否仍要继续？",
-                "桌面分身环境检查",
+                + I18nService.Instance.Translate("\n\n检测到可能影响桌面分身的环境设置。是否仍要继续？"),
+                I18nService.Instance.Translate("桌面分身环境检查"),
                 MessageBoxButton.YesNo,
                 MessageBoxResult.Yes);
             if (result != MessageBoxResult.Yes)

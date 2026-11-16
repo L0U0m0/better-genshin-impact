@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
@@ -56,8 +57,8 @@ public partial class ChildSessionWindow : FluentWindow
         }
 
         var result = ThemedMessageBox.Show(
-            "关闭会断开 RDP 并注销桌面分身，其中所有正在运行的软件都会被关闭，未保存的数据会丢失。是否继续？",
-            "关闭 BetterGI 桌面分身",
+            I18nService.Instance.Translate("关闭会断开 RDP 并注销桌面分身，其中所有正在运行的软件都会被关闭，未保存的数据会丢失。是否继续？"),
+            I18nService.Instance.Translate("关闭 BetterGI 桌面分身"),
             MessageBoxButton.YesNo,
             ThemedMessageBox.MessageBoxIcon.Warning,
             MessageBoxResult.No,

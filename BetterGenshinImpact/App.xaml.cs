@@ -617,8 +617,8 @@ public partial class App : Application
                 try
                 {
                     System.Windows.Forms.MessageBox.Show(
-                        $"应用程序启动失败：{ex.Message}",
-                        "BetterGI 启动失败",
+                        string.Format(I18nService.Instance.Translate("应用程序启动失败：{0}"), ex.Message),
+                        I18nService.Instance.Translate("BetterGI 启动失败"),
                         System.Windows.Forms.MessageBoxButtons.OK,
                         System.Windows.Forms.MessageBoxIcon.Error);
                 }

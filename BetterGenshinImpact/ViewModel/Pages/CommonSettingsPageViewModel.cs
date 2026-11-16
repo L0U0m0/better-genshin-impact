@@ -255,12 +255,12 @@ public partial class CommonSettingsPageViewModel : ViewModel
         var token = Config.ExternalAccessConfig.AccessToken;
         if (string.IsNullOrEmpty(token))
         {
-            ThemedMessageBox.Warning("访问令牌尚未生成。请先启用 HTTP API 或 MCP 后重启，或者点击“重新生成”。");
+            ThemedMessageBox.Warning(I18nService.Instance.Translate("访问令牌尚未生成。请先启用 HTTP API 或 MCP 后重启，或者点击“重新生成”。"));
             return;
         }
 
         Clipboard.SetDataObject(token);
-        ThemedMessageBox.Information("访问令牌已复制到剪贴板。");
+        ThemedMessageBox.Information(I18nService.Instance.Translate("访问令牌已复制到剪贴板。"));
     }
 
     /// <summary>
@@ -271,7 +271,7 @@ public partial class CommonSettingsPageViewModel : ViewModel
     {
         _externalAccessTokenService.RegenerateToken();
         OnPropertyChanged(nameof(MaskedExternalAccessToken));
-        ThemedMessageBox.Information("访问令牌已重新生成，旧令牌立即失效。");
+        ThemedMessageBox.Information(I18nService.Instance.Translate("访问令牌已重新生成，旧令牌立即失效。"));
     }
 
     private void InitializeMiyousheCookie()
@@ -540,11 +540,11 @@ public partial class CommonSettingsPageViewModel : ViewModel
             try
             {
                 await ScriptRepoUpdater.Instance.ImportLocalRepoZip(dialog.FileName);
-                ThemedMessageBox.Information("脚本仓库离线包导入成功！");
+                ThemedMessageBox.Information(I18nService.Instance.Translate("脚本仓库离线包导入成功！"));
             }
             catch (Exception ex)
             {
-                ThemedMessageBox.Error($"脚本仓库离线包导入失败：{ex.Message}");
+                ThemedMessageBox.Error(string.Format(I18nService.Instance.Translate("脚本仓库离线包导入失败：{0}"), ex.Message));
             }
         }
     }
@@ -579,7 +579,7 @@ public partial class CommonSettingsPageViewModel : ViewModel
     [RelayCommand]
     private async Task CheckUpdateAlphaAsync()
     {
-        var result = await ThemedMessageBox.ShowAsync("测试版本非常不稳定！\n测试版本非常不稳定！\n测试版本非常不稳定！\n\n是否继续检查更新？", "警告", MessageBoxButton.YesNo, ThemedMessageBox.MessageBoxIcon.Warning);
+        var result = await ThemedMessageBox.ShowAsync(I18nService.Instance.Translate("测试版本非常不稳定！\n测试版本非常不稳定！\n测试版本非常不稳定！\n\n是否继续检查更新？"), I18nService.Instance.Translate("警告"), MessageBoxButton.YesNo, ThemedMessageBox.MessageBoxIcon.Warning);
         if (result != MessageBoxResult.Yes)
         {
             return;

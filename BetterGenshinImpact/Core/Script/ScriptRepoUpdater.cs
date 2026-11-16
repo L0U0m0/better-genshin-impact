@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 using BetterGenshinImpact.Core.Config;
 using BetterGenshinImpact.Core.Script.Project;
 using BetterGenshinImpact.Core.Script.WebView;
@@ -255,7 +256,7 @@ public partial class ScriptRepoUpdater : Singleton<ScriptRepoUpdater>
                 if (successCount > 0)
                 {
                     _logger.LogInformation("自动更新订阅脚本完成: 成功 {Success} 个, 失败 {Fail} 个", successCount, failCount);
-                    UIDispatcherHelper.Invoke(() => Toast.Success($"已自动更新 {successCount} 个订阅脚本"));
+                    UIDispatcherHelper.Invoke(() => Toast.Success(string.Format(I18nService.Instance.Translate("已自动更新 {0} 个订阅脚本"), successCount)));
                 }
             }
             finally
@@ -288,7 +289,7 @@ public partial class ScriptRepoUpdater : Singleton<ScriptRepoUpdater>
             if (subscribedPaths.Count == 0)
             {
                 _logger.LogInformation("没有已订阅的脚本");
-                UIDispatcherHelper.Invoke(() => Toast.Information("没有已订阅的脚本，请先在仓库中订阅脚本"));
+                UIDispatcherHelper.Invoke(() => Toast.Information(I18nService.Instance.Translate("没有已订阅的脚本，请先在仓库中订阅脚本")));
                 return;
             }
 
@@ -302,9 +303,9 @@ public partial class ScriptRepoUpdater : Singleton<ScriptRepoUpdater>
                 UIDispatcherHelper.Invoke(() =>
                 {
                     if (failCount == 0)
-                        Toast.Success($"已更新 {successCount} 个订阅脚本");
+                        Toast.Success(string.Format(I18nService.Instance.Translate("已更新 {0} 个订阅脚本"), successCount));
                     else
-                        Toast.Warning($"已更新 {successCount} 个订阅脚本，{failCount} 个失败");
+                        Toast.Warning(string.Format(I18nService.Instance.Translate("已更新 {0} 个订阅脚本，{1} 个失败"), successCount, failCount));
                 });
             }
             finally
@@ -315,7 +316,7 @@ public partial class ScriptRepoUpdater : Singleton<ScriptRepoUpdater>
         catch (Exception ex)
         {
             _logger.LogWarning(ex, "一键更新订阅脚本失败");
-            UIDispatcherHelper.Invoke(() => Toast.Error($"更新订阅脚本失败，建议重置仓库后重试\n原因：{ex.Message}"));
+            UIDispatcherHelper.Invoke(() => Toast.Error(string.Format(I18nService.Instance.Translate("更新订阅脚本失败，建议重置仓库后重试\n原因：{0}"), ex.Message)));
         }
     }
 
@@ -332,7 +333,7 @@ public partial class ScriptRepoUpdater : Singleton<ScriptRepoUpdater>
         if (!Directory.Exists(CenterRepoPath))
         {
             _logger.LogWarning("仓库文件夹不存在，请先更新仓库");
-            UIDispatcherHelper.Invoke(() => Toast.Warning("仓库文件夹不存在，请先更新仓库"));
+            UIDispatcherHelper.Invoke(() => Toast.Warning(I18nService.Instance.Translate("仓库文件夹不存在，请先更新仓库")));
             return (0, 0);
         }
 
@@ -352,7 +353,7 @@ public partial class ScriptRepoUpdater : Singleton<ScriptRepoUpdater>
         catch (Exception ex)
         {
             _logger.LogWarning(ex, "查找中央仓库路径失败");
-            UIDispatcherHelper.Invoke(() => Toast.Warning("查找仓库路径失败，请先更新仓库"));
+            UIDispatcherHelper.Invoke(() => Toast.Warning(I18nService.Instance.Translate("查找仓库路径失败，请先更新仓库")));
             return (0, 0);
         }
 
@@ -903,8 +904,8 @@ public partial class ScriptRepoUpdater : Singleton<ScriptRepoUpdater>
                     // 检查是否为有效的Git仓库
                     if (!Repository.IsValid(repoPath))
                     {
-                        Toast.Error($"不是有效的Git仓库，将重新克隆");
-                        UIDispatcherHelper.Invoke(() => Toast.Error("不是有效的Git仓库，将重新克隆"));
+                        Toast.Error(I18nService.Instance.Translate("不是有效的Git仓库，将重新克隆"));
+                        UIDispatcherHelper.Invoke(() => Toast.Error(I18nService.Instance.Translate("不是有效的Git仓库，将重新克隆")));
                         CloneRepository(repoUrl, repoPath, "release", onCheckoutProgress);
                         updated = true;
                         return;
@@ -1016,7 +1017,7 @@ public partial class ScriptRepoUpdater : Singleton<ScriptRepoUpdater>
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Git仓库更新失败");
-                UIDispatcherHelper.Invoke(() => Toast.Error("脚本仓库更新异常，直接删除后重新克隆\n原因：" + ex.Message));
+                UIDispatcherHelper.Invoke(() => Toast.Error(I18nService.Instance.Translate("脚本仓库更新异常，直接删除后重新克隆\n原因：") + ex.Message));
                 repo?.Dispose();
                 repo = null;
                 CloneRepository(repoUrl, repoPath, "release", onCheckoutProgress);
@@ -2258,7 +2259,7 @@ public partial class ScriptRepoUpdater : Singleton<ScriptRepoUpdater>
         var paths = Newtonsoft.Json.JsonConvert.DeserializeObject<List<string>>(pathJson);
         if (paths is null || paths.Count == 0)
         {
-            Toast.Warning("订阅脚本路径为空");
+            Toast.Warning(I18nService.Instance.Translate("订阅脚本路径为空"));
             return;
         }
 
@@ -2267,7 +2268,7 @@ public partial class ScriptRepoUpdater : Singleton<ScriptRepoUpdater>
         if (unsafePaths.Count > 0)
         {
             _logger.LogWarning("订阅链接包含不安全的脚本路径，已忽略: {Paths}", string.Join(", ", unsafePaths));
-            Toast.Warning($"已忽略 {unsafePaths.Count} 个不安全的脚本路径");
+            Toast.Warning(string.Format(I18nService.Instance.Translate("已忽略 {0} 个不安全的脚本路径"), unsafePaths.Count));
             paths = paths.Except(unsafePaths).ToList();
             if (paths.Count == 0)
             {
@@ -2278,7 +2279,7 @@ public partial class ScriptRepoUpdater : Singleton<ScriptRepoUpdater>
         // 保存订阅信息（按当前仓库存储到文件）
         AddSubscribedPathsForCurrentRepo(paths);
 
-        Toast.Information("获取最新仓库信息中...");
+        Toast.Information(I18nService.Instance.Translate("获取最新仓库信息中..."));
 
         string repoPath;
         try
@@ -2287,7 +2288,7 @@ public partial class ScriptRepoUpdater : Singleton<ScriptRepoUpdater>
         }
         catch
         {
-            await ThemedMessageBox.ErrorAsync("本地无仓库信息，请至少成功更新一次脚本仓库信息！");
+            await ThemedMessageBox.ErrorAsync(I18nService.Instance.Translate("本地无仓库信息，请至少成功更新一次脚本仓库信息！"));
             return;
         }
 
@@ -2318,7 +2319,7 @@ public partial class ScriptRepoUpdater : Singleton<ScriptRepoUpdater>
         //     }
         //     else
         //     {
-        //         Toast.Warning($"未知的脚本路径：{path}");
+        //         Toast.Warning(string.Format(I18nService.Instance.Translate("未知的脚本路径：{0}"), path));
         //     }
         // }
         //
@@ -2393,11 +2394,11 @@ public partial class ScriptRepoUpdater : Singleton<ScriptRepoUpdater>
                 }
 
                 UpdateSubscribedScriptPaths();
-                Toast.Success("脚本订阅链接导入完成");
+                Toast.Success(I18nService.Instance.Translate("脚本订阅链接导入完成"));
             }
             else
             {
-                Toast.Warning($"未知的脚本路径：{path}");
+                Toast.Warning(string.Format(I18nService.Instance.Translate("未知的脚本路径：{0}"), path));
             }
         }
     }

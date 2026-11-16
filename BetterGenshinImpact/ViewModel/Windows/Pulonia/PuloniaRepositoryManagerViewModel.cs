@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -277,8 +278,8 @@ public partial class PuloniaRepositoryManagerViewModel : ViewModel
     private async Task ResetAsync()
     {
         var repository = SelectedRepository!;
-        var result = await ThemedMessageBox.QuestionAsync("重置将清理当前本机仓库副本，之后需要重新同步。任务使用的旧内容会保留。",
-            "重置仓库", MessageBoxButton.YesNo);
+        var result = await ThemedMessageBox.QuestionAsync(I18nService.Instance.Translate("重置将清理当前本机仓库副本，之后需要重新同步。任务使用的旧内容会保留。"),
+            I18nService.Instance.Translate("重置仓库"), MessageBoxButton.YesNo);
         if (result != MessageBoxResult.Yes || _closed) return;
         await RunAsync(async ct =>
         {
@@ -331,7 +332,7 @@ public partial class PuloniaRepositoryManagerViewModel : ViewModel
             if (!_closed)
             {
                 StatusMessage = ex.Message;
-                await ThemedMessageBox.ErrorAsync(ex.Message, "仓库操作失败");
+                await ThemedMessageBox.ErrorAsync(ex.Message, I18nService.Instance.Translate("仓库操作失败"));
             }
         }
         finally

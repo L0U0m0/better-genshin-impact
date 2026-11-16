@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -458,7 +459,7 @@ public partial class PuloniaAccountsPageViewModel : ViewModel
             if (await _accounts.CheckAccountRemovalAsync(account.Id) is { } blocker)
             {
                 Message = "不能删除账户：" + blocker;
-                await ThemedMessageBox.WarningAsync(blocker, "不能删除账户");
+                await ThemedMessageBox.WarningAsync(blocker, I18nService.Instance.Translate("不能删除账户"));
                 return;
             }
             // 3. 确认后从草稿移除并立即保存整个目录；保存失败时恢复原位置
@@ -481,7 +482,7 @@ public partial class PuloniaAccountsPageViewModel : ViewModel
             }
             var confirm = $"删除账户“{account.Name}”？\n\n{dataText}\n\n删除后不能撤销。"
                           + (othersDirty ? "\n本页其他未保存的修改会一并保存。" : "");
-            if (await ThemedMessageBox.ShowAsync(confirm, "删除账户", MessageBoxButton.YesNo, ThemedMessageBox.MessageBoxIcon.Warning,
+            if (await ThemedMessageBox.ShowAsync(confirm, I18nService.Instance.Translate("删除账户"), MessageBoxButton.YesNo, ThemedMessageBox.MessageBoxIcon.Warning,
                     MessageBoxResult.No) != MessageBoxResult.Yes)
                 return;
             var index = Accounts.IndexOf(account);
@@ -579,8 +580,8 @@ public partial class PuloniaAccountsPageViewModel : ViewModel
             }
             // 修订冲突：其他实例或页面已保存账户目录，本页草稿基于旧内容，不能覆盖
             Message = "未保存：账户目录已被其他实例或页面修改。";
-            if (await ThemedMessageBox.ShowAsync("账户目录已被其他实例或页面修改，本页的修改不能直接保存。\n\n要重新读取最新的账户目录吗？本页未保存的修改会丢失。",
-                    "账户目录已变更", MessageBoxButton.YesNo, ThemedMessageBox.MessageBoxIcon.Warning, MessageBoxResult.No) == MessageBoxResult.Yes)
+            if (await ThemedMessageBox.ShowAsync(I18nService.Instance.Translate("账户目录已被其他实例或页面修改，本页的修改不能直接保存。\n\n要重新读取最新的账户目录吗？本页未保存的修改会丢失。"),
+                    I18nService.Instance.Translate("账户目录已变更"), MessageBoxButton.YesNo, ThemedMessageBox.MessageBoxIcon.Warning, MessageBoxResult.No) == MessageBoxResult.Yes)
             {
                 await LoadCoreAsync(force: true);
                 Message = "已重新读取最新的账户目录，请重新修改后保存。";
@@ -603,7 +604,7 @@ public partial class PuloniaAccountsPageViewModel : ViewModel
     [RelayCommand(CanExecute = nameof(CanDiscardChanges))]
     private async Task DiscardChangesAsync()
     {
-        if (await ThemedMessageBox.QuestionAsync("放弃本页未保存的修改，并重新读取账户目录？", "放弃修改") != MessageBoxResult.Yes)
+        if (await ThemedMessageBox.QuestionAsync(I18nService.Instance.Translate("放弃本页未保存的修改，并重新读取账户目录？"), I18nService.Instance.Translate("放弃修改")) != MessageBoxResult.Yes)
             return;
         await LoadAsync(force: true);
         Message = "已放弃未保存的修改。";

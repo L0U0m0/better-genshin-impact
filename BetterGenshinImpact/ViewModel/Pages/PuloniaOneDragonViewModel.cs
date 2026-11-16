@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 using System;
 using System.IO;
 using System.ComponentModel;
@@ -292,7 +293,7 @@ public partial class PuloniaOneDragonViewModel : ViewModel, IDropTarget
             Session.InsertOneDragonTask(document, SelectedTask, result.Task);
             SelectedTask = document.SelectedNode;
         }
-        catch (Exception ex) { ThemedMessageBox.Error("无法添加任务：" + ex.Message, "一条龙"); }
+        catch (Exception ex) { ThemedMessageBox.Error(I18nService.Instance.Translate("无法添加任务：") + ex.Message, I18nService.Instance.Translate("一条龙")); }
     }
 
     /// <summary>
@@ -321,7 +322,7 @@ public partial class PuloniaOneDragonViewModel : ViewModel, IDropTarget
             // 保存目标期间用户可能切换配置；只更新仍在显示的来源配置，不能把它的节点选到另一份计划。
             if (ReferenceEquals(SelectedConfiguration, document)) SelectedTask = document.SelectedNode;
         }
-        catch (Exception ex) { await ThemedMessageBox.ErrorAsync(ex.Message, "无法引用任务计划"); }
+        catch (Exception ex) { await ThemedMessageBox.ErrorAsync(ex.Message, I18nService.Instance.Translate("无法引用任务计划")); }
     }
     /// <summary>删除当前行，原文档负责撤销与自动保存。</summary>
     [RelayCommand]
@@ -495,7 +496,7 @@ public partial class PuloniaOneDragonViewModel : ViewModel, IDropTarget
                 await _service.CancelAsync(runId);
             await RefreshExecutionStatusAsync();
         }
-        catch (Exception ex) { await ThemedMessageBox.ErrorAsync("停止失败：" + ex.Message, "一条龙"); }
+        catch (Exception ex) { await ThemedMessageBox.ErrorAsync(I18nService.Instance.Translate("停止失败：") + ex.Message, I18nService.Instance.Translate("一条龙")); }
     }
     /// <summary>拖拽仅允许当前根清单内的任务排序。</summary>
     public void DragOver(IDropInfo dropInfo)
@@ -538,7 +539,7 @@ public partial class PuloniaOneDragonViewModel : ViewModel, IDropTarget
         catch (Exception ex)
         {
             result?.Differences.Add("写入未全部完成：" + ex.Message + "；已保存的计划保留在列表中，原文件不变。");
-            await ThemedMessageBox.ErrorAsync("导入未全部完成：" + ex.Message, "导入旧数据");
+            await ThemedMessageBox.ErrorAsync(I18nService.Instance.Translate("导入未全部完成：") + ex.Message, I18nService.Instance.Translate("导入旧数据"));
         }
         finally
         {

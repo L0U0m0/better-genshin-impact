@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -180,7 +181,7 @@ public partial class QuestVoiceManagementViewModel : ObservableObject
 
     /// <summary>显式破坏性操作使用宿主主题确认；无窗口的组件测试不弹出界面。</summary>
     private static bool ConfirmChange(string message) => Application.Current?.MainWindow is null
-        || ThemedMessageBox.Question(message, "确认配置操作", MessageBoxButton.YesNo, MessageBoxResult.No) == MessageBoxResult.Yes;
+        || ThemedMessageBox.Question(message, I18nService.Instance.Translate("确认配置操作"), MessageBoxButton.YesNo, MessageBoxResult.No) == MessageBoxResult.Yes;
 
     /// <summary>读取当前配置路径，不覆盖已有未保存输入。</summary>
     [RelayCommand(CanExecute = nameof(IsEditingAllowed))]

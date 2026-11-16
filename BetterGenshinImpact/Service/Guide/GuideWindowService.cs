@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 using System;
 using System.ComponentModel;
 using System.Linq;
@@ -345,13 +346,13 @@ public sealed class GuideWindowService : IGuideWindowService, IHostedService, ID
     {
         if (!IsAvailable)
         {
-            Toast.Warning("悬浮小窗只能在主实例中使用");
+            Toast.Warning(I18nService.Instance.Translate("悬浮小窗只能在主实例中使用"));
             return;
         }
 
         if (!WebViewRuntime.IsAvailable)
         {
-            Toast.Warning("悬浮小窗需要 Microsoft Edge WebView2 运行时，请安装后重试");
+            Toast.Warning(I18nService.Instance.Translate("悬浮小窗需要 Microsoft Edge WebView2 运行时，请安装后重试"));
             return;
         }
 
@@ -366,7 +367,7 @@ public sealed class GuideWindowService : IGuideWindowService, IHostedService, ID
             catch (Exception e)
             {
                 _logger.LogError(e, "打开悬浮小窗失败");
-                Toast.Error($"打开悬浮小窗失败：{e.Message}");
+                Toast.Error(string.Format(I18nService.Instance.Translate("打开悬浮小窗失败：{0}"), e.Message));
                 return;
             }
         }
@@ -1260,7 +1261,7 @@ public sealed class GuideWindowService : IGuideWindowService, IHostedService, ID
             }
             else
             {
-                Toast.Information("剪贴板中没有可打开的链接");
+                Toast.Information(I18nService.Instance.Translate("剪贴板中没有可打开的链接"));
             }
 
             return;
@@ -1335,7 +1336,7 @@ public sealed class GuideWindowService : IGuideWindowService, IHostedService, ID
     {
         if (!IsOpen)
         {
-            Toast.Information("请先打开悬浮小窗");
+            Toast.Information(I18nService.Instance.Translate("请先打开悬浮小窗"));
             return;
         }
 

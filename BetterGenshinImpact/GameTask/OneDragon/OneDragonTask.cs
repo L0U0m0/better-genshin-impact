@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -214,7 +215,7 @@ public class OneDragonTask : ISoloTask<OneDragonParam, NoData>
         catch (Exception e)
         {
             _logger.LogDebug(e, "执行配置组任务时失败");
-            Toast.Error("执行配置组任务时失败");
+            Toast.Error(I18nService.Instance.Translate("执行配置组任务时失败"));
         }
     }
 

@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
@@ -54,7 +55,7 @@ public static class PuloniaJavaScriptTaskCreationSettings
             if (reason is null)
             {
                 if (saved is null)
-                    return ThemedMessageBox.Question("设置页没有保存设置，仍然添加任务吗？", DialogTitle,
+                    return ThemedMessageBox.Question(I18nService.Instance.Translate("设置页没有保存设置，仍然添加任务吗？"), DialogTitle,
                         MessageBoxButton.YesNo) == MessageBoxResult.Yes;
                 SetSettings(task, saved);
                 return true;
@@ -62,9 +63,9 @@ public static class PuloniaJavaScriptTaskCreationSettings
 
             // 2. 设置页打不开：没有基础表单时由用户决定是否添加，否则改用基础表单
             if (items.Count == 0)
-                return ThemedMessageBox.Warning($"无法打开脚本设置页面：{reason}\n仍然添加任务吗？", DialogTitle,
+                return ThemedMessageBox.Warning(string.Format(I18nService.Instance.Translate("无法打开脚本设置页面：{0}\n仍然添加任务吗？"), reason), DialogTitle,
                     MessageBoxButton.YesNo) == MessageBoxResult.Yes;
-            ThemedMessageBox.Warning($"无法打开脚本设置页面：{reason}\n将改用基础设置表单。", DialogTitle);
+            ThemedMessageBox.Warning(string.Format(I18nService.Instance.Translate("无法打开脚本设置页面：{0}\n将改用基础设置表单。"), reason), DialogTitle);
         }
         else if (basicFormEdited || items.Count == 0)
         {

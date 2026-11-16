@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -165,7 +166,7 @@ public sealed partial class InstalledPluginItemViewModel : ObservableObject
         }
         catch (Exception e)
         {
-            _ = ThemedMessageBox.ErrorAsync($"无法打开目录：{e.Message}", "插件");
+            _ = ThemedMessageBox.ErrorAsync(string.Format(I18nService.Instance.Translate("无法打开目录：{0}"), e.Message), I18nService.Instance.Translate("插件"));
         }
     }
 
@@ -188,7 +189,7 @@ public sealed partial class InstalledPluginItemViewModel : ObservableObject
         }
         catch (Exception e)
         {
-            _ = ThemedMessageBox.ErrorAsync($"无法打开插件“{Name}”的设置：{e.GetBaseException().Message}", "插件设置");
+            _ = ThemedMessageBox.ErrorAsync(string.Format(I18nService.Instance.Translate("无法打开插件“{0}”的设置：{1}"), Name, e.GetBaseException().Message), I18nService.Instance.Translate("插件设置"));
             return;
         }
 
@@ -219,7 +220,7 @@ public sealed partial class InstalledPluginItemViewModel : ObservableObject
         }
         catch (Exception e)
         {
-            _ = ThemedMessageBox.ErrorAsync($"无法打开主页：{e.Message}", "插件");
+            _ = ThemedMessageBox.ErrorAsync(string.Format(I18nService.Instance.Translate("无法打开主页：{0}"), e.Message), I18nService.Instance.Translate("插件"));
         }
     }
 
@@ -255,7 +256,7 @@ public sealed partial class InstalledPluginItemViewModel : ObservableObject
             {
                 if (!_manager.Enable(Entry))
                 {
-                    await ThemedMessageBox.ErrorAsync($"启用插件“{Name}”失败：{Entry.Error}", "启用插件");
+                    await ThemedMessageBox.ErrorAsync(string.Format(I18nService.Instance.Translate("启用插件“{0}”失败：{1}"), Name, Entry.Error), I18nService.Instance.Translate("启用插件"));
                 }
             }
             else

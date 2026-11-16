@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -124,8 +125,8 @@ public partial class DownloadCenterViewModel : ObservableObject
             return true;
         }
 
-        _exitConfirmed = ThemedMessageBox.Question($"有 {count} 个下载正在进行，退出后下次可以继续下载。\n确定要退出吗？",
-            "下载未完成", MessageBoxButton.OKCancel, MessageBoxResult.Cancel) == MessageBoxResult.OK;
+        _exitConfirmed = ThemedMessageBox.Question(string.Format(I18nService.Instance.Translate("有 {0} 个下载正在进行，退出后下次可以继续下载。\n确定要退出吗？"), count),
+            I18nService.Instance.Translate("下载未完成"), MessageBoxButton.OKCancel, MessageBoxResult.Cancel) == MessageBoxResult.OK;
         return _exitConfirmed;
     }
 
@@ -171,7 +172,7 @@ public partial class DownloadCenterViewModel : ObservableObject
     {
         if (item?.Source.ResultPath is not { } path || !File.Exists(path))
         {
-            Toast.Warning("文件已被移动或删除");
+            Toast.Warning(I18nService.Instance.Translate("文件已被移动或删除"));
             return;
         }
 
@@ -182,7 +183,7 @@ public partial class DownloadCenterViewModel : ObservableObject
         catch (Exception e)
         {
             _logger.LogWarning(e, "打开下载文件夹失败");
-            Toast.Error($"无法打开文件夹：{e.Message}");
+            Toast.Error(string.Format(I18nService.Instance.Translate("无法打开文件夹：{0}"), e.Message));
         }
     }
 
@@ -237,7 +238,7 @@ public partial class DownloadCenterViewModel : ObservableObject
             item.Update();
             if (item.State == DownloadState.Failed && previous != DownloadState.Failed)
             {
-                Toast.Error($"「{item.DisplayName}」下载失败：{item.Source.Progress.Error}");
+                Toast.Error(string.Format(I18nService.Instance.Translate("「{0}」下载失败：{1}"), item.DisplayName, item.Source.Progress.Error));
             }
         }
 

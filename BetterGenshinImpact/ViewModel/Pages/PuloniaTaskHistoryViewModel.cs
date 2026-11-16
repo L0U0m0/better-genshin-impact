@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -376,9 +377,9 @@ public partial class PuloniaTaskHistoryViewModel : ViewModel, IDisposable
             selected.Run.NodeResults);
         // 显式起点会重放其后的节点，已确认成功也可能重复，普通历史同样需要确认。
         var result = await ThemedMessageBox.ShowAsync(
-            $"将沿用这次运行当时的设置，从“{node.TaskName}”开始重新执行，它和之后的任务都会再执行一次。"
-            + (allowUncertainReplay ? "\n这次运行有结果无法确认的任务，请先在游戏中核对。" : "")
-            + "\n是否继续？", "从选中任务开始", MessageBoxButton.YesNo,
+            string.Format(I18nService.Instance.Translate("将沿用这次运行当时的设置，从“{0}”开始重新执行，它和之后的任务都会再执行一次。"), node.TaskName)
+            + (allowUncertainReplay ? I18nService.Instance.Translate("\n这次运行有结果无法确认的任务，请先在游戏中核对。") : "")
+            + I18nService.Instance.Translate("\n是否继续？"), I18nService.Instance.Translate("从选中任务开始"), MessageBoxButton.YesNo,
             ThemedMessageBox.MessageBoxIcon.Warning, MessageBoxResult.No);
         if (result != MessageBoxResult.Yes)
             return;
@@ -547,7 +548,7 @@ public partial class PuloniaTaskHistoryViewModel : ViewModel, IDisposable
     private async Task ShowOperationErrorAsync(string prefix, Exception ex)
     {
         StatusMessage = prefix + ex.Message;
-        await ThemedMessageBox.ErrorAsync(StatusMessage, "执行记录操作失败");
+        await ThemedMessageBox.ErrorAsync(StatusMessage, I18nService.Instance.Translate("执行记录操作失败"));
     }
 
     /// <summary>

@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -176,7 +177,7 @@ public partial class PuloniaTaskNodeAdvancedSettingsViewModel : ObservableObject
         catch (Exception ex) when (ex is JsonException or PuloniaTaskValidationException or InvalidOperationException)
         {
             Message = "参数未应用：" + ex.Message;
-            ThemedMessageBox.Error(Message, "参数格式错误");
+            ThemedMessageBox.Error(Message, I18nService.Instance.Translate("参数格式错误"));
         }
     }
 
@@ -192,7 +193,7 @@ public partial class PuloniaTaskNodeAdvancedSettingsViewModel : ObservableObject
         catch (Exception ex) when (ex is JsonException or PuloniaTaskValidationException or InvalidOperationException)
         {
             Message = "共享设置未应用：" + ex.Message;
-            ThemedMessageBox.Error(Message, "共享设置格式错误");
+            ThemedMessageBox.Error(Message, I18nService.Instance.Translate("共享设置格式错误"));
         }
     }
 
@@ -208,7 +209,7 @@ public partial class PuloniaTaskNodeAdvancedSettingsViewModel : ObservableObject
         catch (Exception ex) when (ex is JsonException or PuloniaTaskValidationException or InvalidOperationException)
         {
             Message = "执行策略未应用：" + ex.Message;
-            ThemedMessageBox.Error(Message, "执行策略格式错误");
+            ThemedMessageBox.Error(Message, I18nService.Instance.Translate("执行策略格式错误"));
         }
     }
 
@@ -224,7 +225,7 @@ public partial class PuloniaTaskNodeAdvancedSettingsViewModel : ObservableObject
         catch (Exception ex) when (ex is JsonException or PuloniaTaskValidationException or InvalidOperationException)
         {
             Message = "引用来源未应用：" + ex.Message;
-            ThemedMessageBox.Error(Message, "引用来源格式错误");
+            ThemedMessageBox.Error(Message, I18nService.Instance.Translate("引用来源格式错误"));
         }
     }
 
@@ -257,7 +258,7 @@ public partial class PuloniaTaskNodeAdvancedSettingsViewModel : ObservableObject
         catch (Exception ex)
         {
             // 清单缺失、仓库版本不可用或路径无效时只提示，不修改任务
-            ThemedMessageBox.Error("无法读取脚本设置：" + ex.Message, "脚本自定义设置");
+            ThemedMessageBox.Error(I18nService.Instance.Translate("无法读取脚本设置：") + ex.Message, I18nService.Instance.Translate("脚本自定义设置"));
             return;
         }
         finally
@@ -278,21 +279,21 @@ public partial class PuloniaTaskNodeAdvancedSettingsViewModel : ObservableObject
                 if (reason is null) return;
                 if (preview.JavaScriptSettingItems.Count == 0)
                 {
-                    ThemedMessageBox.Error("无法打开脚本设置页面：" + reason, "脚本自定义设置");
+                    ThemedMessageBox.Error(I18nService.Instance.Translate("无法打开脚本设置页面：") + reason, I18nService.Instance.Translate("脚本自定义设置"));
                     return;
                 }
-                ThemedMessageBox.Warning($"无法打开脚本设置页面：{reason}\n将改用基础设置表单。", "脚本自定义设置");
+                ThemedMessageBox.Warning(string.Format(I18nService.Instance.Translate("无法打开脚本设置页面：{0}\n将改用基础设置表单。"), reason), I18nService.Instance.Translate("脚本自定义设置"));
             }
 
             var items = preview.JavaScriptSettingItems;
             if (preview.JavaScriptSettingsError is { } error)
             {
-                ThemedMessageBox.Error(error, "脚本自定义设置");
+                ThemedMessageBox.Error(error, I18nService.Instance.Translate("脚本自定义设置"));
                 return;
             }
             if (items.Count == 0)
             {
-                ThemedMessageBox.Information("此脚本未提供自定义设置。", "脚本自定义设置");
+                ThemedMessageBox.Information(I18nService.Instance.Translate("此脚本未提供自定义设置。"), I18nService.Instance.Translate("脚本自定义设置"));
                 return;
             }
 
@@ -306,7 +307,7 @@ public partial class PuloniaTaskNodeAdvancedSettingsViewModel : ObservableObject
             }
             catch (Exception ex) when (ex is PuloniaTaskValidationException or InvalidOperationException)
             {
-                ThemedMessageBox.Error("脚本设置未应用：" + ex.Message, "脚本自定义设置");
+                ThemedMessageBox.Error(I18nService.Instance.Translate("脚本设置未应用：") + ex.Message, I18nService.Instance.Translate("脚本自定义设置"));
             }
         }
     }

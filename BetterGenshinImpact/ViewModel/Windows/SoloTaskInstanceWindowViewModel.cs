@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 using BetterGenshinImpact.GameTask.SoloTask;
 using BetterGenshinImpact.GameTask.SoloTask.Execution;
 using BetterGenshinImpact.Service.Instance;
@@ -129,7 +130,7 @@ public sealed partial class SoloTaskInstanceWindowViewModel : ObservableObject, 
 
             if (!response.Accepted)
             {
-                await ThemedMessageBox.WarningAsync(response.ErrorMessage ?? "目标实例拒绝了本次操作。", "独立任务");
+                await ThemedMessageBox.WarningAsync(response.ErrorMessage ?? I18nService.Instance.Translate("目标实例拒绝了本次操作。"), I18nService.Instance.Translate("独立任务"));
             }
         }
         catch (TimeoutException ex)
@@ -144,11 +145,11 @@ public sealed partial class SoloTaskInstanceWindowViewModel : ObservableObject, 
                 // 查询失败时仍保留原始超时提示，连接事件会继续校正在线状态。
             }
 
-            await ThemedMessageBox.WarningAsync($"实例操作等待确认超时：{ex.Message}", "独立任务");
+            await ThemedMessageBox.WarningAsync(string.Format(I18nService.Instance.Translate("实例操作等待确认超时：{0}"), ex.Message), I18nService.Instance.Translate("独立任务"));
         }
         catch (Exception ex)
         {
-            await ThemedMessageBox.ErrorAsync($"实例操作失败：{ex.Message}", "独立任务");
+            await ThemedMessageBox.ErrorAsync(string.Format(I18nService.Instance.Translate("实例操作失败：{0}"), ex.Message), I18nService.Instance.Translate("独立任务"));
         }
         finally
         {

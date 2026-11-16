@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 using BetterGenshinImpact.Core.Input;
 using BetterGenshinImpact.Core.Config;
 using BetterGenshinImpact.Core.Recognition;
@@ -214,7 +215,7 @@ public partial class AutoSkipTrigger : ITaskTrigger
         {
             _logger.LogError(e, "读取自动剧情默认暂停点击关键词列表失败");
             // 在截图线程上读取，弹窗投递到 UI 线程，不等待用户确认
-            UIDispatcherHelper.BeginInvoke(() => ThemedMessageBox.Error("读取自动剧情默认暂停点击关键词列表失败，请确认修改后的自动剧情默认暂停点击关键词内容格式是否正确！"));
+            UIDispatcherHelper.BeginInvoke(() => ThemedMessageBox.Error(I18nService.Instance.Translate("读取自动剧情默认暂停点击关键词列表失败，请确认修改后的自动剧情默认暂停点击关键词内容格式是否正确！")));
         }
 
         try
@@ -228,7 +229,7 @@ public partial class AutoSkipTrigger : ITaskTrigger
         catch (Exception e)
         {
             _logger.LogError(e, "读取自动剧情暂停点击关键词列表失败");
-            UIDispatcherHelper.BeginInvoke(() => ThemedMessageBox.Error("读取自动剧情暂停点击关键词列表失败，请确认修改后的自动剧情暂停点击关键词内容格式是否正确！"));
+            UIDispatcherHelper.BeginInvoke(() => ThemedMessageBox.Error(I18nService.Instance.Translate("读取自动剧情暂停点击关键词列表失败，请确认修改后的自动剧情暂停点击关键词内容格式是否正确！")));
         }
 
         try
@@ -242,7 +243,7 @@ public partial class AutoSkipTrigger : ITaskTrigger
         catch (Exception e)
         {
             _logger.LogError(e, "读取自动剧情优先点击选项列表失败");
-            UIDispatcherHelper.BeginInvoke(() => ThemedMessageBox.Error("读取自动剧情优先点击选项列表失败，请确认修改后的自动剧情优先点击选项内容格式是否正确！"));
+            UIDispatcherHelper.BeginInvoke(() => ThemedMessageBox.Error(I18nService.Instance.Translate("读取自动剧情优先点击选项列表失败，请确认修改后的自动剧情优先点击选项内容格式是否正确！")));
         }
     }
 

@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 using BetterGenshinImpact.GameTask.SoloTask;
 using BetterGenshinImpact.Helpers;
 using BetterGenshinImpact.Model;
@@ -322,8 +323,8 @@ public sealed partial class CloudWebInstanceWindowViewModel : ObservableObject, 
         try
         {
             var result = await ThemedMessageBox.QuestionAsync(
-                $"关闭实例「{row.Name}」？\n该实例正在执行的任务也会停止，登录状态会保留。",
-                "关闭云原神实例");
+                string.Format(I18nService.Instance.Translate("关闭实例「{0}」？\n该实例正在执行的任务也会停止，登录状态会保留。"), row.Name),
+                I18nService.Instance.Translate("关闭云原神实例"));
             if (result == MessageBoxResult.Yes && !_disposed)
             {
                 await _instanceService.CloseChildInstanceAsync(endpoint, _lifetimeCancellation.Token);
@@ -361,8 +362,8 @@ public sealed partial class CloudWebInstanceWindowViewModel : ObservableObject, 
         try
         {
             var result = await ThemedMessageBox.QuestionAsync(
-                $"确定删除实例「{row.Name}」吗？\n该实例的登录态等 WebView 数据会一并删除，且无法恢复。",
-                "删除云原神网页版实例");
+                string.Format(I18nService.Instance.Translate("确定删除实例「{0}」吗？\n该实例的登录态等 WebView 数据会一并删除，且无法恢复。"), row.Name),
+                I18nService.Instance.Translate("删除云原神网页版实例"));
             if (result == MessageBoxResult.Yes && !_disposed)
             {
                 _store.Delete(row.Name);
@@ -397,7 +398,7 @@ public sealed partial class CloudWebInstanceWindowViewModel : ObservableObject, 
         {
             var result = await Task.Run(() => _store.ClearCache(row.Name));
             var skipped = result.SkippedFiles > 0 ? $"，{result.SkippedFiles} 个文件正在使用，已跳过" : string.Empty;
-            Toast.Success($"已清理「{row.Name}」的缓存，释放 {ByteSizeFormatter.Format(result.FreedBytes)}{skipped}。登录状态已保留");
+            Toast.Success(string.Format(I18nService.Instance.Translate("已清理「{0}」的缓存，释放 {1}{2}。登录状态已保留"), row.Name, ByteSizeFormatter.Format(result.FreedBytes), skipped));
         }
         catch (Exception ex) when (ex is ArgumentException or InvalidOperationException or IOException or UnauthorizedAccessException)
         {

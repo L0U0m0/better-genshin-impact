@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 using System;
 using Windows.System;
 using BetterGenshinImpact.Core.Config;
@@ -38,7 +39,7 @@ public static class MirrorChyanHelper
             );
             if (string.IsNullOrEmpty(cdk))
             {
-                Toast.Warning("输入CDK为空，无法继续操作");
+                Toast.Warning(I18nService.Instance.Translate("输入CDK为空，无法继续操作"));
                 return null;
             }
 

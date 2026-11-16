@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -28,7 +29,7 @@ public static class WebViewRuntimePrompt
             return true;
         }
 
-        var result = await ThemedMessageBox.WarningAsync(Message, "缺少 WebView2 运行时", MessageBoxButton.OKCancel,
+        var result = await ThemedMessageBox.WarningAsync(Message, I18nService.Instance.Translate("缺少 WebView2 运行时"), MessageBoxButton.OKCancel,
             MessageBoxResult.OK);
         if (result == MessageBoxResult.OK)
         {
@@ -49,7 +50,7 @@ public static class WebViewRuntimePrompt
         }
         catch (Exception e)
         {
-            ThemedMessageBox.Error($"无法打开浏览器：{e.Message}\n请手动访问 {WebViewRuntime.DownloadUrl}");
+            ThemedMessageBox.Error(string.Format(I18nService.Instance.Translate("无法打开浏览器：{0}\n请手动访问 {1}"), e.Message, WebViewRuntime.DownloadUrl));
         }
     }
 }

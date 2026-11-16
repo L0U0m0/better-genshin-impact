@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 using BetterGenshinImpact.Core.Config;
 using BetterGenshinImpact.Service;
 using BetterGenshinImpact.View.Windows;
@@ -111,8 +112,8 @@ public partial class CustomHtmlMaskEditorViewModel : ObservableObject
         }
 
         var result = ThemedMessageBox.Show(
-            "你还有未保存的 HTML 遮罩修改。\r\n\r\n现在关闭会丢失这些内容，要继续关闭吗？",
-            "关闭编辑器？",
+            I18nService.Instance.Translate("你还有未保存的 HTML 遮罩修改。\r\n\r\n现在关闭会丢失这些内容，要继续关闭吗？"),
+            I18nService.Instance.Translate("关闭编辑器？"),
             MessageBoxButton.YesNo,
             ThemedMessageBox.MessageBoxIcon.Question,
             MessageBoxResult.No,

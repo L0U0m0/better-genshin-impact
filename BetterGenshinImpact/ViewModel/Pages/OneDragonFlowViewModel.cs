@@ -850,8 +850,8 @@ public partial class OneDragonFlowViewModel : ViewModel
             ? $"{SelectedConfig.Name[..4]}...{SelectedConfig.Name[^4..]}" 
             : SelectedConfig.Name;
         var result = await ThemedMessageBox.ShowAsync(
-            $"确定要删除配置「{displayName}」吗？", 
-            "删除配置", 
+            string.Format(I18nService.Instance.Translate("确定要删除配置「{0}」吗？"), displayName), 
+            I18nService.Instance.Translate("删除配置"), 
             System.Windows.MessageBoxButton.YesNo, 
             ThemedMessageBox.MessageBoxIcon.Question);
         if (result != System.Windows.MessageBoxResult.Yes)

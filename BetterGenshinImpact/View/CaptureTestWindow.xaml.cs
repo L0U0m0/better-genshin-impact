@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 ﻿using BetterGenshinImpact.GameTask;
 using Fischless.GameCapture;
 using System;
@@ -43,7 +44,7 @@ public partial class CaptureTestWindow
     {
         if (hWnd == IntPtr.Zero)
         {
-            Toast.Warning("请选择窗口");
+            Toast.Warning(I18nService.Instance.Translate("请选择窗口"));
             return;
         }
 

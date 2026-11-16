@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -872,7 +873,7 @@ namespace BetterGenshinImpact.GameTask.LogParse
                 }
                 catch (NullReferenceException)
                 {
-                    Toast.Warning("读取日志分析配置文件失败！");
+                    Toast.Warning(I18nService.Instance.Translate("读取日志分析配置文件失败！"));
                     config = new LogParseConfig();
                 }
             }

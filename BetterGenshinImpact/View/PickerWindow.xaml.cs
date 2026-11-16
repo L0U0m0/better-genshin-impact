@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 using BetterGenshinImpact.Core.Simulator;
 using BetterGenshinImpact.GameTask;
 using BetterGenshinImpact.Helpers;
@@ -181,7 +182,7 @@ public partial class PickerWindow : FluentWindow
 
             当前选择的窗口：{window.Name} ({window.ProcessName})
             """,
-            "确认选择",
+            I18nService.Instance.Translate("确认选择"),
             System.Windows.MessageBoxButton.YesNo,
             System.Windows.MessageBoxResult.No
         );

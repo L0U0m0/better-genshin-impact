@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -111,8 +112,8 @@ public partial class AccountRecordsImportViewModel : ObservableObject
         try
         {
             var hasDeltas = ((JObject)_package["accounts"]!).Properties().Any(account => account.Value["deltas"] is JArray { Count: > 0 });
-            if (hasDeltas && await ThemedMessageBox.ShowAsync("此文件包含库存增量测试数据，仅供开发调试与报错验证，不代表正式开放。是否继续导入？",
-                "开发测试操作", MessageBoxButton.YesNo) != MessageBoxResult.Yes) return;
+            if (hasDeltas && await ThemedMessageBox.ShowAsync(I18nService.Instance.Translate("此文件包含库存增量测试数据，仅供开发调试与报错验证，不代表正式开放。是否继续导入？"),
+                I18nService.Instance.Translate("开发测试操作"), MessageBoxButton.YesNo) != MessageBoxResult.Yes) return;
             var uid = TargetUid.Trim();
             if (!InventoryStore.IsValidUid(uid)) throw new ArgumentException("目标 UID 须为首位非零的 9～10 位数字。");
             // 狛荷屋只显示账户目录中的 UID：目标不在目录中时先确认并建账户（在人工操作门禁外进行），取消则不导入。

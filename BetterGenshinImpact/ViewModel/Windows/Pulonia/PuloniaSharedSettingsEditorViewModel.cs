@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -279,8 +280,8 @@ public partial class PuloniaSharedSettingsEditorViewModel : ObservableObject, ID
         {
             var saved = await _session.SaveProfileAsync(new PuloniaSettingsProfile { Name = name, Settings = settings });
             var replace = await ThemedMessageBox.QuestionAsync(
-                $"已保存方案「{saved.Name}」（{saved.Settings.Count} 项）。\n\n是否让本节点改用这个方案，并移除本节点上的 {node.OwnSettings.Count} 项覆盖？有效值不变，可以撤销。",
-                "另存为设置方案");
+                string.Format(I18nService.Instance.Translate("已保存方案「{0}」（{1} 项）。\n\n是否让本节点改用这个方案，并移除本节点上的 {2} 项覆盖？有效值不变，可以撤销。"), saved.Name, saved.Settings.Count, node.OwnSettings.Count),
+                I18nService.Instance.Translate("另存为设置方案"));
             if (replace == MessageBoxResult.Yes)
                 node.Document.UseProfileInsteadOfSettings(node.Node, saved.Id);
             Message = $"已保存方案「{saved.Name}」。";

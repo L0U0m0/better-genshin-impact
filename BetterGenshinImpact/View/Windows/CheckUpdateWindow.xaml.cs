@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
@@ -153,8 +154,8 @@ public partial class CheckUpdateWindow : FluentWindow
         if (source == "github")
         {
             // 提示用户这个是国外服务器，可能会很慢
-            var result = await ThemedMessageBox.ShowAsync("您已选择「Github」作为更新源。\n请确认：您当前网络可正常访问 Github 文件服务？\n若不确定能否访问，建议切换至其他更新渠道。\n是否继续使用 Github 渠道更新？",
-                "警告", System.Windows.MessageBoxButton.OKCancel, ThemedMessageBox.MessageBoxIcon.Warning);
+            var result = await ThemedMessageBox.ShowAsync(I18nService.Instance.Translate("您已选择「Github」作为更新源。\n请确认：您当前网络可正常访问 Github 文件服务？\n若不确定能否访问，建议切换至其他更新渠道。\n是否继续使用 Github 渠道更新？"),
+                I18nService.Instance.Translate("警告"), System.Windows.MessageBoxButton.OKCancel, ThemedMessageBox.MessageBoxIcon.Warning);
             if (result != MessageBoxResult.OK)
             {
                 return;
@@ -184,8 +185,8 @@ public partial class CheckUpdateWindow : FluentWindow
         // 没输入 CDK 的情况下提示这是收费渠道
         if (string.IsNullOrEmpty(MirrorChyanHelper.GetCdk()))
         {
-            var result = await ThemedMessageBox.ShowAsync("Mirror酱是一个【付费】更新渠道！\n更新窗上有多个可用的【免费】国内更新渠道！\n（使用有问题可以直接反馈，或者过一段时间后重试，也可以点击左下角按钮进行手动更新）\n是否继续使用 Mirror酱 渠道更新？",
-                "您已选择「Mirror酱」作为更新源", System.Windows.MessageBoxButton.OKCancel, ThemedMessageBox.MessageBoxIcon.Warning);
+            var result = await ThemedMessageBox.ShowAsync(I18nService.Instance.Translate("Mirror酱是一个【付费】更新渠道！\n更新窗上有多个可用的【免费】国内更新渠道！\n（使用有问题可以直接反馈，或者过一段时间后重试，也可以点击左下角按钮进行手动更新）\n是否继续使用 Mirror酱 渠道更新？"),
+                I18nService.Instance.Translate("您已选择「Mirror酱」作为更新源"), System.Windows.MessageBoxButton.OKCancel, ThemedMessageBox.MessageBoxIcon.Warning);
             if (result != MessageBoxResult.OK)
             {
                 return;
@@ -221,7 +222,7 @@ public partial class CheckUpdateWindow : FluentWindow
         string updaterExePath = Global.Absolute("BetterGI.update.exe");
         if (!File.Exists(updaterExePath))
         {
-            await ThemedMessageBox.ErrorAsync("更新程序不存在，请选择其他更新方式！");
+            await ThemedMessageBox.ErrorAsync(I18nService.Instance.Translate("更新程序不存在，请选择其他更新方式！"));
             return;
         }
 

@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -249,11 +250,11 @@ public partial class HardwareAccelerationViewModel : ObservableObject, IViewMode
     [RelayCommand]
     private async Task ShowEngineDetailsAsync(InferenceEngineCardViewModel card)
         => await ThemedMessageBox.ShowAsync($"{card.StatusText}\n\n{card.Details}\n\n{card.DeviceMessage}",
-            $"{card.Name} · 运行库信息", MessageBoxButton.OK,
+            string.Format(I18nService.Instance.Translate("{0} · 运行库信息"), card.Name), MessageBoxButton.OK,
             card.HasFailure ? ThemedMessageBox.MessageBoxIcon.Warning : ThemedMessageBox.MessageBoxIcon.Information);
 
     [RelayCommand]
-    private async Task ShowErrorAsync() => await ThemedMessageBox.ShowAsync(ErrorDetails, "操作详情", MessageBoxButton.OK, ThemedMessageBox.MessageBoxIcon.Error);
+    private async Task ShowErrorAsync() => await ThemedMessageBox.ShowAsync(ErrorDetails, I18nService.Instance.Translate("操作详情"), MessageBoxButton.OK, ThemedMessageBox.MessageBoxIcon.Error);
 
     [RelayCommand]
     private Task RefreshAsync() => RunAsync(token => RefreshCoreAsync(token));
@@ -435,7 +436,7 @@ public partial class HardwareAccelerationViewModel : ObservableObject, IViewMode
             Directory.CreateDirectory(_installer.PluginsDirectory);
             using var process = Process.Start("explorer.exe", _installer.PluginsDirectory);
         }
-        catch (Exception e) { ThemedMessageBox.Show($"无法打开运行库目录：{e.Message}", "打开目录失败"); }
+        catch (Exception e) { ThemedMessageBox.Show(string.Format(I18nService.Instance.Translate("无法打开运行库目录：{0}"), e.Message), I18nService.Instance.Translate("打开目录失败")); }
     }
     [RelayCommand]
     public void OnOpenCacheFolder()

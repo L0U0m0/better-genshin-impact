@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -462,7 +463,7 @@ public partial class PuloniaTaskPlanViewModel : ViewModel, IDropTarget
         if (Session.WouldCreatePlanReferenceCycle(sourceDocument, referencePlan))
         {
             StatusMessage = $"不能引用“{referencePlan.Name}”：两个计划会互相引用。";
-            await ThemedMessageBox.ErrorAsync(StatusMessage, "无法引用任务计划");
+            await ThemedMessageBox.ErrorAsync(StatusMessage, I18nService.Instance.Translate("无法引用任务计划"));
             return;
         }
 
@@ -498,10 +499,10 @@ public partial class PuloniaTaskPlanViewModel : ViewModel, IDropTarget
         if (document.HasPasteInheritanceDifference(source, pasted, effectiveParameters, parent))
         {
             var result = await ThemedMessageBox.ShowAsync(
-                $"复制内容来自“{clipboard.SourcePlanName}”，目标位置继承的共享设置会改变部分有效设置。\n\n" +
-                "选择“是”：保留复制时的有效设置，不同的项写在粘贴的节点上。\n" +
-                "选择“否”：使用目标位置的继承结果。\n选择“取消”：不粘贴。",
-                "粘贴时发现设置差异", MessageBoxButton.YesNoCancel,
+                string.Format(I18nService.Instance.Translate("复制内容来自“{0}”，目标位置继承的共享设置会改变部分有效设置。\n\n"), clipboard.SourcePlanName) +
+                I18nService.Instance.Translate("选择“是”：保留复制时的有效设置，不同的项写在粘贴的节点上。\n") +
+                I18nService.Instance.Translate("选择“否”：使用目标位置的继承结果。\n选择“取消”：不粘贴。"),
+                I18nService.Instance.Translate("粘贴时发现设置差异"), MessageBoxButton.YesNoCancel,
                 ThemedMessageBox.MessageBoxIcon.Question, MessageBoxResult.Cancel);
             if (result == MessageBoxResult.Cancel)
                 return;

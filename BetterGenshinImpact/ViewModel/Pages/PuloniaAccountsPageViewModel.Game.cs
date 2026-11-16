@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -108,8 +109,8 @@ public partial class PuloniaAccountsPageViewModel
     {
         if (SelectedAccount is not { } account)
             return;
-        if (await ThemedMessageBox.ShowAsync("将从当前已登录的账户识别 UID，退出到登录界面采集账户标识，再返回游戏。请确认当前登录的是要保存的账户。",
-                "采集账户图片", MessageBoxButton.YesNo, ThemedMessageBox.MessageBoxIcon.Question, MessageBoxResult.No) != MessageBoxResult.Yes)
+        if (await ThemedMessageBox.ShowAsync(I18nService.Instance.Translate("将从当前已登录的账户识别 UID，退出到登录界面采集账户标识，再返回游戏。请确认当前登录的是要保存的账户。"),
+                I18nService.Instance.Translate("采集账户图片"), MessageBoxButton.YesNo, ThemedMessageBox.MessageBoxIcon.Question, MessageBoxResult.No) != MessageBoxResult.Yes)
             return;
         await RunGameOperationAsync("正在采集账户图片…", "采集未完成：", async (lease, ct) =>
         {
@@ -146,8 +147,8 @@ public partial class PuloniaAccountsPageViewModel
         var displacedText = displaced.Count == 0
             ? ""
             : $"\n\n{string.Join("、", displaced.Select(PuloniaInstanceKey.Describe))}的当前账户是“{saved.Name}”且正在线，切换会把它挤下线。";
-        if (await ThemedMessageBox.ShowAsync($"将在本实例的游戏中切换到账户“{saved.Name}”（UID {saved.Uid}）并核验 UID，当前登录的账户会被登出。{displacedText}\n\n确定继续吗？",
-                "测试切换", MessageBoxButton.YesNo, ThemedMessageBox.MessageBoxIcon.Question, MessageBoxResult.No) != MessageBoxResult.Yes)
+        if (await ThemedMessageBox.ShowAsync(string.Format(I18nService.Instance.Translate("将在本实例的游戏中切换到账户“{0}”（UID {1}）并核验 UID，当前登录的账户会被登出。{2}\n\n确定继续吗？"), saved.Name, saved.Uid, displacedText),
+                I18nService.Instance.Translate("测试切换"), MessageBoxButton.YesNo, ThemedMessageBox.MessageBoxIcon.Question, MessageBoxResult.No) != MessageBoxResult.Yes)
             return;
         // 3. 取得目标账户的占用：账户正在任一实例运行时不切换，避免两处同时使用同一账户
         IDisposable? occupancy;

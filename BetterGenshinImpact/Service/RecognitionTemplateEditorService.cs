@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 using BetterGenshinImpact.GameTask.Common;
 using BetterGenshinImpact.GameTask.Runtime;
 using BetterGenshinImpact.Service.Interface;
@@ -238,7 +239,7 @@ public sealed class RecognitionTemplateEditorService
         {
             ThemedMessageBox.Show(
                 $"{failureMessage}{Environment.NewLine}{Environment.NewLine}{detail}{Environment.NewLine}{Environment.NewLine}{guidance}",
-                "模板素材制作",
+                I18nService.Instance.Translate("模板素材制作"),
                 MessageBoxButton.OK,
                 ThemedMessageBox.MessageBoxIcon.Warning,
                 MessageBoxResult.OK,

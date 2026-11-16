@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 using BetterGenshinImpact.Service.AccountRecords;
 using System;
 using System.Threading.Tasks;
@@ -76,7 +77,7 @@ public partial class AccountRecordsEventsViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            await ThemedMessageBox.ShowAsync(AccountRecordsErrorMessages.Describe(ex), "事件记录", MessageBoxButton.OK, ThemedMessageBox.MessageBoxIcon.Error);
+            await ThemedMessageBox.ShowAsync(AccountRecordsErrorMessages.Describe(ex), I18nService.Instance.Translate("事件记录"), MessageBoxButton.OK, ThemedMessageBox.MessageBoxIcon.Error);
         }
     }
     /// <summary>按创建顺序倒序展示。</summary>

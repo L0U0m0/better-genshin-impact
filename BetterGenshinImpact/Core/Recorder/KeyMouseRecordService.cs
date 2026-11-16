@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 using System;
 using System.IO;
 using System.Text;
@@ -48,7 +49,7 @@ public sealed class KeyMouseRecordService
         {
             if (_runtimeService.Current is not { IsStopping: false } runtime)
             {
-                UIDispatcherHelper.Invoke(() => Toast.Warning("请先在启动页，启动截图器再使用本功能"));
+                UIDispatcherHelper.Invoke(() => Toast.Warning(I18nService.Instance.Translate("请先在启动页，启动截图器再使用本功能")));
                 return false;
             }
             var root = Path.GetFullPath(Global.Absolute(@"User\KeyMouseScript"));
@@ -66,7 +67,7 @@ public sealed class KeyMouseRecordService
         catch (Exception ex)
         {
             _logger.LogWarning(ex, "启动键鼠录制失败");
-            UIDispatcherHelper.Invoke(() => Toast.Error($"启动录制失败：{ex.Message}"));
+            UIDispatcherHelper.Invoke(() => Toast.Error(string.Format(I18nService.Instance.Translate("启动录制失败：{0}"), ex.Message)));
             return false;
         }
         finally
@@ -100,7 +101,7 @@ public sealed class KeyMouseRecordService
         catch (Exception ex)
         {
             _logger.LogWarning(ex, "停止录制或保存文件失败");
-            UIDispatcherHelper.Invoke(() => Toast.Error($"保存录制失败：{ex.Message}"));
+            UIDispatcherHelper.Invoke(() => Toast.Error(string.Format(I18nService.Instance.Translate("保存录制失败：{0}"), ex.Message)));
             return null;
         }
         finally

@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -58,14 +59,14 @@ public partial class AccountRecordsDictionaryViewModel : ObservableObject
     private async Task RestorePresetCategories()
     {
         if (!CanEdit || !IsSupplementaryDictionary || !EditingEnabled || _restorePresetCategories == null) return;
-        if (await ThemedMessageBox.ShowAsync("将补回缺失的预置物品，并将它们的分类恢复为默认值。用户新增的其他条目会保留，库存数量不变。\n此字典由所有 UID 共用；原文件将保存为 .bak 备份。是否继续？",
-                "恢复预置分类", MessageBoxButton.YesNo) != MessageBoxResult.Yes) return;
+        if (await ThemedMessageBox.ShowAsync(I18nService.Instance.Translate("将补回缺失的预置物品，并将它们的分类恢复为默认值。用户新增的其他条目会保留，库存数量不变。\n此字典由所有 UID 共用；原文件将保存为 .bak 备份。是否继续？"),
+                I18nService.Instance.Translate("恢复预置分类"), MessageBoxButton.YesNo) != MessageBoxResult.Yes) return;
         try
         {
             await AccountRecordsInteractionGate.Instance.ExecuteManualAsync(() => _restorePresetCategories());
             await Refresh();
         }
-        catch (Exception ex) { await ThemedMessageBox.ShowAsync(AccountRecordsErrorMessages.Describe(ex), "恢复预置分类", MessageBoxButton.OK); }
+        catch (Exception ex) { await ThemedMessageBox.ShowAsync(AccountRecordsErrorMessages.Describe(ex), I18nService.Instance.Translate("恢复预置分类"), MessageBoxButton.OK); }
     }
 
     /// <summary>查询变化时更新列表。</summary>
@@ -127,6 +128,6 @@ public partial class AccountRecordsDictionaryViewModel : ObservableObject
                 return Task.CompletedTask;
             });
         }
-        catch (Exception ex) { await ThemedMessageBox.ShowAsync(AccountRecordsErrorMessages.Describe(ex), "打开源文件", MessageBoxButton.OK); }
+        catch (Exception ex) { await ThemedMessageBox.ShowAsync(AccountRecordsErrorMessages.Describe(ex), I18nService.Instance.Translate("打开源文件"), MessageBoxButton.OK); }
     }
 }

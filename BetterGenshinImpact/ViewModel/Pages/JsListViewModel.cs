@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 using BetterGenshinImpact.Core.Config;
 using BetterGenshinImpact.Core.Script;
 using BetterGenshinImpact.Core.Script.Group;
@@ -80,7 +81,7 @@ public partial class JsListViewModel : ViewModel
             }
             catch (Exception e)
             {
-                Toast.Warning($"脚本 {f.Name} 载入失败：{e.Message}");
+                Toast.Warning(string.Format(I18nService.Instance.Translate("脚本 {0} 载入失败：{1}"), f.Name, e.Message));
             }
         }
     }
@@ -124,7 +125,7 @@ public partial class JsListViewModel : ViewModel
 
         if (!string.IsNullOrEmpty(item.Manifest.SettingsUi) || !string.IsNullOrEmpty(item.Manifest.SettingsHtml))
         {
-            Toast.Information("此脚本存在配置，不配置可能无法正常运行，建议请添加至【调度器】，并右键修改配置后使用！");
+            Toast.Information(I18nService.Instance.Translate("此脚本存在配置，不配置可能无法正常运行，建议请添加至【调度器】，并右键修改配置后使用！"));
             _logger.LogWarning("此脚本存在配置，可能无法直接从脚本界面运行，建议请添加至【调度器】，并右键修改配置后使用！");
         }
 
@@ -167,7 +168,7 @@ public partial class JsListViewModel : ViewModel
                 if (Directory.Exists(item.ProjectPath))
                 {
                     Directory.Delete(item.ProjectPath, true);
-                    Toast.Success($"已删除脚本: {item.Manifest.Name}");
+                    Toast.Success(string.Format(I18nService.Instance.Translate("已删除脚本: {0}"), item.Manifest.Name));
                     _logger.LogInformation("已删除脚本: {Name} ({Path})", item.Manifest.Name, item.ProjectPath);
                     
                     // 刷新列表
@@ -175,12 +176,12 @@ public partial class JsListViewModel : ViewModel
                 }
                 else
                 {
-                    Toast.Warning("脚本目录不存在");
+                    Toast.Warning(I18nService.Instance.Translate("脚本目录不存在"));
                 }
             }
             catch (Exception ex)
             {
-                Toast.Error($"删除脚本失败: {ex.Message}");
+                Toast.Error(string.Format(I18nService.Instance.Translate("删除脚本失败: {0}"), ex.Message));
                 _logger.LogError(ex, "删除脚本失败");
             }
         }

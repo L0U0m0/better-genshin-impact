@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 using BetterGenshinImpact.Core.Recognition.OCR;
 using BetterGenshinImpact.GameTask;
 using BetterGenshinImpact.GameTask.AutoArtifactSalvage;
@@ -98,8 +99,8 @@ public partial class ArtifactOcrDialog
     {
         Logger.LogError(e, "自动分解圣遗物-OCR识别异常");
         var result = await ThemedMessageBox.ErrorAsync(
-            $"{e.Message}\n是否保存该圣遗物截图？（至log/autoArtifactSalvageException/）",
-            "识别失败",
+            string.Format(I18nService.Instance.Translate("{0}\n是否保存该圣遗物截图？（至log/autoArtifactSalvageException/）"), e.Message),
+            I18nService.Instance.Translate("识别失败"),
             MessageBoxButton.YesNo,
             MessageBoxResult.No
         );

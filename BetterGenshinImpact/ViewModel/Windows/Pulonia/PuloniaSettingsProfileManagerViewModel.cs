@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -106,7 +107,7 @@ public partial class PuloniaSettingsProfileManagerViewModel : ObservableObject, 
     {
         if (SelectedProfile is not { } item || _session.Profiles.FirstOrDefault(profile => profile.Id == item.Id) is not { } profile)
             return;
-        if (await ThemedMessageBox.QuestionAsync($"确定删除方案「{profile.Name}」吗？此操作不能撤销。", "删除设置方案") != MessageBoxResult.Yes)
+        if (await ThemedMessageBox.QuestionAsync(string.Format(I18nService.Instance.Translate("确定删除方案「{0}」吗？此操作不能撤销。"), profile.Name), I18nService.Instance.Translate("删除设置方案")) != MessageBoxResult.Yes)
             return;
         try
         {
@@ -117,7 +118,7 @@ public partial class PuloniaSettingsProfileManagerViewModel : ObservableObject, 
         }
         catch (Exception ex) when (ex is InvalidOperationException or PuloniaTaskValidationException or System.IO.IOException)
         {
-            await ThemedMessageBox.WarningAsync(ex.Message, "无法删除设置方案");
+            await ThemedMessageBox.WarningAsync(ex.Message, I18nService.Instance.Translate("无法删除设置方案"));
         }
     }
 
@@ -132,8 +133,8 @@ public partial class PuloniaSettingsProfileManagerViewModel : ObservableObject, 
         {
             var shown = string.Join("\n", usages.Take(10)) + (usages.Count > 10 ? $"\n… 另有 {usages.Count - 10} 处" : string.Empty);
             if (await ThemedMessageBox.QuestionAsync(
-                    $"保存后将影响 {usages.Count} 个节点：\n{shown}\n\n已排队和正在运行的任务不受影响。确定保存吗？",
-                    "保存设置方案") != MessageBoxResult.Yes)
+                    string.Format(I18nService.Instance.Translate("保存后将影响 {0} 个节点：\n{1}\n\n已排队和正在运行的任务不受影响。确定保存吗？"), usages.Count, shown),
+                    I18nService.Instance.Translate("保存设置方案")) != MessageBoxResult.Yes)
                 return;
         }
         try
@@ -164,7 +165,7 @@ public partial class PuloniaSettingsProfileManagerViewModel : ObservableObject, 
     /// </summary>
     /// <returns>可以关闭时返回 true。</returns>
     public bool ConfirmClose()
-        => !IsDirty || ThemedMessageBox.Question("当前方案有未保存的修改，关闭后将丢失。确定关闭吗？", "设置方案",
+        => !IsDirty || ThemedMessageBox.Question(I18nService.Instance.Translate("当前方案有未保存的修改，关闭后将丢失。确定关闭吗？"), I18nService.Instance.Translate("设置方案"),
             MessageBoxButton.YesNo, MessageBoxResult.No) == MessageBoxResult.Yes;
 
     /// <summary>切换方案前确认是否放弃未保存的修改；不放弃时回到原选择。</summary>
@@ -173,7 +174,7 @@ public partial class PuloniaSettingsProfileManagerViewModel : ObservableObject, 
     {
         if (_isSwitching)
             return;
-        if (IsDirty && ThemedMessageBox.Question("当前方案有未保存的修改，切换后将丢失。确定切换吗？", "设置方案",
+        if (IsDirty && ThemedMessageBox.Question(I18nService.Instance.Translate("当前方案有未保存的修改，切换后将丢失。确定切换吗？"), I18nService.Instance.Translate("设置方案"),
                 MessageBoxButton.YesNo, MessageBoxResult.No) != MessageBoxResult.Yes)
         {
             // 回到原选择；在当前绑定更新结束后再改，避免列表控件状态错乱
@@ -192,7 +193,7 @@ public partial class PuloniaSettingsProfileManagerViewModel : ObservableObject, 
     /// <summary>输入名称后建立并保存新方案，然后选中它。</summary>
     private async Task CreateAsync(string title, string defaultName, JObject settings)
     {
-        if (IsDirty && ThemedMessageBox.Question("当前方案有未保存的修改，继续将丢失。确定继续吗？", "设置方案",
+        if (IsDirty && ThemedMessageBox.Question(I18nService.Instance.Translate("当前方案有未保存的修改，继续将丢失。确定继续吗？"), I18nService.Instance.Translate("设置方案"),
                 MessageBoxButton.YesNo, MessageBoxResult.No) != MessageBoxResult.Yes)
             return;
         var name = PromptDialog.Prompt("请输入方案名称。", title, defaultName).Trim();

@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -113,7 +114,7 @@ public sealed class PuloniaRunTargetCheck
             var message = "提交前发现以下情况，相关的运行开始时可能进入待处理：\n\n"
                           + string.Join("\n", findings.Problems.Select(problem => "• " + problem))
                           + "\n\n仍然提交吗？选择“否”可以先修改各实例的当前账户（在“运行于”或标题栏中修改）。";
-            if (await ThemedMessageBox.ShowAsync(message, "检查运行账户", MessageBoxButton.YesNo,
+            if (await ThemedMessageBox.ShowAsync(message, I18nService.Instance.Translate("检查运行账户"), MessageBoxButton.YesNo,
                     ThemedMessageBox.MessageBoxIcon.Warning, MessageBoxResult.No) != MessageBoxResult.Yes)
             {
                 returnToChoice();
@@ -124,7 +125,7 @@ public sealed class PuloniaRunTargetCheck
         // 4. 本实例的运行切换时会把其他在线实例挤下线：确认后本次本地请求带上确认标记
         if (findings.LocalDisplacement is { } displacement)
         {
-            if (await ThemedMessageBox.ShowAsync(displacement + "\n\n是否继续？", "切换账户", MessageBoxButton.YesNo,
+            if (await ThemedMessageBox.ShowAsync(displacement + I18nService.Instance.Translate("\n\n是否继续？"), I18nService.Instance.Translate("切换账户"), MessageBoxButton.YesNo,
                     ThemedMessageBox.MessageBoxIcon.Question, MessageBoxResult.No) != MessageBoxResult.Yes)
                 return null;
             return new PuloniaRunTargetConfirmation(true);

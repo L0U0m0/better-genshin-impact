@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 using BetterGenshinImpact.View;
 using BetterGenshinImpact.View.Pages;
 using BetterGenshinImpact.ViewModel.Pages;
@@ -98,7 +99,7 @@ public class ApplicationHostService(
                 }
                 catch (Exception e)
                 {
-                    await BetterGenshinImpact.View.Windows.ThemedMessageBox.WarningAsync($"OCR 预热失败：{e.Message}");
+                    await BetterGenshinImpact.View.Windows.ThemedMessageBox.WarningAsync(string.Format(I18nService.Instance.Translate("OCR 预热失败：{0}"), e.Message));
                 }
 
                 HandleWebViewActivation(cmdOptions);

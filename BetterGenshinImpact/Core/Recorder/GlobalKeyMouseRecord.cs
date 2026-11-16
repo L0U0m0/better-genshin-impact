@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 using BetterGenshinImpact.Core.Config;
 using BetterGenshinImpact.Core.Monitor;
 using BetterGenshinImpact.GameTask;
@@ -61,7 +62,7 @@ public class GlobalKeyMouseRecord : Singleton<GlobalKeyMouseRecord>
     {
         if (Status != KeyMouseRecorderStatus.Stop)
         {
-            Toast.Warning("已经在录制状态，请不要重复启动录制功能");
+            Toast.Warning(I18nService.Instance.Translate("已经在录制状态，请不要重复启动录制功能"));
             return false;
         }
 
@@ -121,8 +122,8 @@ public class GlobalKeyMouseRecord : Singleton<GlobalKeyMouseRecord>
             Status = KeyMouseRecorderStatus.Stop;
             _logger.LogError(ex, "启动键鼠录制失败，相对鼠标捕获方式：{InputType}", inputType);
             await ThemedMessageBox.ErrorAsync(
-                $"启动键鼠录制失败：{ex.Message}",
-                "键鼠录制启动失败");
+                string.Format(I18nService.Instance.Translate("启动键鼠录制失败：{0}"), ex.Message),
+                I18nService.Instance.Translate("键鼠录制启动失败"));
             return false;
         }
     }

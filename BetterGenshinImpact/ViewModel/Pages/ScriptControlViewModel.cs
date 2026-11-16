@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 using BetterGenshinImpact.Core.Config;
 using BetterGenshinImpact.Core.Script;
 using BetterGenshinImpact.Core.Script.Group;
@@ -132,7 +133,7 @@ public partial class ScriptControlViewModel : ViewModel
     private void ClearTasks()
     {
         // 确认？
-        var result = ThemedMessageBox.Question("是否清空所有任务？", "清空任务", MessageBoxButton.YesNo, System.Windows.MessageBoxResult.No);
+        var result = ThemedMessageBox.Question(I18nService.Instance.Translate("是否清空所有任务？"), I18nService.Instance.Translate("清空任务"), MessageBoxButton.YesNo, System.Windows.MessageBoxResult.No);
         if (result != System.Windows.MessageBoxResult.Yes)
         {
             return;
@@ -395,7 +396,7 @@ public partial class ScriptControlViewModel : ViewModel
             }
 
             LogParse.HtmlGenerationStatusChanged += OnHtmlGenerationStatusChanged;
-            Toast.Information("正在准备数据...");
+            Toast.Information(I18nService.Instance.Translate("正在准备数据..."));
             List<(string FileName, string Date)> fs = LogParse.GetLogFiles(LogPath);
             if (dayRangeValue != "All")
             {
@@ -412,7 +413,7 @@ public partial class ScriptControlViewModel : ViewModel
 
             if ((hoeingStatsSwitch.IsChecked ?? false) && string.IsNullOrEmpty(cookieValue))
             {
-                Toast.Warning("未填写cookie，此次将不启用锄地统计！");
+                Toast.Warning(I18nService.Instance.Translate("未填写cookie，此次将不启用锄地统计！"));
             }
 
             //真正存储的gameinfo
@@ -422,20 +423,20 @@ public partial class ScriptControlViewModel : ViewModel
             {
                 try
                 {
-                    Toast.Information("正在从米游社获取旅行札记数据，请耐心等待！");
+                    Toast.Information(I18nService.Instance.Translate("正在从米游社获取旅行札记数据，请耐心等待！"));
                     gameInfo = await TravelsDiaryDetailManager.UpdateTravelsDiaryDetailManager(cookieValue);
-                    Toast.Success($"米游社数据获取成功，开始进行解析，请耐心等待！");
+                    Toast.Success(I18nService.Instance.Translate("米游社数据获取成功，开始进行解析，请耐心等待！"));
                 }
                 catch (Exception e)
                 {
                     _logger.LogWarning(e, "日志分析获取米游社数据失败：{Msg}", e.Message);
                     if (realGameInfo != null)
                     {
-                        Toast.Warning($"访问米游社失败：{e.Message}，此次锄地统计不更新最新数据");
+                        Toast.Warning(string.Format(I18nService.Instance.Translate("访问米游社失败：{0}，此次锄地统计不更新最新数据"), e.Message));
                     }
                     else
                     {
-                        Toast.Warning($"访问米游社失败：{e.Message}，此次不启用锄地统计");
+                        Toast.Warning(string.Format(I18nService.Instance.Translate("访问米游社失败：{0}，此次不启用锄地统计"), e.Message));
                     }
                 }
             }
@@ -462,7 +463,7 @@ public partial class ScriptControlViewModel : ViewModel
 
             if (configGroupEntities.Count == 0)
             {
-                Toast.Warning("未解析出日志记录！");
+                Toast.Warning(I18nService.Instance.Translate("未解析出日志记录！"));
                 LogParse.HtmlGenerationStatusChanged -= OnHtmlGenerationStatusChanged;
             }
             else
@@ -481,7 +482,7 @@ public partial class ScriptControlViewModel : ViewModel
                 catch (Exception ex)
                 {
                     LogParse.HtmlGenerationStatusChanged -= OnHtmlGenerationStatusChanged;
-                    Toast.Error($"生成日志分析时出错: {ex.Message}");
+                    Toast.Error(string.Format(I18nService.Instance.Translate("生成日志分析时出错: {0}"), ex.Message));
                 }
             }
         }
@@ -550,7 +551,7 @@ public partial class ScriptControlViewModel : ViewModel
             SelectedScriptGroup?.AddProject(scriptGroupProject);
         }
 
-        Toast.Success($"增加了{projects.Count - oldcount}个地图追踪任务");
+        Toast.Success(string.Format(I18nService.Instance.Translate("增加了{0}个地图追踪任务"), projects.Count - oldcount));
         if (SelectedScriptGroup != null) WriteScriptGroup(SelectedScriptGroup);
     }
 
@@ -869,7 +870,7 @@ public partial class ScriptControlViewModel : ViewModel
         }
         catch (Exception ex)
         {
-            Toast.Error($"加载地图追踪任务失败: {ex.Message}");
+            Toast.Error(string.Format(I18nService.Instance.Translate("加载地图追踪任务失败: {0}"), ex.Message));
             _logger.LogError(ex, "加载地图追踪任务时发生错误");
         }
     }
@@ -1524,7 +1525,7 @@ public partial class ScriptControlViewModel : ViewModel
                 }
                 catch (Exception e)
                 {
-                    Toast.Warning($"加载单个脚本失败：{e.Message}");
+                    Toast.Warning(string.Format(I18nService.Instance.Translate("加载单个脚本失败：{0}"), e.Message));
                     return null;
                 }
             })
@@ -1631,11 +1632,11 @@ public partial class ScriptControlViewModel : ViewModel
 
                 if (string.IsNullOrWhiteSpace(item.Project.Manifest.SettingsUi))
                 {
-                    Toast.Warning("无法打开脚本设置页面：" + reason);
+                    Toast.Warning(I18nService.Instance.Translate("无法打开脚本设置页面：") + reason);
                     return;
                 }
 
-                Toast.Warning($"无法打开脚本设置页面：{reason}，已改用基础设置表单");
+                Toast.Warning(string.Format(I18nService.Instance.Translate("无法打开脚本设置页面：{0}，已改用基础设置表单"), reason));
             }
 
             if (item.JsScriptSettingsObject == null)
@@ -1646,7 +1647,7 @@ public partial class ScriptControlViewModel : ViewModel
             var ui = item.Project.LoadSettingUi(item.JsScriptSettingsObject);
             if (ui == null)
             {
-                Toast.Warning("此脚本未提供自定义配置");
+                Toast.Warning(I18nService.Instance.Translate("此脚本未提供自定义配置"));
                 return;
             }
 
@@ -1669,7 +1670,7 @@ public partial class ScriptControlViewModel : ViewModel
         }
         else
         {
-            Toast.Warning("只有JS脚本才有自定义配置");
+            Toast.Warning(I18nService.Instance.Translate("只有JS脚本才有自定义配置"));
         }
     }
 

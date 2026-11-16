@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -325,7 +326,7 @@ public partial class MainWindowViewModel
         catch (Exception ex) when (ex is not OutOfMemoryException)
         {
             _logger.LogWarning(ex, "修改本实例当前账户失败");
-            await ThemedMessageBox.WarningAsync("未能修改本实例当前账户：" + ex.Message, "修改当前账户");
+            await ThemedMessageBox.WarningAsync(I18nService.Instance.Translate("未能修改本实例当前账户：") + ex.Message, I18nService.Instance.Translate("修改当前账户"));
         }
     }
 
@@ -348,7 +349,7 @@ public partial class MainWindowViewModel
         catch (Exception ex) when (ex is not OutOfMemoryException)
         {
             _logger.LogWarning(ex, "修改子实例 {Instance} 的当前账户失败", item.DisplayName);
-            await ThemedMessageBox.WarningAsync($"未能修改「{item.DisplayName}」的当前账户：{ex.Message}", "修改当前账户");
+            await ThemedMessageBox.WarningAsync(string.Format(I18nService.Instance.Translate("未能修改「{0}」的当前账户：{1}"), item.DisplayName, ex.Message), I18nService.Instance.Translate("修改当前账户"));
         }
     }
 }
