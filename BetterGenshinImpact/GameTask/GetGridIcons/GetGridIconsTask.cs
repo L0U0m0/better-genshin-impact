@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service;
 using System.Globalization;
 using Microsoft.Extensions.Localization;
 using BetterGenshinImpact.Helpers;

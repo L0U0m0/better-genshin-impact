@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Helpers;
 using System.Globalization;
 using Microsoft.Extensions.Localization;
 using BetterGenshinImpact.GameTask.Common.Resin;

@@ -297,7 +297,7 @@ public static partial class Bv
             RegionOfInterest = new Rect(0, region.Height / 4 * 3, region.Width, region.Height / 4)
         });
 
-        CultureInfo cultureInfo = new CultureInfo(TaskContext.Instance().Config.OtherConfig.GameCultureInfoName);
+        CultureInfo cultureInfo = new CultureInfo(Config.OtherConfig.GameCultureInfoName);
         IStringLocalizer stringLocalizer = App.GetService<IStringLocalizer<BvResxHelper>>() ?? throw new Exception();
         string revival = stringLocalizer.WithCultureGet(cultureInfo, "复苏");
         using var r = list.FirstOrDefault(r => r.Text.Contains(revival));
