@@ -5369,5 +5369,7 @@
   "{TaskName}：选择BOSS编号{BossNum}": "{TaskName}: selezione del boss numero {BossNum}",
   "本次最多消耗 {0} 点树脂": "Consumo massimo di questa esecuzione: {0} di resina",
   "使用全部原粹与浓缩树脂": "Usa tutta la Resina primordiale e condensata",
-  "本实例当前账户是“{Name}”（UID 尾号 {ExpectedUid}），游戏中读到尾号 {ObservedUid}。本次仍按“{CurrentName}”记录进度。": "L'account corrente di questa istanza è «{Name}» (UID che termina con {ExpectedUid}), ma nel gioco risulta {ObservedUid}. Il progresso viene comunque registrato per «{CurrentName}»."
+  "本实例当前账户是“{Name}”（UID 尾号 {ExpectedUid}），游戏中读到尾号 {ObservedUid}。本次仍按“{CurrentName}”记录进度。": "L'account corrente di questa istanza è «{Name}» (UID che termina con {ExpectedUid}), ma nel gioco risulta {ObservedUid}. Il progresso viene comunque registrato per «{CurrentName}».",
+  "【兼容层】已启动轮询定时器 (Interval: {IntervalMs}ms)": "[Livello di compatibilità] Timer di polling avviato (intervallo: {IntervalMs} ms)",
+  "解析脚本错误，行号：{Line}，错误信息：{Error}": "Errore di analisi dello script, riga: {Line}, messaggio: {Error}"
 }

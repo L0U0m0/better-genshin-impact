@@ -89,7 +89,7 @@ namespace BetterGenshinImpact.Platform.Wine
             if (!_pollingTimer.Enabled)
             {
                 _pollingTimer.Start();
-                _logger?.LogInformation($"【兼容层】已启动轮询定时器 (Interval: {intervalMs}ms)");
+                _logger?.LogInformation("【兼容层】已启动轮询定时器 (Interval: {IntervalMs}ms)", intervalMs);
             }
         }
 

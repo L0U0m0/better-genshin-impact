@@ -132,7 +132,7 @@ public class ScriptParser
         }
         catch (System.Exception ex)
         {
-            MyLogger.LogError($"解析脚本错误，行号：{i + 1}，错误信息：{ex}");
+            MyLogger.LogError("解析脚本错误，行号：{Line}，错误信息：{Error}", i + 1, ex);
             ThemedMessageBox.Error(string.Format(I18nService.Instance.Translate("解析脚本错误，行号：{0}，错误信息：{1}"), i + 1, ex), I18nService.Instance.Translate("策略解析失败"));
             return default!;
         }
