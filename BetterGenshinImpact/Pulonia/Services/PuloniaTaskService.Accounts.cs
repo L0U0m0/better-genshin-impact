@@ -204,8 +204,8 @@ public sealed partial class PuloniaTaskService
                 // 遮罩日志显示全部 Information 以上的日志，这条警告会直接出现在日志窗口；
                 // 本实例的通知、标题栏徽标提示色与一键修改由界面订阅账户服务的比对结果完成。
                 if (!matched)
-                    _logger.LogWarning("{Warning}", $"本实例当前账户是“{current.Name}”（UID 尾号 {UidTail(expected)}），"
-                        + $"游戏中读到尾号 {UidTail(observed)}。本次仍按“{current.Name}”记录进度。");
+                    _logger.LogWarning("本实例当前账户是“{Name}”（UID 尾号 {ExpectedUid}），游戏中读到尾号 {ObservedUid}。本次仍按“{CurrentName}”记录进度。",
+                        current.Name, UidTail(expected), UidTail(observed), current.Name);
             }
         }
         // 5. 比对结果（含未比对）报告给账户服务，只在内存中

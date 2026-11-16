@@ -1,3 +1,4 @@
+using BetterGenshinImpact.Service.I18n;
 using System;
 using System.Linq;
 using System.Threading;
@@ -72,7 +73,7 @@ public sealed class ResinPlanTask : ISoloTask<ResinPlanParam, ResinPlanData>
 
         var run = new ResinPlanRun(param.MaxResin);
         Logger.LogInformation("→ {Name} 开始：{Budget}", TaskName,
-            param.MaxResin > 0 ? $"本次最多消耗 {param.MaxResin} 点树脂" : "使用全部原粹与浓缩树脂");
+            param.MaxResin > 0 ? string.Format(I18nService.Instance.Translate("本次最多消耗 {0} 点树脂"), param.MaxResin) : I18nService.Instance.Translate("使用全部原粹与浓缩树脂"));
 
         // 1. 读取开始时的树脂；读不到时不消耗任何树脂
         var stock = await ReadStockAsync(ct);
